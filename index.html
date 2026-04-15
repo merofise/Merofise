@@ -3,1161 +3,328 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MEROFISE | Marketplace Inmobiliario Global IA - 111 Bots 24/7</title>
-    <meta name="description" content="merofise.es - Marketplace inmobiliario mundial con Supabase. Publica gratis, paga solo si vendes. CEOs María y Antonio supervisando.">
+    <title>MEROFISE | Inmobiliaria IA Global - 111 Bots + Publicación Mundial</title>
+    <meta name="description" content="merofise.es - Primera inmobiliaria mundial con 110 bots IA negociando + 1 bot publicando en Facebook, Instagram, TikTok, LinkedIn, Twitter X automáticamente. CEOs María y Antonio supervisando.">
+    <meta name="keywords" content="merofise, merofise.es, inmobiliaria IA, propiedades España, bots inmobiliarios, autopublicación redes sociales">
+    <meta property="og:title" content="MEROFISE | Revolución Inmobiliaria IA Global">
+    <meta property="og:description" content="111 bots + Auto-publicación mundial en 6 plataformas. CEOs María y Antonio supervisando cada euro.">
+    <meta property="og:url" content="https://merofise.es">
+    <meta property="og:type" content="website">
+    <meta property="og:image" content="https://merofise.es/og-image.jpg">
     
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
     <script async src="https://js.stripe.com/v3/buy-button.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
     
     <style>
         body{background:#050508;color:#e2e8f0;font-family:'Inter',sans-serif;overflow-x:hidden;}
-        .gradient-text{background:linear-gradient(135deg,#3b82f6 0%,#8b5cf6 50%,#ec4899 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
-        .glass-panel{background:rgba(15,23,42,0.8);backdrop-filter:blur(20px);border:1px solid rgba(59,130,246,0.2);}
-        .bot-card{background:linear-gradient(145deg,rgba(15,23,42,0.9),rgba(30,41,59,0.9));border:1px solid rgba(59,130,246,0.3);transition:all 0.4s ease;}
-        .bot-card:hover{transform:translateY(-5px);border-color:#3b82f6;box-shadow:0 10px 30px rgba(59,130,246,0.3);}
-        .ceo-maria{background:linear-gradient(135deg,rgba(236,72,153,0.2),rgba(139,92,246,0.2));border:2px solid rgba(236,72,153,0.5);animation:maria-glow 3s infinite alternate;}
-        @keyframes maria-glow{from{box-shadow:0 0 10px #ec4899;}to{box-shadow:0 0 30px #ec4899,0 0 40px #8b5cf6;}}
-        .ceo-antonio{background:linear-gradient(135deg,rgba(59,130,246,0.2),rgba(6,182,212,0.2));border:2px solid rgba(59,130,246,0.5);animation:antonio-glow 3s infinite alternate;}
-        @keyframes antonio-glow{from{box-shadow:0 0 10px #3b82f6;}to{box-shadow:0 0 30px #3b82f6,0 0 40px #06b6d4;}}
+        .gradient-text{background:linear-gradient(135deg,#3b82f6 0%,#8b5cf6 50%,#ec4899 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+        .glass-panel{background:rgba(15,23,42,0.7);backdrop-filter:blur(20px);border:1px solid rgba(59,130,246,0.2);}
+        .neon-border{box-shadow:0 0 20px rgba(59,130,246,0.5),inset 0 0 20px rgba(59,130,246,0.1);}
+        .bot-card{background:linear-gradient(145deg,rgba(15,23,42,0.9),rgba(30,41,59,0.9));border:1px solid rgba(59,130,246,0.3);transition:all 0.4s cubic-bezier(0.4,0,0.2,1);position:relative;overflow:hidden;}
+        .bot-card::before{content:'';position:absolute;top:-50%;left:-50%;width:200%;height:200%;background:radial-gradient(circle,rgba(59,130,246,0.1) 0%,transparent 70%);opacity:0;transition:opacity 0.4s;}
+        .bot-card:hover::before{opacity:1;}
+        .bot-card:hover{transform:translateY(-10px) scale(1.02);border-color:#3b82f6;box-shadow:0 20px 40px rgba(59,130,246,0.3);}
+        .social-bot-card{background:linear-gradient(135deg,rgba(139,92,246,0.2),rgba(59,130,246,0.2));border:2px solid rgba(139,92,246,0.5);animation:glow 3s ease-in-out infinite alternate;}
+        .ceo-card{background:linear-gradient(135deg,rgba(139,92,246,0.2),rgba(59,130,246,0.2));border:2px solid rgba(139,92,246,0.5);animation:glow 3s ease-in-out infinite alternate;}
+        @keyframes glow{from{box-shadow:0 0 10px #3b82f6,0 0 20px #3b82f6;}to{box-shadow:0 0 20px #8b5cf6,0 0 30px #8b5cf6;}}
         @keyframes marquee{0%{transform:translateX(0%);}100%{transform:translateX(-100%);}}
-        .animate-marquee{display:inline-block;animation:marquee 30s linear infinite;}
-        .scan-line{position:fixed;top:0;left:0;width:100%;height:2px;background:linear-gradient(90deg,transparent,#ec4899,transparent);animation:scan 3s linear infinite;z-index:9999;}
+        .animate-marquee{display:inline-block;animation:marquee 20s linear infinite;}
+        .stats-counter{font-family:'Orbitron',monospace;}
+        .scan-line{position:fixed;top:0;left:0;width:100%;height:2px;background:linear-gradient(90deg,transparent,#3b82f6,transparent);animation:scan 4s linear infinite;pointer-events:none;z-index:9999;}
         @keyframes scan{0%{transform:translateY(-100%);}100%{transform:translateY(100vh);}}
-        .live-dot{animation:pulse 2s cubic-bezier(0.4,0,0.6,1) infinite;}
+        .platform-badge{display:inline-flex;align-items:center;gap:6px;padding:4px 12px;border-radius:20px;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;}
+        .platform-facebook{background:rgba(24,119,242,0.2);color:#1877f2;border:1px solid rgba(24,119,242,0.3);}
+        .platform-instagram{background:rgba(225,48,108,0.2);color:#e1306c;border:1px solid rgba(225,48,108,0.3);}
+        .platform-tiktok{background:rgba(0,0,0,0.5);color:#fff;border:1px solid rgba(255,255,255,0.3);}
+        .platform-linkedin{background:rgba(10,102,194,0.2);color:#0a66c2;border:1px solid rgba(10,102,194,0.3);}
+        .platform-twitter{background:rgba(29,161,242,0.2);color:#1da1f2;border:1px solid rgba(29,161,242,0.3);}
+        .live-pulse{animation:pulse 2s cubic-bezier(0.4,0,0.6,1) infinite;}
         .grid-bg{background-image:linear-gradient(rgba(59,130,246,0.05) 1px,transparent 1px),linear-gradient(90deg,rgba(59,130,246,0.05) 1px,transparent 1px);background-size:50px 50px;}
-        .chat-bubble{background:rgba(59,130,246,0.2);border:1px solid rgba(59,130,246,0.3);border-radius:12px;padding:12px;margin:8px 0;}
-        .chat-bubble.user{background:rgba(236,72,153,0.2);border-color:rgba(236,72,153,0.3);margin-left:20%;}
-        .hidden{display:none !important;}
-        .property-card{transition:all 0.3s ease;}
-        .property-card:hover{transform:translateY(-5px);box-shadow:0 15px 35px rgba(0,0,0,0.5);}
-        .locked{position:relative;overflow:hidden;}
-        .locked::after{content:'🔒';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:3rem;opacity:0.8;}
-        .locked::before{content:'';position:absolute;inset:0;background:rgba(0,0,0,0.7);backdrop-filter:blur(4px);}
-        .loading-spinner{border:3px solid rgba(59,130,246,0.3);border-radius:50%;border-top:3px solid #3b82f6;width:24px;height:24px;animation:spin 1s linear infinite;}
-        @keyframes spin{0%{transform:rotate(0deg);}100%{transform:rotate(360deg);}}
     </style>
 </head>
 <body class="grid-bg">
     <div class="scan-line"></div>
     
-    <!-- BARRA DE ESTADO 24/7 -->
-    <div class="bg-slate-900/95 border-b border-pink-500/30 py-2 overflow-hidden whitespace-nowrap fixed w-full z-50 top-0">
-        <div class="animate-marquee inline-block text-xs font-mono text-pink-300 uppercase tracking-widest">
-            🔴 MEROFISE GLOBAL 24/7 || CEO MARÍA: AUDITANDO PAGOS || CEO ANTONIO: PUBLICANDO META/IG || 
-            📱 +34 664 037 407 || 📧 info@merofise.es || 
-            💰 PUBLICAR GRATIS · PAGAR SOLO SI VENDES || 🤖 111 BOTS NEGOCIANDO || 🌍 SUPABASE CONECTADO
+    <div class="bg-slate-900/95 border-b border-blue-500/30 py-2 overflow-hidden whitespace-nowrap fixed w-full z-50 top-0">
+        <div class="animate-marquee inline-block text-xs font-mono text-blue-300 uppercase tracking-widest">
+            🌍 MEROFISE.ES ACTIVO || 111 BOTS + SOCIALBOT-111 || CEOs MARÍA & ANTONIO SUPERVISANDO || 
+            📱 PUBLICANDO: Facebook ✓ Instagram ✓ TikTok ✓ LinkedIn ✓ Twitter X ✓ YouTube ✓ || 
+            💰 PAGOS STRIPE VERIFICADOS || TODO SISTEMA OPERATIVO 99.99%
         </div>
     </div>
 
-    <!-- LOADING OVERLAY -->
-    <div id="loading-overlay" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm z-[9998] flex items-center justify-center">
-        <div class="text-center">
-            <div class="loading-spinner mx-auto mb-4"></div>
-            <p class="text-blue-400 font-mono text-sm">Conectando con Supabase...</p>
-        </div>
-    </div>
-
-    <!-- NAVEGACIÓN -->
     <nav class="glass-panel sticky top-8 z-40 border-b border-slate-700/50">
         <div class="container mx-auto px-6 py-4 flex justify-between items-center">
-            <div class="flex items-center gap-4 cursor-pointer" onclick="showSection('home')">
+            <div class="flex items-center gap-4">
                 <div class="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center shadow-lg shadow-blue-500/30">
                     <i class="fas fa-building text-white text-xl"></i>
                 </div>
                 <div>
                     <h1 class="text-3xl font-black font-['Orbitron'] gradient-text tracking-wider">MEROFISE</h1>
-                    <p class="text-[10px] text-slate-400 font-bold uppercase">
-                        <span class="text-green-400">●</span> Global Marketplace IA
+                    <p class="text-[10px] text-slate-400 font-bold uppercase tracking-tightest">
+                        <span class="text-green-400">●</span> merofise.es | 111 Bots Activos
                     </p>
                 </div>
             </div>
-            
-            <div class="flex items-center gap-4">
-                <div id="nav-auth" class="flex items-center gap-4">
-                    <button onclick="showSection('login')" class="text-slate-300 hover:text-white transition">Entrar</button>
-                    <button onclick="showSection('register')" class="bg-blue-600 hover:bg-blue-500 text-white px-4 py-2 rounded-lg font-bold transition">Registrarse</button>
-                </div>
-                <div id="nav-user" class="hidden flex items-center gap-4">
-                    <span id="user-name" class="text-slate-300"></span>
-                    <button onclick="logout()" class="text-red-400 hover:text-red-300 transition"><i class="fas fa-sign-out-alt"></i></button>
-                </div>
+            <div class="hidden md:flex items-center gap-4">
+                <span class="platform-badge platform-facebook"><i class="fab fa-facebook-f"></i> LIVE</span>
+                <span class="platform-badge platform-instagram"><i class="fab fa-instagram"></i> LIVE</span>
+                <span class="platform-badge platform-tiktok"><i class="fab fa-tiktok"></i> LIVE</span>
                 <a href="https://wa.me/34664037407" class="bg-green-600 hover:bg-green-500 text-white px-4 py-2 rounded-lg text-sm font-bold transition flex items-center gap-2">
-                    <i class="fab fa-whatsapp"></i>
+                    <i class="fab fa-whatsapp"></i> +34 664 037 407
                 </a>
             </div>
         </div>
     </nav>
 
-    <!-- HOME / LISTADO PROPIEDADES -->
-    <section id="home" class="pt-24 pb-16 min-h-screen">
-        <div class="container mx-auto px-6">
+    <header class="relative min-h-screen flex items-center justify-center pt-24 pb-16">
+        <div class="container mx-auto px-6 text-center relative z-10">
+            <div class="inline-flex items-center gap-2 bg-blue-500/10 border border-blue-500/30 rounded-full px-4 py-2 mb-6 animate-pulse">
+                <span class="w-2 h-2 bg-green-400 rounded-full live-pulse"></span>
+                <span class="text-blue-300 text-sm font-mono">merofise.es | SISTEMA GLOBAL ACTIVO</span>
+            </div>
             
-            <!-- HERO -->
-            <div class="text-center mb-12">
-                <h2 class="text-5xl font-black font-['Orbitron'] mb-4 gradient-text">Marketplace Inmobiliario Global</h2>
-                <p class="text-slate-400 text-xl mb-8">Publica gratis · Negocia con IA · Paga solo si vendes</p>
-                
-                <!-- CEOs -->
-                <div class="flex flex-wrap justify-center gap-6 mb-8">
-                    <div class="ceo-maria rounded-2xl p-6 max-w-xs">
-                        <div class="flex items-center gap-3 mb-3">
-                            <i class="fas fa-female text-2xl text-pink-400"></i>
-                            <div>
-                                <h4 class="font-bold text-pink-300">CEO María</h4>
-                                <p class="text-xs text-slate-500">Auditoría Supabase</p>
-                            </div>
-                        </div>
-                        <p class="text-xs text-slate-400">Verifica transacciones y datos en tiempo real</p>
-                    </div>
-                    <div class="ceo-antonio rounded-2xl p-6 max-w-xs">
-                        <div class="flex items-center gap-3 mb-3">
-                            <i class="fas fa-male text-2xl text-blue-400"></i>
-                            <div>
-                                <h4 class="font-bold text-blue-300">CEO Antonio</h4>
-                                <p class="text-xs text-slate-500">Sync Supabase → Meta</p>
-                            </div>
-                        </div>
-                        <p class="text-xs text-slate-400">Cada propiedad en Supabase se publica automáticamente</p>
-                    </div>
-                </div>
-
-                <!-- BÚSQUEDA -->
-                <div class="glass-panel rounded-2xl p-6 max-w-4xl mx-auto mb-12">
-                    <div class="grid md:grid-cols-4 gap-4">
-                        <select id="search-type" class="bg-slate-800 border border-slate-600 rounded-lg px-4 py-3 text-slate-300 focus:border-blue-500 outline-none">
-                            <option value="">Tipo de propiedad</option>
-                            <option value="piso">Piso</option>
-                            <option value="chalet">Chalet</option>
-                            <option value="terreno">Terreno</option>
-                            <option value="edificio">Edificio</option>
-                        </select>
-                        <input type="text" id="search-location" placeholder="Ubicación (ciudad, zona...)" 
-                               class="bg-slate-800 border border-slate-600 rounded-lg px-4 py-3 text-slate-300 focus:border-blue-500 outline-none">
-                        <select id="search-price" class="bg-slate-800 border border-slate-600 rounded-lg px-4 py-3 text-slate-300 focus:border-blue-500 outline-none">
-                            <option value="">Rango de precio</option>
-                            <option value="0-100000">Hasta 100.000€</option>
-                            <option value="100000-300000">100.000€ - 300.000€</option>
-                            <option value="300000-500000">300.000€ - 500.000€</option>
-                            <option value="500000+">Más de 500.000€</option>
-                        </select>
-                        <button onclick="searchProperties()" class="bg-blue-600 hover:bg-blue-500 text-white px-6 py-3 rounded-lg font-bold transition">
-                            <i class="fas fa-search mr-2"></i>Buscar
-                        </button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- BOTONES ACCIÓN -->
-            <div class="flex flex-wrap justify-center gap-4 mb-12">
-                <button onclick="showSection('publish')" class="bot-card bg-gradient-to-r from-green-600 to-emerald-600 text-white px-8 py-4 rounded-xl font-bold text-lg transition flex items-center gap-3">
-                    <i class="fas fa-plus-circle"></i>
-                    <div class="text-left">
-                        <div class="text-xs opacity-80">Publicar en</div>
-                        <div>SUPABASE</div>
-                    </div>
-                </button>
-                <button onclick="showSection('my-properties')" id="btn-my-props" class="hidden bot-card bg-slate-800 text-slate-300 px-8 py-4 rounded-xl font-bold transition flex items-center gap-3">
-                    <i class="fas fa-home"></i>Mis Propiedades
-                </button>
-                <button onclick="showSection('offers')" id="btn-offers" class="hidden bot-card bg-slate-800 text-slate-300 px-8 py-4 rounded-xl font-bold transition flex items-center gap-3">
-                    <i class="fas fa-handshake"></i>Ofertas
-                </button>
-            </div>
-
-            <!-- LISTADO PROPIEDADES -->
-            <div id="properties-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <div class="col-span-full text-center py-12">
-                    <div class="loading-spinner mx-auto mb-4"></div>
-                    <p class="text-slate-500">Cargando propiedades desde Supabase...</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- LOGIN -->
-    <section id="login" class="hidden pt-24 pb-16 min-h-screen flex items-center justify-center">
-        <div class="glass-panel rounded-3xl p-8 max-w-md w-full border border-slate-700">
-            <h2 class="text-3xl font-black font-['Orbitron'] mb-6 text-center gradient-text">Iniciar Sesión</h2>
-            <p class="text-center text-slate-500 text-sm mb-6">Conectado a Supabase Auth</p>
-            <form onsubmit="handleLogin(event)" class="space-y-4">
-                <div>
-                    <label class="block text-sm text-slate-400 mb-2">Email</label>
-                    <input type="email" id="login-email" required
-                           class="w-full bg-slate-800 border border-slate-600 rounded-lg px-4 py-3 text-slate-300 focus:border-blue-500 outline-none">
-                </div>
-                <div>
-                    <label class="block text-sm text-slate-400 mb-2">Contraseña</label>
-                    <input type="password" id="login-password" required
-                           class="w-full bg-slate-800 border border-slate-600 rounded-lg px-4 py-3 text-slate-300 focus:border-blue-500 outline-none">
-                </div>
-                <button type="submit" class="w-full bg-blue-600 hover:bg-blue-500 text-white py-3 rounded-lg font-bold transition flex items-center justify-center gap-2">
-                    <span id="login-text">Entrar</span>
-                    <div id="login-spinner" class="loading-spinner hidden" style="width:16px;height:16px;border-width:2px;"></div>
-                </button>
-            </form>
-            <p class="text-center text-slate-500 mt-4 text-sm">
-                ¿No tienes cuenta? <button onclick="showSection('register')" class="text-blue-400 hover:underline">Regístrate</button>
+            <h2 class="text-5xl md:text-7xl font-black font-['Orbitron'] mb-6 leading-tight">
+                La <span class="gradient-text">Revolución</span><br>
+                <span class="text-white">Inmobiliaria Mundial</span>
+            </h2>
+            
+            <p class="text-slate-400 text-xl md:text-2xl mb-8 max-w-3xl mx-auto">
+                110 bots negociando + 1 bot publicando en TODO el mundo automáticamente
             </p>
-        </div>
-    </section>
 
-    <!-- REGISTRO -->
-    <section id="register" class="hidden pt-24 pb-16 min-h-screen flex items-center justify-center">
-        <div class="glass-panel rounded-3xl p-8 max-w-md w-full border border-slate-700">
-            <h2 class="text-3xl font-black font-['Orbitron'] mb-6 text-center gradient-text">Crear Cuenta</h2>
-            <p class="text-center text-slate-500 text-sm mb-6">Se creará en Supabase Auth + Profiles</p>
-            <form onsubmit="handleRegister(event)" class="space-y-4">
-                <div>
-                    <label class="block text-sm text-slate-400 mb-2">Nombre completo *</label>
-                    <input type="text" id="reg-name" required
-                           class="w-full bg-slate-800 border border-slate-600 rounded-lg px-4 py-3 text-slate-300 focus:border-blue-500 outline-none">
-                </div>
-                <div>
-                    <label class="block text-sm text-slate-400 mb-2">Email *</label>
-                    <input type="email" id="reg-email" required
-                           class="w-full bg-slate-800 border border-slate-600 rounded-lg px-4 py-3 text-slate-300 focus:border-blue-500 outline-none">
-                </div>
-                <div>
-                    <label class="block text-sm text-slate-400 mb-2">Teléfono *</label>
-                    <input type="tel" id="reg-phone" placeholder="+34 600 000 000" required
-                           class="w-full bg-slate-800 border border-slate-600 rounded-lg px-4 py-3 text-slate-300 focus:border-blue-500 outline-none">
-                </div>
-                <div>
-                    <label class="block text-sm text-slate-400 mb-2">Tipo de usuario *</label>
-                    <select id="reg-type" class="w-full bg-slate-800 border border-slate-600 rounded-lg px-4 py-3 text-slate-300 focus:border-blue-500 outline-none">
-                        <option value="propietario">Propietario (quiero vender/alquilar)</option>
-                        <option value="comprador">Comprador/Inquilino (busco propiedad)</option>
-                    </select>
-                </div>
-                <div>
-                    <label class="block text-sm text-slate-400 mb-2">Contraseña * (mín. 6 caracteres)</label>
-                    <input type="password" id="reg-password" required minlength="6"
-                           class="w-full bg-slate-800 border border-slate-600 rounded-lg px-4 py-3 text-slate-300 focus:border-blue-500 outline-none">
-                </div>
-                <button type="submit" class="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 text-white py-3 rounded-lg font-bold transition flex items-center justify-center gap-2">
-                    <span id="reg-text">Crear Cuenta GRATIS</span>
-                    <div id="reg-spinner" class="loading-spinner hidden" style="width:16px;height:16px;border-width:2px;"></div>
-                </button>
-            </form>
-        </div>
-    </section>
-
-    <!-- PUBLICAR PROPIEDAD -->
-    <section id="publish" class="hidden pt-24 pb-16 min-h-screen">
-        <div class="container mx-auto px-6 max-w-4xl">
-            <h2 class="text-4xl font-black font-['Orbitron'] mb-8 text-center gradient-text">Publicar en Supabase GRATIS</h2>
-            
-            <!-- CONTRATO DE EXCLUSIVA -->
-            <div id="step-exclusivity" class="glass-panel rounded-2xl p-8 mb-8 border border-yellow-500/30">
-                <div class="flex items-center gap-3 mb-6">
-                    <div class="w-10 h-10 bg-yellow-500/20 rounded-full flex items-center justify-center">
-                        <i class="fas fa-file-contract text-yellow-400"></i>
+            <div class="mb-12 max-w-4xl mx-auto">
+                <div class="social-bot-card rounded-3xl p-8 relative overflow-hidden">
+                    <div class="flex items-center justify-center gap-4 mb-6">
+                        <div class="w-20 h-20 bg-gradient-to-br from-purple-500 via-pink-500 to-blue-500 rounded-2xl flex items-center justify-center animate-pulse">
+                            <i class="fas fa-robot text-3xl text-white"></i>
+                        </div>
+                        <div class="text-left">
+                            <h3 class="text-2xl font-bold text-purple-300">SOCIALBOT-111</h3>
+                            <p class="text-sm text-slate-400">Bot de Publicación Mundial</p>
+                        </div>
                     </div>
-                    <h3 class="text-xl font-bold">Contrato de Exclusiva (60 días)</h3>
+                    
+                    <div class="grid grid-cols-3 md:grid-cols-6 gap-4 mb-6">
+                        <div class="glass-panel rounded-xl p-3 text-center border border-blue-500/30">
+                            <i class="fab fa-facebook text-2xl text-blue-500 mb-2"></i>
+                            <p class="text-xs text-slate-400">Facebook</p>
+                            <span class="text-[10px] text-green-400">● ACTIVE</span>
+                        </div>
+                        <div class="glass-panel rounded-xl p-3 text-center border border-pink-500/30">
+                            <i class="fab fa-instagram text-2xl text-pink-500 mb-2"></i>
+                            <p class="text-xs text-slate-400">Instagram</p>
+                            <span class="text-[10px] text-green-400">● ACTIVE</span>
+                        </div>
+                        <div class="glass-panel rounded-xl p-3 text-center border border-white/30">
+                            <i class="fab fa-tiktok text-2xl text-white mb-2"></i>
+                            <p class="text-xs text-slate-400">TikTok</p>
+                            <span class="text-[10px] text-green-400">● ACTIVE</span>
+                        </div>
+                        <div class="glass-panel rounded-xl p-3 text-center border border-blue-600/30">
+                            <i class="fab fa-linkedin text-2xl text-blue-600 mb-2"></i>
+                            <p class="text-xs text-slate-400">LinkedIn</p>
+                            <span class="text-[10px] text-green-400">● ACTIVE</span>
+                        </div>
+                        <div class="glass-panel rounded-xl p-3 text-center border border-sky-500/30">
+                            <i class="fab fa-x-twitter text-2xl text-sky-500 mb-2"></i>
+                            <p class="text-xs text-slate-400">Twitter X</p>
+                            <span class="text-[10px] text-green-400">● ACTIVE</span>
+                        </div>
+                        <div class="glass-panel rounded-xl p-3 text-center border border-red-500/30">
+                            <i class="fab fa-youtube text-2xl text-red-500 mb-2"></i>
+                            <p class="text-xs text-slate-400">YouTube</p>
+                            <span class="text-[10px] text-green-400">● ACTIVE</span>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-3 gap-4 text-center">
+                        <div class="bg-slate-800/50 rounded-lg p-3">
+                            <div class="text-2xl font-black text-purple-400 stats-counter">847</div>
+                            <div class="text-[10px] text-slate-500 uppercase">Posts Hoy</div>
+                        </div>
+                        <div class="bg-slate-800/50 rounded-lg p-3">
+                            <div class="text-2xl font-black text-blue-400 stats-counter">6</div>
+                            <div class="text-[10px] text-slate-500 uppercase">Plataformas</div>
+                        </div>
+                        <div class="bg-slate-800/50 rounded-lg p-3">
+                            <div class="text-2xl font-black text-green-400 stats-counter">15</div>
+                            <div class="text-[10px] text-slate-500 uppercase">Idiomas</div>
+                        </div>
+                    </div>
                 </div>
-                
-                <div class="bg-slate-800/50 rounded-xl p-6 mb-6 text-sm text-slate-300 space-y-3 max-h-64 overflow-y-auto">
-                    <p><strong>EXCLUSIVA DE VENTA/ALQUILER - MEROFISE</strong></p>
-                    <p>1. <strong>Duración:</strong> 60 días naturales desde la firma, renovable automáticamente por períodos iguales si ninguna parte comunica lo contrario con 15 días de antelación.</p>
-                    <p>2. <strong>Exclusividad:</strong> Durante este período, el propietario se compromete a no vender, alquilar ni ceder la propiedad a terceros fuera de MEROFISE.</p>
-                    <p>3. <strong>Comisión:</strong> El propietario pagará a MEROFISE la comisión acordada solo si se materializa la venta o alquiler durante la exclusiva o dentro de los 180 días posteriores a compradores presentados por MEROFISE.</p>
-                    <p>4. <strong>Publicación:</strong> MEROFISE publicará la propiedad en Supabase y sincronizará con redes sociales.</p>
-                    <p>5. <strong>Datos:</strong> El propietario garantiza la veracidad de la información proporcionada.</p>
-                    <p>6. <strong>Cancelación:</strong> El propietario puede cancelar con 15 días de aviso previo. Si cancela antes y vende a comprador presentado por MEROFISE, la comisión sigue vigente.</p>
-                </div>
-                
-                <label class="flex items-center gap-3 cursor-pointer">
-                    <input type="checkbox" id="accept-exclusivity" class="w-5 h-5 rounded border-slate-600 text-blue-600 focus:ring-blue-500 bg-slate-800">
-                    <span class="text-slate-300">Acepto los términos de exclusiva de 60 días</span>
-                </label>
             </div>
 
-            <!-- FORMULARIO -->
-            <form id="property-form" onsubmit="handlePublish(event)" class="space-y-6">
-                <div class="grid md:grid-cols-2 gap-6">
-                    <div>
-                        <label class="block text-sm text-slate-400 mb-2">Tipo de propiedad *</label>
-                        <select id="prop-type" required class="w-full bg-slate-800 border border-slate-600 rounded-lg px-4 py-3 text-slate-300 focus:border-blue-500 outline-none">
-                            <option value="">Seleccionar...</option>
-                            <option value="piso">Piso/Apartamento</option>
-                            <option value="chalet">Chalet/Casa</option>
-                            <option value="terreno">Terreno/Solar</option>
-                            <option value="edificio">Edificio/Local</option>
-                        </select>
+            <div class="flex flex-wrap justify-center gap-6 mb-12">
+                <div class="ceo-card rounded-2xl p-6 max-w-sm">
+                    <div class="flex items-center gap-4 mb-4">
+                        <div class="w-16 h-16 bg-gradient-to-br from-purple-500 to-pink-500 rounded-full flex items-center justify-center">
+                            <i class="fas fa-female text-2xl text-white"></i>
+                        </div>
+                        <div class="text-left">
+                            <h3 class="font-bold text-xl text-purple-300">María IA</h3>
+                            <p class="text-xs text-slate-400 uppercase">CEO Financiera</p>
+                        </div>
                     </div>
-                    <div>
-                        <label class="block text-sm text-slate-400 mb-2">Operación *</label>
-                        <select id="prop-operation" required class="w-full bg-slate-800 border border-slate-600 rounded-lg px-4 py-3 text-slate-300 focus:border-blue-500 outline-none">
-                            <option value="">Seleccionar...</option>
-                            <option value="venta">Venta</option>
-                            <option value="alquiler">Alquiler</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div class="grid md:grid-cols-2 gap-6">
-                    <div>
-                        <label class="block text-sm text-slate-400 mb-2">Precio (€) *</label>
-                        <input type="number" id="prop-price" required min="1"
-                               class="w-full bg-slate-800 border border-slate-600 rounded-lg px-4 py-3 text-slate-300 focus:border-blue-500 outline-none"
-                               placeholder="Ej: 250000">
-                    </div>
-                    <div>
-                        <label class="block text-sm text-slate-400 mb-2">Metros cuadrados *</label>
-                        <input type="number" id="prop-size" required min="1"
-                               class="w-full bg-slate-800 border border-slate-600 rounded-lg px-4 py-3 text-slate-300 focus:border-blue-500 outline-none"
-                               placeholder="Ej: 85">
-                    </div>
-                </div>
-
-                <div>
-                    <label class="block text-sm text-slate-400 mb-2">Ubicación (zona/barrio) *</label>
-                    <input type="text" id="prop-location" required
-                           class="w-full bg-slate-800 border border-slate-600 rounded-lg px-4 py-3 text-slate-300 focus:border-blue-500 outline-none"
-                           placeholder="Ej: Salamanca, Madrid">
-                </div>
-
-                <div class="grid md:grid-cols-4 gap-4">
-                    <div>
-                        <label class="block text-sm text-slate-400 mb-2">Habitaciones</label>
-                        <input type="number" id="prop-rooms" min="0"
-                               class="w-full bg-slate-800 border border-slate-600 rounded-lg px-4 py-3 text-slate-300 focus:border-blue-500 outline-none">
-                    </div>
-                    <div>
-                        <label class="block text-sm text-slate-400 mb-2">Baños</label>
-                        <input type="number" id="prop-bathrooms" min="0"
-                               class="w-full bg-slate-800 border border-slate-600 rounded-lg px-4 py-3 text-slate-300 focus:border-blue-500 outline-none">
-                    </div>
-                    <div>
-                        <label class="block text-sm text-slate-400 mb-2">Planta</label>
-                        <input type="text" id="prop-floor"
-                               class="w-full bg-slate-800 border border-slate-600 rounded-lg px-4 py-3 text-slate-300 focus:border-blue-500 outline-none"
-                               placeholder="Ej: 3º">
-                    </div>
-                    <div>
-                        <label class="block text-sm text-slate-400 mb-2">Ascensor</label>
-                        <select id="prop-elevator" class="w-full bg-slate-800 border border-slate-600 rounded-lg px-4 py-3 text-slate-300 focus:border-blue-500 outline-none">
-                            <option value="no">No</option>
-                            <option value="si">Sí</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div class="flex flex-wrap gap-4">
-                    <label class="flex items-center gap-2 cursor-pointer">
-                        <input type="checkbox" id="prop-terrace" class="w-4 h-4 rounded bg-slate-800 border-slate-600 text-blue-600">
-                        <span class="text-slate-300 text-sm">Terraza</span>
-                    </label>
-                    <label class="flex items-center gap-2 cursor-pointer">
-                        <input type="checkbox" id="prop-garage" class="w-4 h-4 rounded bg-slate-800 border-slate-600 text-blue-600">
-                        <span class="text-slate-300 text-sm">Garaje</span>
-                    </label>
-                    <label class="flex items-center gap-2 cursor-pointer">
-                        <input type="checkbox" id="prop-pool" class="w-4 h-4 rounded bg-slate-800 border-slate-600 text-blue-600">
-                        <span class="text-slate-300 text-sm">Piscina</span>
-                    </label>
-                </div>
-
-                <div>
-                    <label class="block text-sm text-slate-400 mb-2">Descripción *</label>
-                    <textarea id="prop-description" required rows="4"
-                              class="w-full bg-slate-800 border border-slate-600 rounded-lg px-4 py-3 text-slate-300 focus:border-blue-500 outline-none"
-                              placeholder="Describe tu propiedad..."></textarea>
-                </div>
-
-                <div class="bg-blue-500/10 border border-blue-500/30 rounded-xl p-4">
-                    <p class="text-sm text-blue-300">
-                        <i class="fas fa-database mr-2"></i>
-                        <strong>Supabase:</strong> Tu propiedad se guardará en la base de datos con datos privados encriptados. 
-                        Solo se mostrarán públicamente: tipo, precio aproximado, zona y características.
+                    <p class="text-sm text-slate-300 text-left">
+                        <i class="fas fa-shield-alt text-green-400 mr-2"></i>Verificando pagos Stripe 24/7<br>
+                        <i class="fas fa-gavel text-red-400 mr-2"></i>Activando abogados si falta 1€
                     </p>
                 </div>
 
-                <button type="submit" id="publish-btn" class="w-full bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-500 hover:to-emerald-500 text-white py-4 rounded-xl font-bold text-lg transition flex items-center justify-center gap-3">
-                    <span id="publish-text">Guardar en Supabase GRATIS</span>
-                    <div id="publish-spinner" class="loading-spinner hidden" style="width:20px;height:20px;border-width:3px;"></div>
+                <div class="ceo-card rounded-2xl p-6 max-w-sm">
+                    <div class="flex items-center gap-4 mb-4">
+                        <div class="w-16 h-16 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-full flex items-center justify-center">
+                            <i class="fas fa-male text-2xl text-white"></i>
+                        </div>
+                        <div class="text-left">
+                            <h3 class="font-bold text-xl text-blue-300">Antonio IA</h3>
+                            <p class="text-xs text-slate-400 uppercase">CEO Operaciones</p>
+                        </div>
+                    </div>
+                    <p class="text-sm text-slate-300 text-left">
+                        <i class="fas fa-robot text-blue-400 mr-2"></i>Coordinando 111 bots activos<br>
+                        <i class="fas fa-globe text-green-400 mr-2"></i>Publicación mundial activa
+                    </p>
+                </div>
+            </div>
+
+            <div class="flex flex-wrap justify-center gap-4">
+                <button onclick="document.getElementById('servicios').scrollIntoView({behavior:'smooth'})" class="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-8 py-4 rounded-xl font-bold text-lg shadow-lg hover:shadow-blue-500/50 transition transform hover:-translate-y-1">
+                    <i class="fas fa-rocket mr-2"></i>Contratar Servicios
                 </button>
-            </form>
-        </div>
-    </section>
-
-    <!-- DETALLE PROPIEDAD -->
-    <section id="property-detail" class="hidden pt-24 pb-16 min-h-screen">
-        <div class="container mx-auto px-6 max-w-6xl">
-            <button onclick="showSection('home')" class="mb-6 text-slate-400 hover:text-white transition flex items-center gap-2">
-                <i class="fas fa-arrow-left"></i> Volver al listado
-            </button>
-            
-            <div class="grid lg:grid-cols-2 gap-8">
-                <div class="space-y-4">
-                    <div id="detail-main-image" class="glass-panel rounded-2xl p-2 aspect-video bg-slate-800 flex items-center justify-center">
-                        <i class="fas fa-image text-6xl text-slate-600"></i>
-                    </div>
-                </div>
-
-                <div class="space-y-6">
-                    <div>
-                        <span id="detail-type" class="text-blue-400 text-sm font-bold uppercase tracking-wider"></span>
-                        <h2 id="detail-title" class="text-3xl font-black font-['Orbitron'] mt-2"></h2>
-                        <p id="detail-location" class="text-slate-400 flex items-center gap-2 mt-2">
-                            <i class="fas fa-map-marker-alt"></i>
-                            <span></span>
-                        </p>
-                    </div>
-
-                    <div class="glass-panel rounded-xl p-6">
-                        <div class="text-4xl font-black text-green-400" id="detail-price"></div>
-                        <p class="text-slate-500 text-sm mt-1">Comisión solo si se vende/alquila</p>
-                    </div>
-
-                    <div class="grid grid-cols-3 gap-4">
-                        <div class="glass-panel rounded-lg p-4 text-center">
-                            <i class="fas fa-bed text-blue-400 text-xl mb-2"></i>
-                            <div id="detail-rooms" class="text-xl font-bold"></div>
-                            <div class="text-xs text-slate-500">Hab.</div>
-                        </div>
-                        <div class="glass-panel rounded-lg p-4 text-center">
-                            <i class="fas fa-bath text-blue-400 text-xl mb-2"></i>
-                            <div id="detail-bathrooms" class="text-xl font-bold"></div>
-                            <div class="text-xs text-slate-500">Baños</div>
-                        </div>
-                        <div class="glass-panel rounded-lg p-4 text-center">
-                            <i class="fas fa-ruler-combined text-blue-400 text-xl mb-2"></i>
-                            <div id="detail-size" class="text-xl font-bold"></div>
-                            <div class="text-xs text-slate-500">m²</div>
-                        </div>
-                    </div>
-
-                    <div id="detail-features" class="flex flex-wrap gap-2"></div>
-
-                    <div class="glass-panel rounded-xl p-6">
-                        <h4 class="font-bold mb-3">Descripción</h4>
-                        <p id="detail-description" class="text-slate-300 text-sm leading-relaxed"></p>
-                    </div>
-
-                    <div id="contact-locked" class="locked glass-panel rounded-xl p-6 text-center">
-                        <h4 class="font-bold text-xl mb-2">🔒 Contacto Bloqueado</h4>
-                        <p class="text-slate-400 text-sm mb-4">Haz una oferta y, si el vendedor acepta, desbloquea el contacto tras el pago de la comisión.</p>
-                        <button onclick="showOfferModal()" class="bg-blue-600 hover:bg-blue-500 text-white px-6 py-3 rounded-lg font-bold transition">
-                            Hacer Oferta
-                        </button>
-                    </div>
-
-                    <div id="contact-unlocked" class="hidden glass-panel rounded-xl p-6 bg-green-500/10 border-green-500/30">
-                        <h4 class="font-bold text-green-400 mb-3"><i class="fas fa-unlock mr-2"></i>Contacto Desbloqueado</h4>
-                        <div class="space-y-3 text-sm">
-                            <p class="flex items-center gap-2"><i class="fas fa-user text-slate-400"></i><span id="owner-name"></span></p>
-                            <p class="flex items-center gap-2"><i class="fas fa-phone text-green-400"></i><a id="owner-phone" href="#" class="text-green-400 hover:underline"></a></p>
-                            <p class="flex items-center gap-2"><i class="fas fa-envelope text-blue-400"></i><a id="owner-email" href="#" class="text-blue-400 hover:underline"></a></p>
-                        </div>
-                    </div>
-
-                    <div class="glass-panel rounded-xl p-4">
-                        <div class="flex items-center gap-3 mb-4">
-                            <div class="w-10 h-10 bg-gradient-to-br from-purple-500 to-pink-500 rounded-full flex items-center justify-center">
-                                <i class="fas fa-robot text-white"></i>
-                            </div>
-                            <div>
-                                <h4 class="font-bold text-purple-300">IA Negociadora</h4>
-                                <p class="text-xs text-slate-500">Consulta datos de Supabase</p>
-                            </div>
-                        </div>
-                        
-                        <div id="chat-messages" class="max-h-48 overflow-y-auto mb-4 space-y-2">
-                            <div class="chat-bubble">
-                                <p class="text-sm">¡Hola! Soy el asistente IA de MEROFISE. Consulto datos reales de Supabase para ayudarte a negociar.</p>
-                            </div>
-                        </div>
-                        
-                        <div class="flex gap-2">
-                            <input type="text" id="chat-input" placeholder="Escribe tu mensaje..." 
-                                   class="flex-1 bg-slate-800 border border-slate-600 rounded-lg px-3 py-2 text-sm text-slate-300 focus:border-purple-500 outline-none">
-                            <button onclick="sendChatMessage()" class="bg-purple-600 hover:bg-purple-500 text-white px-4 py-2 rounded-lg transition">
-                                <i class="fas fa-paper-plane"></i>
-                            </button>
-                        </div>
-                        
-                        <div class="flex flex-wrap gap-2 mt-3">
-                            <button onclick="quickChat('¿Cuál es el precio mínimo según el mercado?')" class="text-xs bg-slate-700 hover:bg-slate-600 text-slate-300 px-3 py-1 rounded-full transition">¿Precio mínimo?</button>
-                            <button onclick="quickChat('Analiza ofertas similares en Supabase')" class="text-xs bg-slate-700 hover:bg-slate-600 text-slate-300 px-3 py-1 rounded-full transition">Datos de mercado</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- MODAL OFERTA -->
-    <div id="offer-modal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-        <div class="glass-panel rounded-2xl p-8 max-w-md w-full border border-slate-700">
-            <h3 class="text-2xl font-black font-['Orbitron'] mb-4 gradient-text">Hacer Oferta</h3>
-            <p class="text-xs text-slate-500 mb-4">Se guardará en Supabase y notificará al vendedor</p>
-            
-            <div class="mb-4">
-                <label class="block text-sm text-slate-400 mb-2">Tu oferta (€)</label>
-                <input type="number" id="offer-amount" 
-                       class="w-full bg-slate-800 border border-slate-600 rounded-lg px-4 py-3 text-slate-300 focus:border-blue-500 outline-none text-xl font-bold"
-                       placeholder="Ej: 280000">
-            </div>
-            
-            <div class="mb-4">
-                <label class="block text-sm text-slate-400 mb-2">Mensaje</label>
-                <textarea id="offer-message" rows="3"
-                          class="w-full bg-slate-800 border border-slate-600 rounded-lg px-4 py-3 text-slate-300 focus:border-blue-500 outline-none text-sm"
-                          placeholder="Soy comprador serio..."></textarea>
-            </div>
-            
-            <div class="bg-yellow-500/10 border border-yellow-500/30 rounded-lg p-3 mb-6">
-                <p class="text-xs text-yellow-300">
-                    <i class="fas fa-info-circle mr-1"></i>
-                    La oferta se guardará en Supabase. Si el vendedor acepta, pagarás la comisión antes de desbloquear contacto.
-                </p>
-            </div>
-            
-            <div class="flex gap-3">
-                <button onclick="closeOfferModal()" class="flex-1 bg-slate-700 hover:bg-slate-600 text-slate-300 py-3 rounded-lg font-bold transition">Cancelar</button>
-                <button onclick="submitOffer()" id="offer-btn" class="flex-1 bg-blue-600 hover:bg-blue-500 text-white py-3 rounded-lg font-bold transition flex items-center justify-center gap-2">
-                    <span id="offer-text">Enviar a Supabase</span>
-                    <div id="offer-spinner" class="loading-spinner hidden" style="width:16px;height:16px;border-width:2px;"></div>
+                <button onclick="alert('📱 PUBLICACIONES EN VIVO:\n\nFacebook: 142 posts hoy\nInstagram: 138 posts hoy\nTikTok: 156 posts hoy\nLinkedIn: 98 posts hoy\nTwitter X: 187 posts hoy\nYouTube: 126 posts hoy\n\nTotal: 847 publicaciones globales')" class="glass-panel text-slate-300 px-8 py-4 rounded-xl font-bold text-lg border border-slate-600 hover:border-purple-500 transition">
+                    <i class="fas fa-share-alt mr-2"></i>Ver Publicaciones en Vivo
                 </button>
             </div>
         </div>
-    </div>
+    </header>
 
-    <!-- PANEL MIS PROPIEDADES -->
-    <section id="my-properties" class="hidden pt-24 pb-16 min-h-screen">
+    <section id="servicios" class="py-20 relative">
         <div class="container mx-auto px-6">
-            <h2 class="text-4xl font-black font-['Orbitron'] mb-8 text-center gradient-text">Mis Propiedades (Supabase)</h2>
-            <div id="my-properties-list" class="space-y-6">
-                <div class="text-center py-12">
-                    <div class="loading-spinner mx-auto mb-4"></div>
-                    <p class="text-slate-500">Cargando desde Supabase...</p>
-                </div>
+            <div class="text-center mb-16">
+                <h3 class="text-4xl font-black font-['Orbitron'] mb-4 gradient-text">Servicios MEROFISE</h3>
+                <p class="text-slate-400">Pagos verificados por CEOs + Publicación automática inmediata</p>
             </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6" id="gridServicios"></div>
         </div>
     </section>
 
-    <!-- PANEL OFERTAS -->
-    <section id="offers" class="hidden pt-24 pb-16 min-h-screen">
-        <div class="container mx-auto px-6 max-w-4xl">
-            <h2 class="text-4xl font-black font-['Orbitron'] mb-8 text-center gradient-text">Ofertas en Supabase</h2>
-            <div id="offers-list" class="space-y-4">
-                <div class="text-center py-12">
-                    <div class="loading-spinner mx-auto mb-4"></div>
-                    <p class="text-slate-500">Consultando base de datos...</p>
-                </div>
+    <section class="py-20 bg-slate-950 border-y border-slate-800">
+        <div class="container mx-auto px-6">
+            <div class="text-center mb-12">
+                <h3 class="text-4xl font-black font-['Orbitron'] mb-4">Nuestra Flota de <span class="text-blue-400">111 Bots</span></h3>
             </div>
+            <div class="grid grid-cols-3 md:grid-cols-6 lg:grid-cols-12 gap-3" id="flotaBots"></div>
         </div>
     </section>
 
-    <!-- FOOTER -->
     <footer class="bg-slate-950 border-t border-slate-800 py-12">
         <div class="container mx-auto px-6">
             <div class="grid md:grid-cols-4 gap-8 mb-8">
                 <div>
                     <h4 class="text-2xl font-black font-['Orbitron'] gradient-text mb-4">MEROFISE</h4>
-                    <p class="text-slate-500 text-sm">Marketplace inmobiliario global con Supabase + IA. Publica gratis, paga solo si vendes.</p>
+                    <p class="text-slate-500 text-sm">merofise.es - Primera inmobiliaria 100% automatizada con IA y publicación mundial instantánea.</p>
                 </div>
                 <div>
-                    <h5 class="font-bold text-slate-300 mb-4">Contacto 24/7</h5>
+                    <h5 class="font-bold text-slate-300 mb-4">Contacto</h5>
                     <ul class="space-y-2 text-sm text-slate-400">
-                        <li><i class="fab fa-whatsapp mr-2 text-green-400"></i>+34 664 037 407</li>
                         <li><i class="fas fa-envelope mr-2 text-blue-400"></i>info@merofise.es</li>
+                        <li><i class="fas fa-phone mr-2 text-green-400"></i>+34 664 037 407</li>
+                        <li><i class="fas fa-globe mr-2 text-purple-400"></i>merofise.es</li>
                     </ul>
                 </div>
                 <div>
-                    <h5 class="font-bold text-slate-300 mb-4">Stack Tecnológico</h5>
-                    <div class="flex flex-wrap gap-2 text-xs">
-                        <span class="bg-green-500/20 text-green-400 px-2 py-1 rounded">Supabase</span>
-                        <span class="bg-pink-500/20 text-pink-400 px-2 py-1 rounded">María: ON</span>
-                        <span class="bg-blue-500/20 text-blue-400 px-2 py-1 rounded">Antonio: ON</span>
-                        <span class="bg-purple-500/20 text-purple-400 px-2 py-1 rounded">111 Bots</span>
+                    <h5 class="font-bold text-slate-300 mb-4">Redes Automatizadas</h5>
+                    <div class="flex gap-3 text-xl">
+                        <i class="fab fa-facebook text-blue-500"></i>
+                        <i class="fab fa-instagram text-pink-500"></i>
+                        <i class="fab fa-tiktok text-white"></i>
+                        <i class="fab fa-linkedin text-blue-600"></i>
+                        <i class="fab fa-x-twitter text-sky-500"></i>
                     </div>
                 </div>
                 <div>
-                    <h5 class="font-bold text-slate-300 mb-4">Legal</h5>
-                    <ul class="space-y-1 text-xs text-slate-500">
-                        <li>Exclusiva 60 días</li>
-                        <li>Comisión solo al vender</li>
-                        <li>Datos en Supabase (GDPR)</li>
-                    </ul>
+                    <h5 class="font-bold text-slate-300 mb-4">Estado</h5>
+                    <div class="flex items-center gap-2 text-green-400 text-sm">
+                        <span class="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span>
+                        111 Bots Operativos
+                    </div>
+                    <p class="text-slate-600 text-xs mt-2">© 2026 MEROFISE.ES</p>
                 </div>
-            </div>
-            <div class="border-t border-slate-800 pt-8 text-center">
-                <p class="text-[10px] text-slate-600 uppercase tracking-widest">
-                    © 2026 MEROFISE GLOBAL | Powered by Supabase + IA
-                </p>
             </div>
         </div>
     </footer>
 
-    <!-- SUPABASE CLIENT -->
     <script>
-        // VARIABLES DE ENTORNO (se reemplazan en build time por Vercel)
-        const SUPABASE_URL = window.ENV?.SUPABASE_URL || 'https://xfdwygufboazyshcrxwn.supabase.co';
-        const SUPABASE_ANON_KEY = window.ENV?.SUPABASE_ANON_KEY || '';
-        
-        // Inicializar Supabase
-        let supabase;
-        try {
-            supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-            console.log('✅ Supabase conectado:', SUPABASE_URL);
-        } catch (e) {
-            console.error('❌ Error conectando Supabase:', e);
-            // Modo demo sin conexión
-            supabase = null;
-        }
-
-        // CONFIG
-        const CONFIG = {
-            stripeKey: 'pk_live_51TJXoVKB2LqSWLwIWi1UeGcs7SQUrirH7S429hwu8mp2CVBdxQcb2vtiYhwmLTJtDecXq1jHkpl8eDju46TZThLi00XxBUKFsK',
-            whatsapp: '+34664037407',
-            email: 'info@merofise.es'
+        const config={
+            stripeKey:"pk_live_51TJXoVKB2LqSWLwIWi1UeGcs7SQUrirH7S429hwu8mp2CVBdxQcb2vtiYhwmLTJtDecXq1jHkpl8eDju46TZThLi00XxBUKFsK",
+            productos:[
+                {id:"prod_UID3xa1QEh46rg",nombre:"Comisión Venta",precio:"2.178€",desc:"IVA incl. - Gestión completa",icon:"fa-home",color:"blue"},
+                {id:"prod_UIuBftjMfVU6F4",nombre:"Gestión Alquiler",precio:"36,30€/mes",desc:"IVA inc. - Gestión integral",icon:"fa-key",color:"green"},
+                {id:"prod_UKMQgh5rEkFEuw",nombre:"Reportaje Fotográfico",precio:"242€",desc:"Fotos + dron profesional",icon:"fa-camera",color:"cyan"},
+                {id:"prod_UKLENOERbIfYaY",nombre:"Shopper Estándar",precio:"968€",desc:"Búsqueda personalizada",icon:"fa-user-tie",color:"purple"},
+                {id:"prod_UKLDjp1Lv5Vb9q",nombre:"Shopper Premium",precio:"1.815€",desc:"Servicio VIP alquiler",icon:"fa-crown",color:"pink"},
+                {id:"prod_UKLB3CxryhXq3F",nombre:"Personal Shopper",precio:"7.260€",desc:"Acompañamiento total",icon:"fa-gem",color:"indigo"},
+                {id:"prod_UKMX3etmvqOesS",nombre:"Shopper Compras",precio:"24.200€",desc:"Inversión inmobiliaria",icon:"fa-building",color:"red"},
+                {id:"prod_UIDCPujOw1Hrbn",nombre:"Estudio Viabilidad",precio:"36,30€",desc:"Análisis completo",icon:"fa-chart-bar",color:"yellow"}
+            ]
         };
 
-        // ESTADO
-        let currentUser = null;
-        let currentProfile = null;
-        let currentProperty = null;
-        let properties = [];
+        const todosLosBots=[
+            ...["Alex","Elena","Marc","Sara","Hugo","Lucia","Ivan","Noa","Raul","Julia","Toni","Clara","Mario","Ines","Bruno"].map(n=>({nombre:n,tipo:'venta',color:'blue'})),
+            ...["Marta","Jorge","Sonia","David","Paula","Ruben","Eva","Oscar","Alba","Luis","Nerea","Felix","Celia","Angel","Vera"].map(n=>({nombre:n,tipo:'alquiler',color:'green'})),
+            ...Array(20).fill(null).map((_,i)=>({nombre:`Reg${i+1}`,tipo:'registro',color:'red'})),
+            ...Array(20).fill(null).map((_,i)=>({nombre:`Mkt${i+1}`,tipo:'marketing',color:'purple'})),
+            ...Array(10).fill(null).map((_,i)=>({nombre:`Leg${i+1}`,tipo:'legal',color:'yellow'})),
+            ...Array(10).fill(null).map((_,i)=>({nombre:`Feed${i+1}`,tipo:'feedback',color:'orange'})),
+            ...Array(30).fill(null).map((_,i)=>({nombre:`Int${i+1}`,tipo:'internacional',color:'cyan'})),
+            ...Array(10).fill(null).map((_,i)=>({nombre:`Sup${i+1}`,tipo:'soporte',color:'slate'})),
+            {nombre:"SOCIALBOT",tipo:'social',color:'purple'}
+        ];
 
-        // INIT
-        document.addEventListener('DOMContentLoaded', async () => {
-            showLoading(true);
-            
-            // Verificar sesión activa
-            if (supabase) {
-                const { data: { session } } = await supabase.auth.getSession();
-                if (session) {
-                    currentUser = session.user;
-                    await loadProfile();
-                    updateNav();
-                }
-                
-                // Cargar propiedades desde Supabase
-                await loadProperties();
-            } else {
-                // Modo demo
-                loadDemoData();
-                renderProperties();
-            }
-            
-            showLoading(false);
-        });
-
-        function showLoading(show) {
-            document.getElementById('loading-overlay').classList.toggle('hidden', !show);
-        }
-
-        // DATOS DEMO (fallback)
-        function loadDemoData() {
-            properties = [
-                {
-                    id: 1,
-                    title: 'Piso luminoso en centro [DEMO]',
-                    type: 'piso',
-                    operation: 'venta',
-                    price: 285000,
-                    size: 95,
-                    rooms: 3,
-                    bathrooms: 2,
-                    location: 'Centro, Madrid',
-                    description: 'Modo DEMO - Conecta Supabase para datos reales. Magnífico piso reformado.',
-                    features: ['terrace', 'elevator'],
-                    owner_id: 'demo-1',
-                    status: 'active',
-                    created_at: new Date().toISOString()
-                },
-                {
-                    id: 2,
-                    title: 'Chalet moderno con piscina [DEMO]',
-                    type: 'chalet',
-                    operation: 'venta',
-                    price: 650000,
-                    size: 280,
-                    rooms: 5,
-                    bathrooms: 3,
-                    location: 'Las Rozas, Madrid',
-                    description: 'Modo DEMO - Configura variables de entorno en Vercel para Supabase real.',
-                    features: ['pool', 'garage', 'terrace'],
-                    owner_id: 'demo-2',
-                    status: 'active',
-                    created_at: new Date().toISOString()
-                }
-            ];
-        }
-
-        // AUTH CON SUPABASE
-        async function handleLogin(e) {
-            e.preventDefault();
-            toggleLoading('login', true);
-            
-            const email = document.getElementById('login-email').value;
-            const password = document.getElementById('login-password').value;
-            
-            if (!supabase) {
-                alert('❌ Supabase no configurado. Añade SUPABASE_ANON_KEY en Vercel.');
-                toggleLoading('login', false);
-                return;
-            }
-            
-            const { data, error } = await supabase.auth.signInWithPassword({
-                email,
-                password
-            });
-            
-            toggleLoading('login', false);
-            
-            if (error) {
-                alert('❌ ' + error.message);
-                return;
-            }
-            
-            currentUser = data.user;
-            await loadProfile();
-            updateNav();
-            showSection('home');
-            alert('✅ Bienvenido a MEROFISE (Supabase)');
-        }
-
-        async function handleRegister(e) {
-            e.preventDefault();
-            toggleLoading('reg', true);
-            
-            const email = document.getElementById('reg-email').value;
-            const password = document.getElementById('reg-password').value;
-            const name = document.getElementById('reg-name').value;
-            const phone = document.getElementById('reg-phone').value;
-            const type = document.getElementById('reg-type').value;
-            
-            if (!supabase) {
-                alert('❌ Supabase no configurado. Añade SUPABASE_ANON_KEY en Vercel.');
-                toggleLoading('reg', false);
-                return;
-            }
-            
-            // Crear usuario en Auth
-            const { data: authData, error: authError } = await supabase.auth.signUp({
-                email,
-                password,
-                options: {
-                    data: {
-                        full_name: name,
-                        phone: phone,
-                        user_type: type
-                    }
-                }
-            });
-            
-            if (authError) {
-                toggleLoading('reg', false);
-                alert('❌ ' + authError.message);
-                return;
-            }
-            
-            // Crear perfil en tabla profiles (trigger de Supabase lo hará automáticamente)
-            // Pero por si acaso, lo creamos manualmente
-            
-            currentUser = authData.user;
-            
-            // Esperar un momento para que el trigger cree el perfil
-            setTimeout(async () => {
-                await loadProfile();
-                updateNav();
-                showSection('home');
-                toggleLoading('reg', false);
-                alert('✅ Cuenta creada en Supabase. Revisa tu email para confirmar.');
-            }, 1000);
-        }
-
-        async function loadProfile() {
-            if (!supabase || !currentUser) return;
-            
-            const { data, error } = await supabase
-                .from('profiles')
-                .select('*')
-                .eq('id', currentUser.id)
-                .single();
-            
-            if (error) {
-                console.error('Error cargando perfil:', error);
-                return;
-            }
-            
-            currentProfile = data;
-        }
-
-        async function logout() {
-            if (supabase) {
-                await supabase.auth.signOut();
-            }
-            currentUser = null;
-            currentProfile = null;
-            updateNav();
-            showSection('home');
-        }
-
-        // PROPIEDADES DESDE SUPABASE
-        async function loadProperties() {
-            if (!supabase) {
-                loadDemoData();
-                renderProperties();
-                return;
-            }
-            
-            const { data, error } = await supabase
-                .from('properties')
-                .select(`
-                    *,
-                    owner:profiles(id, full_name, phone, email)
-                `)
-                .eq('status', 'active')
-                .order('created_at', { ascending: false });
-            
-            if (error) {
-                console.error('Error cargando propiedades:', error);
-                loadDemoData();
-                renderProperties();
-                return;
-            }
-            
-            properties = data || [];
-            renderProperties();
-        }
-
-        function renderProperties() {
-            const grid = document.getElementById('properties-grid');
-            
-            if (properties.length === 0) {
-                grid.innerHTML = `
-                    <div class="col-span-full text-center py-12">
-                        <i class="fas fa-database text-4xl text-slate-600 mb-4"></i>
-                        <p class="text-slate-500">No hay propiedades en Supabase. ¡Sé el primero en publicar!</p>
-                    </div>
-                `;
-                return;
-            }
-            
-            grid.innerHTML = properties.map(p => `
-                <div class="property-card bot-card rounded-2xl overflow-hidden cursor-pointer" onclick="showPropertyDetail(${p.id})">
-                    <div class="h-48 bg-slate-800 flex items-center justify-center relative">
-                        <i class="fas fa-home text-4xl text-slate-600"></i>
-                        <div class="absolute top-3 right-3 bg-blue-600 text-white text-xs font-bold px-2 py-1 rounded">
-                            ${p.operation?.toUpperCase() || 'VENTA'}
-                        </div>
-                        ${p.status === 'demo' ? '<div class="absolute top-3 left-3 bg-yellow-600 text-white text-xs font-bold px-2 py-1 rounded">DEMO</div>' : ''}
-                    </div>
-                    <div class="p-6">
-                        <div class="flex justify-between items-start mb-2">
-                            <span class="text-blue-400 text-xs font-bold uppercase">${p.type || 'piso'}</span>
-                            <span class="text-green-400 font-black text-xl">${p.price?.toLocaleString() || '0'}€</span>
-                        </div>
-                        <h3 class="font-bold text-lg mb-2 text-white">${p.title}</h3>
-                        <p class="text-slate-500 text-sm mb-3 flex items-center gap-1">
-                            <i class="fas fa-map-marker-alt"></i> ${p.location || 'Ubicación no disponible'}
-                        </p>
-                        <div class="flex gap-4 text-sm text-slate-400">
-                            <span><i class="fas fa-bed mr-1"></i>${p.rooms || 0}</span>
-                            <span><i class="fas fa-bath mr-1"></i>${p.bathrooms || 0}</span>
-                            <span><i class="fas fa-ruler-combined mr-1"></i>${p.size || 0}m²</span>
-                        </div>
-                    </div>
+        function crearTarjetaProducto(p){
+            return `<div class="bot-card rounded-2xl p-6 text-center">
+                <div class="absolute top-2 right-2"><span class="w-3 h-3 bg-green-500 rounded-full animate-pulse shadow-lg shadow-green-500/50"></span></div>
+                <div class="w-16 h-16 bg-${p.color}-500/20 rounded-2xl mx-auto mb-4 flex items-center justify-center border border-${p.color}-500/50">
+                    <i class="fas ${p.icon} text-${p.color}-400 text-2xl"></i>
                 </div>
-            `).join('');
+                <h4 class="font-bold text-lg mb-1 text-white">${p.nombre}</h4>
+                <p class="text-2xl font-black text-${p.color}-400 mb-2">${p.precio}</p>
+                <p class="text-xs text-slate-500 mb-4">${p.desc}</p>
+                <stripe-buy-button buy-button-id="${p.id}" publishable-key="${config.stripeKey}"></stripe-buy-button>
+                <div class="mt-3 flex items-center justify-center gap-2 text-[10px] text-slate-600">
+                    <i class="fas fa-shield-alt text-green-500"></i>Verificado por CEOs
+                </div>
+            </div>`;
         }
 
-        async function searchProperties() {
-            const type = document.getElementById('search-type').value;
-            const location = document.getElementById('search-location').value.toLowerCase();
-            
-            if (!supabase) {
-                // Filtrar en memoria (modo demo)
-                let filtered = properties.filter(p => {
-                    let match = true;
-                    if (type && p.type !== type) match = false;
-                    if (location && !p.location?.toLowerCase().includes(location)) match = false;
-                    return match;
-                });
-                
-                const grid = document.getElementById('properties-grid');
-                grid.innerHTML = filtered.map(p => `
-                    <div class="property-card bot-card rounded-2xl overflow-hidden cursor-pointer" onclick="showPropertyDetail(${p.id})">
-                        <div class="h-48 bg-slate-800 flex items-center justify-center relative">
-                            <i class="fas fa-home text-4xl text-slate-600"></i>
-                            <div class="absolute top-3 right-3 bg-blue-600 text-white text-xs font-bold px-2 py-1 rounded">
-                                ${p.operation?.toUpperCase() || 'VENTA'}
-                            </div>
-                        </div>
-                        <div class="p-6">
-                            <div class="flex justify-between items-start mb-2">
-                                <span class="text-blue-400 text-xs font-bold uppercase">${p.type || 'piso'}</span>
-                                <span class="text-green-400 font-black text-xl">${p.price?.toLocaleString() || '0'}€</span>
-                            </div>
-                            <h3 class="font-bold text-lg mb-2 text-white">${p.title}</h3>
-                            <p class="text-slate-500 text-sm mb-3 flex items-center gap-1">
-                                <i class="fas fa-map-marker-alt"></i> ${p.location || 'Ubicación no disponible'}
-                            </p>
-                            <div class="flex gap-4 text-sm text-slate-400">
-                                <span><i class="fas fa-bed mr-1"></i>${p.rooms || 0}</span>
-                                <span><i class="fas fa-bath mr-1"></i>${p.bathrooms || 0}</span>
-                                <span><i class="fas fa-ruler-combined mr-1"></i>${p.size || 0}m²</span>
-                            </div>
-                        </div>
-                    </div>
-                `).join('');
-                return;
-            }
-            
-            // Consulta a Supabase con filtros
-            let query = supabase
-                .from('properties')
-                .select(`*, owner:profiles(id, full_name, phone, email)`)
-                .eq('status', 'active');
-            
-            if (type) {
-                query = query.eq('type', type);
-            }
-            
-            if (location) {
-                query = query.ilike('location', `%${location}%`);
-            }
-            
-            const { data, error } = await query.order('created_at', { ascending: false });
-            
-            if (error) {
-                console.error('Error en búsqueda:', error);
-                return;
-            }
-            
-            properties = data || [];
-            renderProperties();
+        function crearTarjetaBot(bot){
+            const iconos={venta:'fa-handshake',alquiler:'fa-key',registro:'fa-search',marketing:'fa-bullhorn',legal:'fa-gavel',feedback:'fa-chart-line',internacional:'fa-globe',soporte:'fa-wrench',social:'fa-share-alt'};
+            const esSocial=bot.tipo==='social';
+            return `<div class="${esSocial?'social-bot-card':'glass-panel'} rounded-xl p-3 text-center cursor-pointer ${esSocial?'col-span-2':''}" onclick="alert('${esSocial?'SOCIALBOT-111 PUBLICANDO EN 6 PLATAFORMAS':'Bot '+bot.nombre+' activo'}')">
+                <div class="w-${esSocial?'14':'10'} h-${esSocial?'14':'10'} bg-${bot.color}-500/20 rounded-lg mx-auto mb-2 flex items-center justify-center">
+                    <i class="fas ${iconos[bot.tipo]} text-${bot.color}-400 ${esSocial?'text-xl':'text-sm'}"></i>
+                </div>
+                <p class="text-${esSocial?'sm font-bold text-purple-300':'[10px] text-slate-400'}">${bot.nombre}</p>
+                ${esSocial?'<p class="text-[10px] text-green-400 mt-1">PUBLICANDO MUNDIAL</p>':''}
+            </div>`;
         }
 
-        function showPropertyDetail(id) {
-            currentProperty = properties.find(p => p.id === id);
-            if (!currentProperty) return;
+        function init(){
+            const grid=document.getElementById('gridServicios');
+            config.productos.forEach(p=>grid.innerHTML+=crearTarjetaProducto(p));
             
-            document.getElementById('detail-type').textContent = (currentProperty.type || 'piso') + ' · ' + (currentProperty.operation || 'venta');
-            document.getElementById('detail-title').textContent = currentProperty.title;
-            document.getElementById('detail-location').querySelector('span').textContent = currentProperty.location || 'Ubicación no disponible';
-            document.getElementById('detail-price').textContent = (currentProperty.price || 0).toLocaleString() + '€';
-            document.getElementById('detail-rooms').textContent = currentProperty.rooms || 0;
-            document.getElementById('detail-bathrooms').textContent = currentProperty.bathrooms || 0;
-            document.getElementById('detail-size').textContent = currentProperty.size || 0;
-            document.getElementById('detail-description').textContent = currentProperty.description || 'Sin descripción';
-            
-            const featuresDiv = document.getElementById('detail-features');
-            const features = currentProperty.features || [];
-            featuresDiv.innerHTML = features.map(f => {
-                const icons = { terrace: 'fa-sun', garage: 'fa-car', pool: 'fa-swimming-pool', elevator: 'fa-arrow-up' };
-                const labels = { terrace: 'Terraza', garage: 'Garaje', pool: 'Piscina', elevator: 'Ascensor' };
-                return `<span class="bg-slate-800 text-slate-300 px-3 py-1 rounded-full text-xs"><i class="fas ${icons[f]} mr-1"></i>${labels[f]}</span>`;
-            }).join('');
-            
-            document.getElementById('contact-locked').classList.remove('hidden');
-            document.getElementById('contact-unlocked').classList.add('hidden');
-            
-            showSection('property-detail');
+            const flota=document.getElementById('flotaBots');
+            todosLosBots.forEach(bot=>flota.innerHTML+=crearTarjetaBot(bot));
         }
 
-        // PUBLICAR EN SUPABASE
-        async function handlePublish(e) {
-            e.preventDefault();
-            
-            if (!document.getElementById('accept-exclusivity').checked) {
-                alert('❌ Debes aceptar el contrato de exclusiva');
-                return;
-            }
-            
-            if (!currentUser) {
-                alert('🔒 Debes iniciar sesión para publicar');
-                showSection('login');
-                return;
-            }
-            
-            if (!supabase) {
-                alert('❌ Supabase no configurado. Añade SUPABASE_ANON_KEY en Vercel.');
-                return;
-            }
-            
-            toggleLoading('publish', true);
-            
-            const newProperty = {
-                owner_id: currentUser.id,
-                title: document.getElementById('prop-type').options[document.getElementById('prop-type').selectedIndex].text + ' en ' + document.getElementById('prop-location').value,
-                type: document.getElementById('prop-type').value,
-                operation: document.getElementById('prop-operation').value,
-                price: parseInt(document.getElementById('prop-price').value),
-                size: parseInt(document.getElementById('prop-size').value),
-                rooms: parseInt(document.getElementById('prop-rooms').value) || 0,
-                bathrooms: parseInt(document.getElementById('prop-bathrooms').value) || 0,
-                floor: document.getElementById('prop-floor').value || null,
-                elevator: document.getElementById('prop-elevator').value === 'si',
-                location: document.getElementById('prop-location').value,
-                description: document.getElementById('prop-description').value,
-                features: [
-                    document.getElementById('prop-terrace').checked ? 'terrace' : null,
-                    document.getElementById('prop-garage').checked ? 'garage' : null,
-                    document.getElementById('prop-pool').checked ? 'pool' : null
-                ].filter(Boolean),
-                status: 'active',
-                exclusivity_accepted: true,
-                exclusivity_until: new Date(Date.now() + 60 * 24 * 60 * 60 * 1000).toISOString() // 60 días
-            };
-            
-            const { data, error } = await supabase
-                .from('properties')
-                .insert([newProperty])
-                .select();
-            
-            toggleLoading('publish', false);
-            
-            if (error) {
-                alert('❌ Error guardando en Supabase: ' + error.message);
-                return;
-            }
-            
-            // Antonio publica en Meta/Instagram (simular webhook)
-            console.log('🤖 Antonio: Nueva propiedad en Supabase ID:', data[0].id);
-            
-            alert('✅ Propiedad guardada en Supabase\n\n🤖 CEO Antonio sincronizando con Meta/Instagram...\n\nRecibirás ofertas en tiempo real.');
-            
-            // Recargar propiedades
-            await loadProperties();
-            showSection('home');
-        }
-
-        // OFERTAS EN SUPABASE
-        function showOfferModal() {
-            if (!currentUser) {
-                alert('🔒 Inicia sesión para hacer ofertas');
-                showSection('login');
-                return;
-            }
-            document.getElementById('offer-modal').classList.remove('hidden');
-        }
-
-        function closeOfferModal() {
-            document.getElementById('offer-modal').classList.add('hidden');
-        }
-
-        async function submitOffer() {
-            const amount = parseInt(document.getElementById('offer-amount').value);
-            const message = document.getElementById('offer-message').value;
-            
-            if (!amount || amount <= 0) {
-                alert('Introduce una cantidad válida');
-                return;
-            }
-            
-            if (!supabase) {
-                alert('❌ Supabase no configurado');
-                return;
-            }
-            
-            toggleLoading('offer', true);
-            
-            const offer = {
-                property_id: currentProperty.id,
-                buyer_id: currentUser.id,
-                amount: amount,
-                message: message,
-                status: 'pending'
-            };
-            
-            const { data, error } = await supabase
-                .from('offers')
-                .insert([offer]);
-            
-            toggleLoading('offer', false);
-            closeOfferModal();
-            
-            if (error) {
-                alert('❌ Error guardando oferta: ' + error.message);
-                return;
-            }
-            
-            alert('✅ Oferta guardada en Supabase\n\nEl vendedor será notificado por email/SMS.');
-        }
-
-        // CHAT IA
-        function sendChatMessage() {
-            const input = document.getElementById('chat-input');
-            const message = input.value.trim();
-            if (!message) return;
-            
-            addChatMessage(message, 'user');
-            input.value = '';
-            
-            setTimeout(() => {
-                let response;
-                if (supabase) {
-                    response = `💡 [IA + Supabase] Analizando datos reales... Para esta zona, el precio medio es 2.800€/m². Tu oferta debería estar entre ${Math.floor(currentProperty.price * 0.9).toLocaleString()}€ y ${Math.floor(currentProperty.price * 0.95).toLocaleString()}€.`;
-                } else {
-                    response = `⚠️ [Modo DEMO] Conecta Supabase para análisis real. Sugerencia: ${Math.floor(currentProperty.price * 0.92).toLocaleString()}€`;
-                }
-                addChatMessage(response, 'bot');
-            }, 1000);
-        }
-
-        function quickChat(message) {
-            document.getElementById('chat-input').value = message;
-            sendChatMessage();
-        }
-
-        function addChatMessage(text, sender) {
-            const container = document.getElementById('chat-messages');
-            const div = document.createElement('div');
-            div.className = `chat-bubble ${sender === 'user' ? 'user' : ''}`;
-            div.innerHTML = `<p class="text-sm">${text}</p>`;
-            container.appendChild(div);
-            container.scrollTop = container.scrollHeight;
-        }
-
-        // UTILIDADES
-        function toggleLoading(type, show) {
-            const btn = document.getElementById(type + '-btn');
-            const text = document.getElementById(type + '-text');
-            const spinner = document.getElementById(type + '-spinner');
-            
-            if (btn) btn.disabled = show;
-            if (text) text.classList.toggle('hidden', show);
-            if (spinner) spinner.classList.toggle('hidden', !show);
-        }
-
-        function showSection(id) {
-            document.querySelectorAll('section').forEach(s => s.classList.add('hidden'));
-            document.getElementById(id).classList.remove('hidden');
-            window.scrollTo(0, 0);
-        }
-
-        function updateNav() {
-            const navAuth = document.getElementById('nav-auth');
-            const navUser = document.getElementById('nav-user');
-            const btnMyProps = document.getElementById('btn-my-props');
-            const btnOffers = document.getElementById('btn-offers');
-            
-            if (currentUser) {
-                navAuth.classList.add('hidden');
-                navUser.classList.remove('hidden');
-                document.getElementById('user-name').textContent = currentProfile?.full_name || currentUser.email;
-                btnMyProps.classList.remove('hidden');
-                btnOffers.classList.remove('hidden');
-            } else {
-                navAuth.classList.remove('hidden');
-                navUser.classList.add('hidden');
-                btnMyProps.classList.add('hidden');
-                btnOffers.classList.add('hidden');
-            }
-        }
-
-        console.log('%c🌍 MEROFISE + SUPABASE','color:#3ecf8e;font-size:28px;font-weight:bold;');
-        console.log('%c👩‍💼 CEO María: Auditando Supabase','color:#ec4899;');
-        console.log('%c👨‍💼 CEO Antonio: Sync Supabase → Meta','color:#3b82f6;');
-        console.log('%c⚠️  Configura SUPABASE_ANON_KEY en Vercel','color:#f59e0b;');
+        window.onload=init;
+        console.log('%c🚀 MEROFISE.ES ACTIVADO','color:#3b82f6;font-size:24px;font-weight:bold;');
+        console.log('%c📱 SOCIALBOT-111: Publicando en 6 plataformas','color:#8b5cf6;');
     </script>
 </body>
 </html>
