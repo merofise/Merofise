@@ -1,1091 +1,176 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MEROFISE | Inmobiliaria IA Global - 111 Bots + Publicación Mundial</title>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="https://js.stripe.com/v3/"></script>
-<script src="https://cdn.tailwindcss.com"></script>
-<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-<style>
-body{background:#050508;color:#e2e8f0;font-family:'Inter',sans-serif;overflow-x:hidden;}
-.gradient-text{background:linear-gradient(135deg,#3b82f6 0%,#8b5cf6 50%,#ec4899 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
-.glass-panel{background:rgba(15,23,42,0.7);backdrop-filter:blur(20px);border:1px solid rgba(59,130,246,0.3);}
-.neon-border{box-shadow:0 0 20px rgba(59,130,246,0.5),inset 0 0 20px rgba(59,130,246,0.1);}
-.bot-card{background:linear-gradient(145deg,rgba(15,23,42,0.9),rgba(30,41,59,0.9));border:1px solid rgba(59,130,246,0.3);transition:all 0.4s cubic-bezier(0.4,0,0.2,1);}
-.bot-card:hover{transform:translateY(-10px) scale(1.02);border-color:#3b82f6;box-shadow:0 20px 40px rgba(59,130,246,0.4);}
-.social-bot-card{background:linear-gradient(135deg,rgba(139,92,246,0.2),rgba(59,130,246,0.2));border:2px solid rgba(139,92,246,0.5);animation:glow 3s ease-in-out infinite alternate;}
-.ceo-card{background:linear-gradient(135deg,rgba(139,92,246,0.2),rgba(59,130,246,0.2));border:2px solid rgba(139,92,246,0.5);animation:glow 3s ease-in-out infinite alternate;}
-@keyframes glow{from{box-shadow:0 0 10px #3b82f6,0 0 20px #3b82f6;}to{box-shadow:0 0 20px #8b5cf6,0 0 30px #8b5cf6;}}
-@keyframes marquee{0%{transform:translateX(0%);}100%{transform:translateX(-100%);}}
-.animate-marquee{display:inline-block;animation:marquee 20s linear infinite;}
-.scan-line{position:fixed;top:0;left:0;width:100%;height:2px;background:linear-gradient(90deg,transparent,#3b82f6,transparent);animation:scan 4s linear infinite;pointer-events:none;z-index:9999;}
-@keyframes scan{0%{transform:translateY(-100%);}100%{transform:translateY(100vh);}}
-.grid-bg{background-image:linear-gradient(rgba(59,130,246,0.05) 1px,transparent 1px),linear-gradient(90deg,rgba(59,130,246,0.05) 1px,transparent 1px);background-size:50px 50px;}
-.platform-badge{display:inline-flex;align-items:center;gap:6px;padding:4px 12px;border-radius:20px;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;}
-.platform-facebook{background:rgba(24,119,242,0.2);color:#1877f2;border:1px solid rgba(24,119,242,0.3);}
-.platform-instagram{background:rgba(225,48,108,0.2);color:#e1306c;border:1px solid rgba(225,48,108,0.3);}
-.platform-tiktok{background:rgba(0,0,0,0.5);color:#fff;border:1px solid rgba(255,255,255,0.3);}
-.platform-linkedin{background:rgba(10,102,194,0.2);color:#0a66c2;border:1px solid rgba(10,102,194,0.3);}
-.platform-twitter{background:rgba(29,161,242,0.2);color:#1da1f2;border:1px solid rgba(29,161,242,0.3);}
-.live-pulse{animation:pulse 2s cubic-bezier(0.4,0,0.6,1) infinite;}
-@keyframes pulse{0%,100%{opacity:1;}50%{opacity:0.5;}}
-.property-card{background:linear-gradient(145deg,rgba(15,23,42,0.95),rgba(30,41,59,0.95));border:1px solid rgba(139,92,246,0.3);transition:all 0.3s ease;}
-.property-card:hover{transform:translateY(-5px);box-shadow:0 20px 40px rgba(139,92,246,0.3);border-color:#8b5cf6;}
-.hidden-section{display:none !important;}
-.visible-section{display:block !important;}
-.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.8);backdrop-filter:blur(10px);z-index:9999;display:flex;align-items:center;justify-content:center;}
-.modal-content{background:linear-gradient(145deg,rgba(15,23,42,0.95),rgba(30,41,59,0.95));border:2px solid rgba(139,92,246,0.5);border-radius:20px;padding:2rem;max-width:600px;width:90%;max-height:90vh;overflow-y:auto;}
-.btn-primary{background:linear-gradient(135deg,#3b82f6,#8b5cf6);color:white;padding:0.75rem 1.5rem;border-radius:12px;font-weight:bold;transition:all 0.3s ease;border:none;cursor:pointer;}
-.btn-primary:hover{transform:translateY(-2px);box-shadow:0 10px 30px rgba(59,130,246,0.5);}
-.btn-secondary{background:rgba(30,41,59,0.8);color:#e2e8f0;padding:0.75rem 1.5rem;border-radius:12px;font-weight:bold;transition:all 0.3s ease;border:1px solid rgba(139,92,246,0.3);cursor:pointer;}
-.btn-secondary:hover{background:rgba(139,92,246,0.2);border-color:#8b5cf6;}
-.input-field{width:100%;background:rgba(15,23,42,0.8);border:1px solid rgba(139,92,246,0.3);border-radius:12px;padding:1rem;color:#e2e8f0;font-size:1rem;transition:all 0.3s ease;}
-.input-field:focus{outline:none;border-color:#8b5cf6;box-shadow:0 0 20px rgba(139,92,246,0.3);}
-.typing-indicator{display:flex;gap:4px;align-items:center;padding:1rem;}
-.typing-dot{width:8px;height:8px;background:#8b5cf6;border-radius:50%;animation:typing 1.4s infinite ease-in-out both;}
-.typing-dot:nth-child(1){animation-delay:-0.32s;}
-.typing-dot:nth-child(2){animation-delay:-0.16s;}
-@keyframes typing{0%,80%,100%{transform:scale(0);}40%{transform:scale(1);}}
-.chat-message{background:rgba(30,41,59,0.8);border-radius:12px;padding:1rem;margin:0.5rem 0;border-left:3px solid #8b5cf6;}
-.chat-message.user{border-left-color:#3b82f6;background:rgba(59,130,246,0.1);}
-.offer-card{background:linear-gradient(145deg,rgba(15,23,42,0.9),rgba(30,41,59,0.9));border:1px solid rgba(34,197,94,0.3);border-radius:16px;padding:1.5rem;margin:1rem 0;transition:all 0.3s ease;}
-.offer-card:hover{border-color:#22c55e;box-shadow:0 10px 30px rgba(34,197,94,0.2);}
-</style>
-</head>
-<body class="grid-bg">
-<div class="scan-line"></div>
+PK{�\"�8h8-Y�MEROFISE_v2_0_FINAL.html�}ko#W�����;��ŷ�VK-ٔD�ح�E�m��辬�$�U�b�C��G�$�dv<3�l��&^/��b�d0_�E���?���so=n�HJ�ǞAd�D޺�s���{����;�NZd���;�ѩ1��1;���[w�<1�eH-�9����^q-'?2�m�.46���#�i8̀�Mu��*��V�_��fh�F���P�mVK���Tf+�6v4Ӑz;l��;-R$��-m�,
+��̞�k��(�V*o�v��L'#�P��V+�g:61��T4
+��I��V��J)ß�ˉi��4vd�vsYt)���2���01�6m^��/]Mg�s��
+�1K���д����c�I��y�2^�'Jv����S�Q��
+��|�9�Uj��]�tMf��?�YL���̺�P��ĥF@���2雺nN"
+Ɩ9f�s��3���,m�~JNم���v�G��e�Be\v��x��p��}��S)���<�omD�|��3���e@2��٬��9(�j��AvO����g�.��&�gk�8�L4�aֺB-Uj`���.����gbI[wDk�![�6��	��6µ�|P����(I�j�p��t:�X��(��ؖ�\Q����Vl�����փ���rh1��=��Љn�j�ɰ�2}A�e]��e��lUkk޷�f@I��;͓o4����r�T��j�s�h�F������5sEwL{�f�w�
+�R��Js��xT~��ږ���;��q(I�B�KC��k�ye���z��^{�l.s{�Ӥ9a�9���5����\��2�6��0P��q���˫��R�XY��Ρ
+�s�0́��t��<��b�vi��S|X��v��4�r���i�e�`��T*����J��x��4Z�'Xc��A
+U��:�ܴ't�K �+�N�u�$�-�i=<;m�6wI(:�P�f�ki�eY5GT3��������S5,��k�I^���!��X!��)�+5�	� $�8H�j�O����_'�}��Iަ�]����-g�G�l������J/VLݴ��5�i{��`���*�~���Ϙ�?v��.Z��j����3��߯�Y
+Tj�{Q���e��X55@Ġ4��p�H/]��}$�� ��(�F}T	g.l����l�7����m��=M)��+�Y�Jie�T����2�.��7cE���-��3��[Ŭ*|ڕ�`���cV�Mks�u������Y��@�vV'�Ƽn�җ�(����ħ'@�2���^�${T9X����!�1/�Շ�+N��PSUflH��H�������e�5�j��p��kS�n�����Y���-����
+2d����^���N��
+�y��j{j��G/
+tj��EŦo
+z�P|���W��6x4�b_ӑY h�P�����,����6uM�@��:�j�n�K�p�u�!�&ß�=U|˄���qj'��e^��U�e`QU�#�K�X���������Q��|܇�z.�fz�9Ű���k�I�}��� �9\X<�l8����o��m?�dX�J�ҫ�����Rk�C�ڽL, �"��uP��uÊu5u��!�g�����P�X"��prC���>�pۧҦ�YYp[&Cꀎ7.�#
+�a��	3�C�x.�x[R������#���xInx�D+�%��ey˰�.��~��ˍzِ�ek�`V
+�Y��MZXD�1(�~�)��:�;|�<���O���qͬj�_�흀�{�^s�
+��1U@	�BҨ��,�	���<9������$%MB�+&Nj	�	n�Z���p��U�l�q�Qt�踎�]�Z%\E�EM�.-
+x�����	�wY�f��Ϝ�
+v5´a�����`P}k����I}7T<U�h�f.��Qۄg�*�M-��U��`�G�𧃄��X!�b���
+�"�
+��vS�_	�6���H�Xu����r�wH�G
+�b�/pZaEÜXtLƗŚ�8ށf ��(�^{��.k&d�~[�`�\C.�L��Dƈ������ާE�!#��m8m�����i�t�O�;��0�s�r�ѕ!S΋�f)`A���M���i��=q7��Ќ��@7{�$�
+��m6o�K�>�"f��k5��E���prz�m=l������:�v�`�~����9��l>��u����|�G����
+�Bv��M����6�@S�&H��^����l
+�B�U�nW"tۈ�-,*N��ˍ�
+�Ju����U�ӕt��ٔ�pmG�_�v&��0���p�4b����'FLk	v=H��4n�V��@�t��?��S�"�BM�,Z�o�#�o@�L<\�2����K��F����	xs欆��֧�@M�X�z:l�,?`_V8�� 2=��In]n���j��g/��c�#u���Y�0�P��k�_rjt�cf)�����&���։9a�~�;X�m�ă�Ay�خ��W��fL�w#�	�
+�K�݇9��P�ᾠT���2i�#�u|t�>j��y��?�*N��tx�.@�|e���֨��j���y��l6D{n(h��U�r[;�G��ns�8��YP�Yb`�)�����t�ᡩR������s��mǲ�*`]�&[6R�{H�  Bk���b���MP�Ә�Aq	��(0B٨(�N�B�Y�D�,>��e�X<�0�g��9�H3�â��J��/ʼ�c��52�k!e{qaAʷ��1��+��:�Ǒ*2׈(ɡT� �ϱ8�ÿ,��!�-��V��.}���Ce49h���6Ȣ&io����v38��m�ó���T�T��e����h�l��?߃��@|^�%s�zu0�P&9�+�#b+BY�å�������?9ZHY�D�P��+�%C,(ڣE1�¢�C[q<����">��5} D�9n�zEb���,�ͨt�<��	RP�b�6�vu=��"䓷�����(���ӧ)�v��<c\vQɸ���IyE�
+�i/(J/�R�<�����ʂ*�O�QuT#�?�n�0��+?8z"uk�{k���w�'Ox��!S5�F��΂b}�ۃa�
+*��_.J��Y@\��qߴ@7���t��n�T�7��W���b�S�%�P�m�a
+�Nҙ��=F�f��!ќ�oq�>Km��Ɉ�\oNQ'�E�$�>s_tQ��+[=X��|�2�SF�lc���f�첑�b�xO!����
+^�jl��)��u-�g�=|�iܮC`=��q��)�"�ar:9�L�?SA��*		Ԑ����vo���!}����_����0mX���j�&��(���lך6D���آ����������Pe�`���!��b#k��A�#TǀX;7�A�{�A�{����>��w7	w����;�xNG��4�\Yܺ[;���L�
+f��AD"Θ"�\1���
+��xl�����������z��O��Ɵe"elݰ�P�|K�1C)���3�}����m?iw$�<iu���2���Tsx�����@3{̐�k�0�y��MW5����כ8M%��,hB��R���*��0��c�@%D�Ęo��[�~|Și^%�h]������N�����9�9=`������������>�Esq��'�O9Z���r�h񓶿*�KN!����g���wC����
+���փM}u�^����_��K�&���vc���6ɞf�����O#�X�I�g���2Ϟ;$v�-�������\�M����/��������i����؈'9��w�=;=����$]&��1q�C�P������o
+��MD����|L�b|�G_��GԢ���.�.�M�1�Sp�шG��f�p���|K��y�*Y΂����tw�[GO����|ڌ~�֝G�{��Ȳ�/��a؁�;;Q��v�b9���)ű�F���f�z�k�;ޅ.EP�o$�|{>�5�F&�p�*��Xp���}
+�_�Fb{�((V"��>?YA�6GqLX�ʭ�+q�e��a��00�c�}��`���<0'�EC�H��	g�n}�����J�Y���Ρ|�(�3A��a,|:�@�H'����zׯ~�J��'���mu�?�F��ﾂm]�:P���wb��_8��CXO,�*�J��n��<��f
+����-
+t�����C�L4���"�x�$8&:8�_q?J���QoP	ʾ@����D�C"�n�
+�C����c♪?���3�۬ĿX1g%ߚ���38 �%�yA_yCf��[��HH0��(H�˪?����}��o~��h^:�0�ٻLJ:�6l4���*I�w�%�2Ys{7�9�m�5*�]���҈��+ �@ށ�����YO��y����~:���e���
+ÝR���O��bЙ��M�%��I�͘�ͼˁ@�B�_����'�����)�0�PO����wM�~�Y�i�"�7����Y23vN��P���F">=�2��}�s��A�b��@��>�$�2յ�]$�ns1숻S�$�3ѓ�zkK$����E�a��M3DV������r)I/�-�G;޳�'틍�	�E��m���Eҍ	�9�cl����&�gE���KL)�������H�I�4l�7�0�5T�ϫ��3���m����l
+^�=Xc�8q���ֈj`��VY���u&���1��к%��"�"?�����닍�8
+�"Mŵד��=0]���eo9n����P�Y���;|�<
+�E/]�b�a��\a�6��]�c�sT�>	J~80��g����m��Q�X����Rq�3���_�_��#�t�}����%�������,�`~�E�H���O�dR�I�4�Ą�-^���D	�j�&���V{q�I�d�<�ͥDDĀ8'���zi�c����3=wu���O�2���$�l[��1�#�#�M5Ǵi<|;kC�$w�e����$4����hh��6TrL��yh�����JwÄNw�!shٷ��	���X�Zė��.i|���
+'}G�㐝㣽�� ���a0�T���4���N/�91��9�:�ۉ:A�:'�ń:w%�
+��6O�6)�L�����k�]������T�2�2�%�L$��s��ݞ�C���ɜ?��hz֨v�o>y�];x�y�`�~O�����}��Y��:+��É�6�v�l��w�^���>NF�G�.S�Y}�>����we���;<�*����g����y>�+oI~r-yv��@�-�K5X��8%�:�*)��9_��?�J�Qo��ի�^��F�k�J����k��+JouU��=�⤌M`]���m��k`�9y��(������lv��������>�q�_>�����������[wU����������{��l���|��Mv�;��椹���Bm��{|0�4G�^s�>��T������Y����.��r��{�{�{���C�z0=��<z�x<Ug8پtg�=?�t��<�������������U���u�i���v|18�>�o>�}�+��{ӏ�Q�Ym�EG�V�����k�
+��xR��̏�.��/ƪR-�&P�>�_������>|��ѓ}8=Z����i�h�8��&��<9��u��t��#�;xyvv�T�TN��Ɨ�j��^�x�t��z�|�QC9e-�m�_���6~�a�1�*������ݵ���óa}w|��y���݆u����1��S���g��ߝ^L������;W�`����q��5����i7o؉�NTDS�;	��C>���0G=�+�)�[�,�kA��~z��
+�1B�#�urm�\�^'�Zx�k���V�e"���?��������1[:�kr�)��F(�bC��z�46���6�!����m۴��^��nl�O�:m��R�*��h0Tī��F�����wfr@�����o�I|����i���Qr��������կ��j_P#9�)C�&����Oi�)Kzt�G�+o�#Gqz�$m�S��i�B�-0��~�6�#WO�(�H4�����_��W?�������O�D�4�4총
+d�5A�����_�
+������7���k���1�qr�#�]��CЏ�S�Pm�#��	�R#���-M0�ߤ�߶�)�;���є�x���[~�`�;m܉�� �3Er����5-�$':}���������#��nG�AƠ7����U��IYg�v\U����Z�Mr�^hj*h�&��/n@;����҆<�͝�	���?��\��RdI��p�I���~����5����=�
+��`��@&���W��#ۊ`�	5`�1E�
+h5���_�Fl�TE��q_}��t�CK�}-���p�t��7�3U`KY�!��YX�H#�_�Ǵ�����h�-�t�4ʻS���2���M@;e�7`�Hխ�ƀ��;��2M�����Oӆ{��4���a �Z�
+�����Y76��G�v����3Dܰ�9��dGGG.�A5wKTU[x�q��3�Y����w�y`�q��Ia�lnyv�c]J6��i^Ľ�ւ�сA.����+/�X�q-}������F�3
+~Sg%��_��_�n=x��rT3�U�"
+u�!)�%i��~������$*��aw�ID>nג��1f�a��f���u�"̌��^�x
+,����[�ן��g1W�@��c̯����2�n��H�Y�?y��K���
+���~�����2b�>IBy���h<vVO~t�!5r�����ǫ��P�i�h�u
+�{,9An�O�5�[5�Mg�ZjA�����&�oEeS���ɗ��p<�痤���019�2�oHmǖ������-�ؿ��>�9�e�穧
+A�Y
+�.Gx!<�'.���X�*4�\'o��` ?���W�"�<��pE�܅�I�楍�s�EM��=����o��[t��u-;�Zp��P��y��S����8��t�������fّR�Jf��t�g�+���a�"����,X*�s��q������'�ω�?id%x��������r���.����̸�S�mJ��LZ(�4��]=+��%�#+?WɴK��G�P����X�Eo�e�u��*@�ȫ
+�����ߌO�"�m]�{<�y�o�V)�g��py�Z1;p�W�_a[tt�4��jGğ�Gt\�Q/}���i�_��Q"I���>������ϗJ/L�(��K��a�2�AUa0�,���"�ϻӑ���s�	�D����5�W�řK~)G2�RbDR�>��ESJ�5Ed�g!
+����J��$�Ǡ{�ؖl�$�%(���[a
+C��i
+�CӢ���,��x�)Eh&��o����d�f1M��<dn���@#��!=�3k�Q�s�|r�����ZQ3/���L���&	��sZ:Ïۗm����f��H_������Ƣ�'�pxٶ
+KK�V�~����Ow9
+��[�醏g�`��/F�`���y*ry�d�U�`>~�S���)�����C
+��i���tî�����s^aC��q��Ae�	�M+�����UW���ǹ#c*�J$\2�l���l��Ow+�Y��z�N�w���(�q6�3�B��-�TB��r
+&_�$�Yp��J�ua^'���2���`�p,,���9F��R��x���B�f����s�c67fvk��Z�W"ͮ>�\OWwd`�X��-[(�|�"~&ǋ��O����h,�����@-�M�QSV��/���qyH:��e��h���h�9ʰ�/ӱV�%�M��4��s�&��w�1`��LO�{>�b�r��MF�cY�mP~aC��j�[P�ɣ����1���ġYر~�.�z
+	�_D��SE����
+EĲ(�,��;dF�B~f��%y�=Zx�z��;޾^���qQ�GP�ɕ�I�ݴ,�J�p��|�x���,�h�,H<�I��Ư$.���ZF����Y/����ޫ�k��F�o[F�P��,�8��>� ;NjR�d�m�@J�s���g�I�?랻���3���a�����
+��x<�ޣ�l˲s1aZ�����N��CDN�g!�������Ќ^~�(�1�dҵ�j�<��$�k�*��=4魫�7!�װ�ϹQj%.V��~�K���}�U,��Ws�q�(P�r����qϹ�� SY�s��K.���g<$"�fw�R"��b���9*%��J��A��p�ͽ��!+V�d�XpR�%K�M~馷 2�����"W6=
+!�uZȮTM5cp������8w-���`���B^��}��EU`���+���j#�bH>ğ�������������e^F��/��)T���/��%nK��P8�k�v��F��6y��-�bV}D��ϟ��̺=��.����-��#���+jdE�~p�v��1��b-��_���D}�5���/9��O����I�\o�%.vE��,I��e ��)��᝽��`�g�ً���i��+�Gtľ��z����zf�K
+�Z
+�hqB���ȯ-
+B�B)��w{���@|�n���0��ן��M6�"���H)Ó�����3���OP���[KL�����I��E�7���_=��	�X�A��^�W�8�]�w{�3�/���u��
+�W�j�J%���5��9�=u��"�í�'9K��b]�ƗO`ZU۹���&"e�
+�F���j�ȈD�F~�kB���Q���w����=i�@{Lǀh�3FTſ@��r��q0�q�/'�	Or��*x�m5c��������В1/\_��"z\�_2�U]����-߆�;g�	g��`��4�@�
+&�_9#[\"�m�u���"���\t�5	Y0�~��.�S�7���S�X	~��O^��Ur���R腉�:�dN���)�:���k���f��F�c��C��ENϢ�7���O~G8��s !F�s���Z"]j���q���>�Q�������]����Ov-��*r��RN��6��cշy�d�삦(�]����bG�L���a����{����x�}�у���P�ZG^{�k��4�HV&!�`k#W篑�8�?� 
+J�U�l"a��(Z@�<�#��6���(^{����j�I�H�A�_~&d�7}��2E�i �x����{%
+5!�J2�&}��9�:x��,�h���sX�WM0�He�\�v��e��~��i�� ސ�Q��_ |�qa��q�4Oމ/G!�����J�k���]�[��AL!����6w��a��aQ�s���8L=�4
+��\�/�r�<��y�g���·�W 6@(���پ�S"
+Vw����_���?1:楯P�'��Ap�ן��o��>���@`L`�����3�9�����ߤ��*aW-ہ���!�3�m���$0�3��?����
+<z�wm�9�$f�ο����5�����#h��D_��_��3��%�NG@�o�Z?�o�G�X��!�᜙�������F�O`��I�����8e�ݎ��ؑ�,^GM�,��p�����f&����V<F�, ��Y�Z���׿�Q[��Ily/�#xoŇ0`���
+����6�q��Vo�x��V�xX���L�}2��Z�R~�w"��MJ��Weo��-�
+�3���@�z�J~�<�n�OtRf���I)<?V!*�o� ���y'x�$H��K�	i~�<�:���f�u��.��L*S�dDQ(��臻JS�B1�m���,,�ю�1�(��r��=K���{����	���!��3���\��6�i�RX���8��7_3C1Uvv�Ƌ�P�p
+�<ǋ��w@q*1fR�򁮖�y�̡KDv��W��ăY	l/��
+�g��+��ó���9܈r�����dǨ�\����(P����Ü��ب ��#N��
+�71���N��;;�e��!g�������׻�����d��e9�m�dK��O�+��g��B�j�te���2�W<�B$�G覾���-��U����͂*��9��ܦ�q�G?J�%d;��zS����-I3�6'�`�e#h�͟<Z���yJ��7؉�H�\��+.�
 
-<!-- Ticker -->
-<div class="bg-slate-900/95 border-b border-blue-500/30 py-2 overflow-hidden whitespace-nowrap fixed w-full z-50 top-0">
-  <div class="animate-marquee inline-block text-xs font-mono text-blue-300 uppercase tracking-widest">
-    MEROFISE.ES ACTIVO || 111 BOTS + SOCIALBOT-111 || CEOs MARÍA & ANTONIO SUPERVISANDO || PUBLICANDO: Facebook ✓ Instagram ✓ TikTok ✓ LinkedIn ✓ Twitter X ✓ YouTube ✓ || PAGOS STRIPE VERIFICADOS || TODO SISTEMA OPERATIVO 99.99%
-  </div>
-</div>
+j�?�S�YL
+S�O��}�� ��w�d���af�ᕂY�1+�$��^������^\tI4��|��I��
+�����4�a�"y0�Rr�yc)�S�{��ݰ��R�b<����[�2m�r6\���;n�.�SWw
+���	��F=y!Cy���^�t@�cU0�N�j�*������Sq�,=�'j+����X�������:���|�ǩ6��V"_~�_��@,��s���m�7� i��v0Wۓv�y±�^�`��񛆜G�̓{�����f�B�j��2�{#(]
+<�R��¸e�����i�U�`Ia�
+;��	��c|����O�˾v�CM��TgHʑ�}~�}�s��F\��K
+����������s,����1���$��pɎ��3[N��7��6e�)�{��]h
+�%퀃�t�3�t�t��#o��)b�Rj9�_(`�ڲ���2l"�2�mU�Qt���;�s�UA$E*�vӲ���nR�^�E�X���?S0WHsQhЮ�ć��P~��,C��>�>�v�C�K:3F��E����kT"R-�x܄�Zz�u�B�����8L�Z�Ƞ-E���{�
+�4�JHmK	I��H�P)Uj�9��:�LE����t�������bW�RM����7���jHX�^��O�B�=LYD!�����37�x.�"�r�.��/����3Ċ����}�ѲDYT�%���(�0]�H�W���Ò0�ޏ��n8ZmD[~k�A*S������� �7�q����ba�@���j�2^�tI�n"JU�s�N����bu�uc���\M�O4	��Pา��D�*Y#x��.b1b�i$L�\���-&N6��ݱ��D�`X ���MK)���x��a�o)0�^x��Y'�;ЌBGh֖60ˇ��:�n�Sp�|����0�U��~�oօ����a�x�d���/r�����6�z�c��x+q��T�-
+�W���J���G"��!V�!㙟��O�U/�%zﮖb��C.*}��
+El����jE����h��+��0k�H�f`���Q��� -���%	���8���{�7�lO%�=A8�7٬-�E��R�j�oy_j��'�hZ��k,X�v��Y���-,iן隭�cL`��v��+k����Dg�GןaJ��p�"iy�вf�"�<�s#���4�'sŇ��	$\�jt!Dd�#*?�k�r:ď���">����2��ʈ^$�{ew�F%?Ng�6r�NԬ�	 ��p712���6���o���"��C��>��8�Cx��i���ާ��Mi"KiG���ޗ�lV=��W!<(�G������PK9�\��BU�
+�-security/domain-lock.js�Z�r���S N�%G⊢l9�,Mi�R6�DW�����wA�r����D��n���"�L��^4��Unz]�I_�y�`��?�e�e2�w��9��w���~������_�CGÓѾ3�����9��?���y�n���@c*$Y`�r&��җ?�e���>p��a�%���!I���1%�����HP���,">��$x�¨�����=`���2�hA8�RAl"��iL�����&����	���ԕ���
+�����菎���''����c4PZ�Gg���PP���n��@�ɼ��>[V�i ���E��X��^lZ.��5�Y�9�.�m�+�D�tzY��g.��L�r�f�݆�6���y��.�h0e?�����x��ֶ�mo�ko=��~`�!��/Ce�_�K��������i���~�;>;#c�_�$�n(A�[��	,�lq�$B�v[��q7ќ�S�-��~uoڴѣ��/�G���
+FGL5bS�C�E�
+��;�sk�a����)l��	݈s���hI�-me_5�V6����Q�J&+��]�_��yD4
+�k&zT?:E�wL��Tu<���`�B
 
-<!-- Navigation -->
-<nav class="glass-panel sticky top-8 z-40 border-b border-slate-700/50">
-  <div class="container mx-auto px-6 py-4 flex justify-between items-center">
-    <div class="flex items-center gap-4 cursor-pointer" onclick="showSection('home')">
-      <div class="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center shadow-lg shadow-blue-500/30">
-        <i class="fas fa-building text-white text-xl"></i>
-      </div>
-      <div>
-        <h1 class="text-3xl font-black font-['Orbitron'] gradient-text tracking-wider">MEROFISE</h1>
-        <p class="text-[10px] text-slate-400 font-bold uppercase tracking-tightest">
-          <span class="text-green-400">●</span> merofise.es | 111 Bots Activos
-        </p>
-      </div>
-    </div>
-    <div class="hidden md:flex items-center gap-4">
-      <span class="platform-badge platform-facebook"><i class="fab fa-facebook-f"></i> LIVE</span>
-      <span class="platform-badge platform-instagram"><i class="fab fa-instagram"></i> LIVE</span>
-      <span class="platform-badge platform-tiktok"><i class="fab fa-tiktok"></i> LIVE</span>
-      <button id="authBtn" onclick="openAuthModal()" class="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-4 py-2 rounded-lg text-sm font-bold transition flex items-center gap-2">
-        <i class="fas fa-user"></i> <span id="authBtnText">Entrar</span>
-      </button>
-      <a href="https://wa.me/34664037407" target="_blank" class="bg-green-600 hover:bg-green-500 text-white px-4 py-2 rounded-lg text-sm font-bold transition flex items-center gap-2">
-        <i class="fab fa-whatsapp"></i> +34 664 037 407
-      </a>
-    </div>
-  </div>
-</nav>
+ģX��I
+�=�F�='؃σ;}tzt3������]z~Y�~=z�r�ݻ�F�D�=�q^��S��e�B�w����>S��/���`!vI}�{
+f]t�^�w��B��Og�ڮ��� ۚ:��.�l�����<*B�̦>Y�E���('n��`��"���,����L��)�U�(la���ݽڱ盩���xZ=�����D�;w�~���<ܘo��ҩ������l{w����#��Ã�`R;+��5B7?0�noo�X��
+!&�?ǁ�-���F�GQ8�����]�y�~:����9ϭ��T�-�BЍr�kf�Fw���:���V\=��W��b��
+Xz�hа֑ռz:�:�t:Et^����T�ʹW�&��Z��^ؕ��r���rn�_i��4�s���'\b�K�p3�
+}	�18 ��z7,Goze|�8f����2+O[�[_�n�nŒ�gU�%]�&���%`IM[2g<qf�fu�Jޛi�
+�9�ap9;{Y�~�,�J�9[�o
+9g����n�
+D��Bk�63��t��O r��{����L"P=:���Vi���˶1��A�}m%_��������=98����j�{2L^ݚ���s�'�!: �h6#��|"��↔B�oD*���د���%����	D�4#�e�Y"�wwj$��VNa��M逖1�=��35���xm�$1�ZQ�^��\��[�3�2&֛]��vY=�XI�,#�Ǿˉ�cP����i������Ǝ�d{	�C��U����BY$W{����gN�j�x"�gV=��Z��U[��)����ʔ���	����O]�3��y�Ùf�7���*��6,��.$�F��يIy��9QCd�#_�\��2��O1�Z� .��l��n!��zسJ�8����`�W׭P�ǉ�	0��}�&�?#�`��ڥ���7;�/��6�ө\s
+O'OO�;Ն(DC����_������!�E�zJf�d
+p�p���V�	�^)0�D
+�z�L�ҼN��E�m�ڮڶ+�o�<�l�h��d�ϋ7����ȸ�\d4�F"ޫ�9,�E�q,���F|~U��2�r{�5��rG�m�b��k�{;��ˌ�ۿ������������q���ѣ�4_���U�l�;�vҴ�6g6�bY�J�P�p��~���%Y<��#F�]OӕؓL:��)���X��N�^g2)�ц�Z-X�W�*'V	��"T49��*)�R�(�4�ZȪBL^K1�p������U��Ef캪��D%7븄
+��Dq��]�n������y|���A�t4��t<vǷ*��U����|R��&��n�46��k��gr"Ik�OS�OC���z�_u����9�X[��x7�\��n<(}��m�ߨ�ޡ���Xv-(�i���ُ=�l�O4RI�Ux�и>�7bqf���o��5��x�j��r���A��Mr)5���1���$ol��i��KvD�4�U�10�|e��}q��
+;�t��6���;�!X�={��3Xr��Vbv�uL񅰭�8�b�#�;�Y�\Z�T�3nT�����a!W�ی#A��y�&v���g������'�a�f3��g{.e8��{����Z�bJk��Q�U��cU����3��X_�aIhN}���޶m#�)ξc07��txp�s���"r�r�������#�]}��g�Mg@c��i��5�蹩�l�MՙIv������:ӵ]!Nc�+�K�Lи�>��'LJ�P����Ok����T��g�hC�zo�������LQ;���Kt��%�����\tч��5�_��I�m?�XM43z�2��u�\���%k\\�L�>�����$��{�@�{o�Y2��Y�eH֑�ao]=-�"!����K�Ò����k�)Ef���k��k]�g��k]�b�*J�Ci�nD�{�8�ٚ*�!��3��ȣ���n����xtlC_A�pU�s$Y4���4b��Y�a����#1od*4���*���d�V W,J4K�EfLA�9�G@f���t��Z�2��YI��o�����n:ta�?�����Z�ڪ'�˸����p<�b����`��jЋ�.����Y���9�%��Nh7�����0Q���`�������h	�j:��p�Y=u�]$�O=�
+�"X�B��u��6����T�j��i�B��^�9N��bm�����6z|2�'��ӓ�Oz�����0$��eV�K��|���R�\�$�,���I!R�J�hQ�D&��q�
+�f��*�����dƥ��;��d'\�d�z�~Ȗ���e��Kr]D-S��e� 
+xVV�ee5h)���ㆬ2����`����'ԋ/��j��s��,�Z9�˗�/���0�́�O�;���	 �|��a+NK�G�}��B��'q���U�T�~)je��u��95w�$	H�,���,���#����IS�bi�@���Wmyң��a�5C�mc>��"�3W'Uf�r����L%�尵U��Aa��DRfC�5�ǐ{��W�( H�E��%�#�3��
+IA_
+�ˆ�S���"��c����_��+��Q��T���lV_K+E�ڣ�b�j��q���b�JX��&x��kNۍ+�y����m��y{�]��ߣ���*��z߶�ؠP�΋<
+�VU�I�s�Y��)�s�)�	�S�0����;L��4�W6���CI}ޜB7 �w9�j[��c*�aŝ,s�������@u��)g��b�y
+n\�rË�q��:D>f>�$5�ӎΞim�Hy�ywˉg�uђu�U��n5���	��j�I�PK��\a��\Dscripts/install_windows.bat�YKs�����+Ʋ��%ć��r-�A!�%��]EY�AHJ)W9�JrqŎ��l�8�!>$U��/�����Bz� A.���!<�������t7?�ڐ"��Ǵ�f���T*�M׈1��~��٧H6��NmT��#Y�P)�ax�����AT�P$�1�@��É�<����9���ߢ�E�]F�*#
+���Q��)���ኽ�*B,�ˡ6�I�h��,l��C�c��cb��6W+fb��8�������1�G�ض�]�ll"_�ڊ������7�!�Ѩ5rH�Ě�T��4H��!��c�)�v��§`m�ؾ��}�61�Ϻ���k���})3��v�c��VϿ�-��vF�i��cxv"�l��ֶ�1�V9`ea��d`ͯ~푙:]!�lz�5FA��G:�Q!w��X�3����Sdp�ck��:6a׷�L�F��.@)BC�olF�"p�j�*ձp� � �r���!O��;�$ � L�`L`l^Ǎ������s�����B=��)��!6�,��hІlN�';���W.�%[6A�!c�����z�j�u�{�I	鴐�����ގ0vH%k.;"�:�Qp��K<Xl{���9���Fmxo��NUpU��3��m�^*m_�����SF#�#a��%6��t��Z��.[̫���rh�Ͼ�s��O��FȴƁ<0�M<�e�:���cS#���7�>w�/����Aw
+�Lz�~:e؜��_[�&/��-�M�*Ԫ}�!�Z)DE	.�%�Ӳo�g��^lJU.>��.D��N0�FW�u�VM�V�&��B�
+S��O��,�Go�6�*j����ɨ
+A�pj����t�兂���y͡M]exm22��×s
+/#�'P(\�g{v�r����C������u�ā+j�J�s��H��ȁ���cl�>q���Pko���{���X��ծT�����;r���Q�OM@������N*{'u?Լ3T�#Zʻ1�Z�S�NIl*b�ޭ�*y�q�NT��/R"h��`
+�P���[�.��5�z��"�\�u�b�gU����ө���ă�C�.��H�����Q�c��J�����0���[���uL0D�W7��$�<��l�u�[o�˲R�e�{*=>�F]�Lpw7�<yDۧ�L�J锧r��[�Xs�+gpڥ��N��p�L���ggZ/3a��p:.7OXk��җ��e��⥻��<o�$�z4˷N���WUQ�
 
-<!-- Main Content Container -->
-<main id="mainContent">
-
-<!-- Home Section -->
-<section id="home" class="visible-section">
-  <header class="relative min-h-screen flex items-center justify-center pt-24 pb-16">
-    <div class="container mx-auto px-6 text-center relative z-10">
-      <div class="inline-flex items-center gap-2 bg-blue-500/10 border border-blue-500/30 rounded-full px-4 py-2 mb-6 animate-pulse cursor-pointer" onclick="showSection('properties')">
-        <span class="w-2 h-2 bg-green-400 rounded-full live-pulse"></span>
-        <span class="text-blue-300 text-sm font-mono">merofise.es | SISTEMA GLOBAL ACTIVO</span>
-      </div>
-      <h2 class="text-5xl md:text-7xl font-black font-['Orbitron'] mb-6 leading-tight">
-        La <span class="gradient-text">Revolución</span><br>
-        <span class="text-white">Inmobiliaria Mundial</span>
-      </h2>
-      <p class="text-slate-400 text-xl md:text-2xl mb-8 max-w-3xl mx-auto">
-        110 bots negociando + 1 bot publicando en TODO el mundo automáticamente
-      </p>
-      
-      <!-- Social Bot Card -->
-      <div class="mb-12 max-w-4xl mx-auto">
-        <div class="social-bot-card rounded-3xl p-8 relative overflow-hidden">
-          <div class="flex items-center justify-center gap-4 mb-6">
-            <div class="w-20 h-20 bg-gradient-to-br from-purple-500 via-pink-500 to-blue-500 rounded-2xl flex items-center justify-center animate-pulse">
-              <i class="fas fa-robot text-3xl text-white"></i>
-            </div>
-            <div class="text-left">
-              <h3 class="text-2xl font-bold text-purple-300">SOCIALBOT-111</h3>
-              <p class="text-sm text-slate-400">Bot de Publicación Mundial</p>
-            </div>
-          </div>
-          <div class="grid grid-cols-3 md:grid-cols-6 gap-4 mb-6">
-            <div class="glass-panel rounded-xl p-3 text-center border border-blue-500/30">
-              <i class="fab fa-facebook text-2xl text-blue-500 mb-2"></i>
-              <p class="text-xs text-slate-400">Facebook</p>
-              <span class="text-[10px] text-green-400">● ACTIVE</span>
-            </div>
-            <div class="glass-panel rounded-xl p-3 text-center border border-pink-500/30">
-              <i class="fab fa-instagram text-2xl text-pink-500 mb-2"></i>
-              <p class="text-xs text-slate-400">Instagram</p>
-              <span class="text-[10px] text-green-400">● ACTIVE</span>
-            </div>
-            <div class="glass-panel rounded-xl p-3 text-center border border-white/30">
-              <i class="fab fa-tiktok text-2xl text-white mb-2"></i>
-              <p class="text-xs text-slate-400">TikTok</p>
-              <span class="text-[10px] text-green-400">● ACTIVE</span>
-            </div>
-            <div class="glass-panel rounded-xl p-3 text-center border border-blue-600/30">
-              <i class="fab fa-linkedin text-2xl text-blue-600 mb-2"></i>
-              <p class="text-xs text-slate-400">LinkedIn</p>
-              <span class="text-[10px] text-green-400">● ACTIVE</span>
-            </div>
-            <div class="glass-panel rounded-xl p-3 text-center border border-sky-500/30">
-              <i class="fab fa-x-twitter text-2xl text-sky-500 mb-2"></i>
-              <p class="text-xs text-slate-400">Twitter X</p>
-              <span class="text-[10px] text-green-400">● ACTIVE</span>
-            </div>
-            <div class="glass-panel rounded-xl p-3 text-center border border-red-500/30">
-              <i class="fab fa-youtube text-2xl text-red-500 mb-2"></i>
-              <p class="text-xs text-slate-400">YouTube</p>
-              <span class="text-[10px] text-green-400">● ACTIVE</span>
-            </div>
-          </div>
-          <div class="grid grid-cols-3 gap-4 text-center">
-            <div class="bg-slate-800/50 rounded-lg p-3">
-              <div class="text-2xl font-black text-purple-400" id="postsHoy">847</div>
-              <div class="text-[10px] text-slate-500 uppercase">Posts Hoy</div>
-            </div>
-            <div class="bg-slate-800/50 rounded-lg p-3">
-              <div class="text-2xl font-black text-blue-400">6</div>
-              <div class="text-[10px] text-slate-500 uppercase">Plataformas</div>
-            </div>
-            <div class="bg-slate-800/50 rounded-lg p-3">
-              <div class="text-2xl font-black text-green-400">15</div>
-              <div class="text-[10px] text-slate-500 uppercase">Idiomas</div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- CEOs -->
-      <div class="flex flex-wrap justify-center gap-6 mb-12">
-        <div class="ceo-card rounded-2xl p-6 max-w-sm">
-          <div class="flex items-center gap-4 mb-4">
-            <div class="w-16 h-16 bg-gradient-to-br from-purple-500 to-pink-500 rounded-full flex items-center justify-center">
-              <i class="fas fa-female text-2xl text-white"></i>
-            </div>
-            <div class="text-left">
-              <h3 class="font-bold text-xl text-purple-300">María IA</h3>
-              <p class="text-xs text-slate-400 uppercase">CEO Financiera</p>
-            </div>
-          </div>
-          <p class="text-sm text-slate-300 text-left">
-            <i class="fas fa-shield-alt text-green-400 mr-2"></i>Verificando pagos Stripe 24/7<br>
-            <i class="fas fa-gavel text-red-400 mr-2"></i>Activando abogados si falta 1€
-          </p>
-        </div>
-        <div class="ceo-card rounded-2xl p-6 max-w-sm">
-          <div class="flex items-center gap-4 mb-4">
-            <div class="w-16 h-16 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-full flex items-center justify-center">
-              <i class="fas fa-male text-2xl text-white"></i>
-            </div>
-            <div class="text-left">
-              <h3 class="font-bold text-xl text-blue-300">Antonio IA</h3>
-              <p class="text-xs text-slate-400 uppercase">CEO Operaciones</p>
-            </div>
-          </div>
-          <p class="text-sm text-slate-300 text-left">
-            <i class="fas fa-robot text-blue-400 mr-2"></i>Coordinando 111 bots activos<br>
-            <i class="fas fa-globe text-green-400 mr-2"></i>Publicación mundial activa
-          </p>
-        </div>
-      </div>
-
-      <div class="flex flex-wrap justify-center gap-4">
-        <button onclick="showSection('properties')" class="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-8 py-4 rounded-xl font-bold text-lg shadow-lg hover:shadow-blue-500/50 transition transform hover:-translate-y-1">
-          <i class="fas fa-search mr-2"></i>Ver Propiedades
-        </button>
-        <button onclick="openPublishModal()" class="glass-panel text-slate-300 px-8 py-4 rounded-xl font-bold text-lg border border-slate-600 hover:border-purple-500 transition">
-          <i class="fas fa-plus mr-2"></i>Publicar Propiedad
-        </button>
-        <button onclick="openIaAssistant()" class="glass-panel text-slate-300 px-8 py-4 rounded-xl font-bold text-lg border border-slate-600 hover:border-pink-500 transition">
-          <i class="fas fa-brain mr-2"></i>Asistente IA
-        </button>
-      </div>
-    </div>
-  </header>
-</section>
-
-<!-- Properties Section -->
-<section id="properties" class="hidden-section pt-24 pb-16">
-  <div class="container mx-auto px-6">
-    <div class="text-center mb-12">
-      <h3 class="text-4xl font-black font-['Orbitron'] mb-4 gradient-text">Propiedades Disponibles</h3>
-      <p class="text-slate-400">Gestión completa con verificación de CEOs</p>
-    </div>
-    
-    <!-- Filters -->
-    <div class="glass-panel rounded-2xl p-6 mb-8">
-      <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <select id="filterType" class="input-field" onchange="loadProperties()">
-          <option value="">Todos los tipos</option>
-          <option value="venta">Venta</option>
-          <option value="alquiler">Alquiler</option>
-        </select>
-        <select id="filterCategory" class="input-field" onchange="loadProperties()">
-          <option value="">Todas las categorías</option>
-          <option value="casa">Casa</option>
-          <option value="piso">Piso</option>
-          <option value="atico">Ático</option>
-          <option value="local">Local</option>
-        </select>
-        <input type="number" id="filterMinPrice" placeholder="Precio mín €" class="input-field" onchange="loadProperties()">
-        <input type="number" id="filterMaxPrice" placeholder="Precio máx €" class="input-field" onchange="loadProperties()">
-      </div>
-    </div>
-
-    <div id="propertiesGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-      <!-- Properties loaded dynamically -->
-    </div>
-  </div>
-</section>
-
-<!-- Dashboard Section -->
-<section id="dashboard" class="hidden-section pt-24 pb-16">
-  <div class="container mx-auto px-6">
-    <div class="text-center mb-12">
-      <h3 class="text-4xl font-black font-['Orbitron'] mb-4 gradient-text">Mi Panel</h3>
-      <p class="text-slate-400">Gestiona tus propiedades y ofertas</p>
-    </div>
-    
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-      <!-- My Properties -->
-      <div class="glass-panel rounded-2xl p-6">
-        <h4 class="text-2xl font-bold mb-4 text-purple-300"><i class="fas fa-home mr-2"></i>Mis Propiedades</h4>
-        <div id="myPropertiesList" class="space-y-4">
-          <!-- Loaded dynamically -->
-        </div>
-        <button onclick="openPublishModal()" class="btn-primary w-full mt-4">
-          <i class="fas fa-plus mr-2"></i>Nueva Propiedad
-        </button>
-      </div>
-      
-      <!-- My Offers -->
-      <div class="glass-panel rounded-2xl p-6">
-        <h4 class="text-2xl font-bold mb-4 text-blue-300"><i class="fas fa-handshake mr-2"></i>Mis Ofertas</h4>
-        <div id="myOffersList" class="space-y-4">
-          <!-- Loaded dynamically -->
-        </div>
-      </div>
-    </div>
-
-    <!-- Bot Panel -->
-    <div class="glass-panel rounded-2xl p-6 mt-8">
-      <h4 class="text-2xl font-bold mb-4 text-green-300"><i class="fas fa-robot mr-2"></i>Panel de Bots</h4>
-      <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4" id="botPanel">
-        <!-- Bots loaded dynamically -->
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- Personal Shopper Section -->
-<section id="shopper" class="hidden-section pt-24 pb-16">
-  <div class="container mx-auto px-6">
-    <div class="text-center mb-12">
-      <h3 class="text-4xl font-black font-['Orbitron'] mb-4 gradient-text">Personal Shopper IA</h3>
-      <p class="text-slate-400">Encuentra tu propiedad ideal con ayuda de nuestros CEOs IA</p>
-    </div>
-    
-    <div class="glass-panel rounded-2xl p-8 max-w-4xl mx-auto">
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-        <div>
-          <label class="block text-sm font-bold mb-2 text-slate-300">Presupuesto máximo</label>
-          <input type="number" id="shopperBudget" class="input-field" placeholder="€">
-        </div>
-        <div>
-          <label class="block text-sm font-bold mb-2 text-slate-300">Ubicación preferida</label>
-          <input type="text" id="shopperLocation" class="input-field" placeholder="Ciudad o zona">
-        </div>
-        <div>
-          <label class="block text-sm font-bold mb-2 text-slate-300">Tipo de propiedad</label>
-          <select id="shopperType" class="input-field">
-            <option value="casa">Casa</option>
-            <option value="piso">Piso</option>
-            <option value="atico">Ático</option>
-            <option value="local">Local comercial</option>
-          </select>
-        </div>
-        <div>
-          <label class="block text-sm font-bold mb-2 text-slate-300">Habitaciones mínimas</label>
-          <input type="number" id="shopperRooms" class="input-field" min="1" value="2">
-        </div>
-      </div>
-      
-      <div class="mb-8">
-        <label class="block text-sm font-bold mb-2 text-slate-300">Requisitos adicionales</label>
-        <textarea id="shopperNotes" class="input-field h-32" placeholder="Describe tus necesidades específicas..."></textarea>
-      </div>
-
-      <div class="flex gap-4">
-        <button onclick="submitShopperRequest()" class="btn-primary flex-1">
-          <i class="fas fa-search mr-2"></i>Buscar con IA
-        </button>
-        <button onclick="openStripeCheckout('shopper')" class="btn-secondary">
-          <i class="fas fa-crown mr-2"></i>Contratar Premium
-        </button>
-      </div>
-
-      <div id="shopperResults" class="mt-8 hidden">
-        <h4 class="text-xl font-bold mb-4 text-purple-300">Resultados del análisis IA</h4>
-        <div id="shopperResultsContent" class="space-y-4"></div>
-      </div>
-    </div>
-  </div>
-</section>
-
-</main>
-
-<!-- Auth Modal -->
-<div id="authModal" class="modal-overlay hidden-section">
-  <div class="modal-content">
-    <div class="flex justify-between items-center mb-6">
-      <h3 class="text-2xl font-bold gradient-text">Acceder a MEROFISE</h3>
-      <button onclick="closeAuthModal()" class="text-slate-400 hover:text-white"><i class="fas fa-times text-xl"></i></button>
-    </div>
-    
-    <div class="space-y-4">
-      <div id="authError" class="hidden bg-red-500/20 border border-red-500/50 rounded-lg p-3 text-red-300 text-sm"></div>
-      
-      <div>
-        <label class="block text-sm font-bold mb-2 text-slate-300">Email</label>
-        <input type="email" id="authEmail" class="input-field" placeholder="tu@email.com">
-      </div>
-      
-      <div>
-        <label class="block text-sm font-bold mb-2 text-slate-300">Contraseña</label>
-        <input type="password" id="authPassword" class="input-field" placeholder="••••••••">
-      </div>
-
-      <div class="flex gap-4 pt-4">
-        <button onclick="login()" class="btn-primary flex-1">Iniciar Sesión</button>
-        <button onclick="register()" class="btn-secondary flex-1">Registrarse</button>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- Publish Property Modal -->
-<div id="publishModal" class="modal-overlay hidden-section">
-  <div class="modal-content max-w-2xl">
-    <div class="flex justify-between items-center mb-6">
-      <h3 class="text-2xl font-bold gradient-text">Publicar Propiedad</h3>
-      <button onclick="closePublishModal()" class="text-slate-400 hover:text-white"><i class="fas fa-times text-xl"></i></button>
-    </div>
-    
-    <form id="publishForm" onsubmit="publishProperty(event)" class="space-y-4">
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div>
-          <label class="block text-sm font-bold mb-2 text-slate-300">Título</label>
-          <input type="text" name="title" required class="input-field" placeholder="Ej: Ático de lujo en Madrid">
-        </div>
-        <div>
-          <label class="block text-sm font-bold mb-2 text-slate-300">Precio (€)</label>
-          <input type="number" name="price" required class="input-field" placeholder="300000">
-        </div>
-      </div>
-      
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <div>
-          <label class="block text-sm font-bold mb-2 text-slate-300">Tipo</label>
-          <select name="transaction_type" class="input-field">
-            <option value="venta">Venta</option>
-            <option value="alquiler">Alquiler</option>
-          </select>
-        </div>
-        <div>
-          <label class="block text-sm font-bold mb-2 text-slate-300">Categoría</label>
-          <select name="category" class="input-field">
-            <option value="casa">Casa</option>
-            <option value="piso">Piso</option>
-            <option value="atico">Ático</option>
-            <option value="local">Local</option>
-          </select>
-        </div>
-        <div>
-          <label class="block text-sm font-bold mb-2 text-slate-300">Habitaciones</label>
-          <input type="number" name="rooms" class="input-field" min="0" value="2">
-        </div>
-      </div>
-      
-      <div>
-        <label class="block text-sm font-bold mb-2 text-slate-300">Ubicación</label>
-        <input type="text" name="location" required class="input-field" placeholder="Dirección completa">
-      </div>
-      
-      <div>
-        <label class="block text-sm font-bold mb-2 text-slate-300">Descripción</label>
-        <textarea name="description" required class="input-field h-32" placeholder="Describe la propiedad..."></textarea>
-      </div>
-
-      <div>
-        <label class="block text-sm font-bold mb-2 text-slate-300">Imagen URL</label>
-        <input type="url" name="image_url" class="input-field" placeholder="https://ejemplo.com/imagen.jpg">
-      </div>
-
-      <div class="flex gap-4 pt-4">
-        <button type="submit" class="btn-primary flex-1">
-          <i class="fas fa-check mr-2"></i>Publicar Ahora
-        </button>
-        <button type="button" onclick="closePublishModal()" class="btn-secondary">Cancelar</button>
-      </div>
-    </form>
-  </div>
-</div>
-
-<!-- Make Offer Modal -->
-<div id="offerModal" class="modal-overlay hidden-section">
-  <div class="modal-content">
-    <div class="flex justify-between items-center mb-6">
-      <h3 class="text-2xl font-bold gradient-text">Hacer Oferta</h3>
-      <button onclick="closeOfferModal()" class="text-slate-400 hover:text-white"><i class="fas fa-times text-xl"></i></button>
-    </div>
-    
-    <div id="offerPropertyInfo" class="mb-6 p-4 bg-slate-800/50 rounded-xl"></div>
-    
-    <form id="offerForm" onsubmit="submitOffer(event)" class="space-y-4">
-      <input type="hidden" id="offerPropertyId">
-      
-      <div>
-        <label class="block text-sm font-bold mb-2 text-slate-300">Monto de la oferta (€)</label>
-        <input type="number" id="offerAmount" required class="input-field" placeholder="250000">
-      </div>
-      
-      <div>
-        <label class="block text-sm font-bold mb-2 text-slate-300">Mensaje</label>
-        <textarea id="offerMessage" class="input-field h-32" placeholder="Tu mensaje para el propietario..."></textarea>
-      </div>
-
-      <div class="flex gap-4 pt-4">
-        <button type="submit" class="btn-primary flex-1">
-          <i class="fas fa-paper-plane mr-2"></i>Enviar Oferta
-        </button>
-        <button type="button" onclick="closeOfferModal()" class="btn-secondary">Cancelar</button>
-      </div>
-    </form>
-  </div>
-</div>
-
-<!-- IA Assistant Modal -->
-<div id="iaModal" class="modal-overlay hidden-section">
-  <div class="modal-content max-w-2xl h-[80vh] flex flex-col">
-    <div class="flex justify-between items-center mb-4">
-      <div class="flex items-center gap-3">
-        <div class="w-10 h-10 bg-gradient-to-br from-purple-500 to-pink-500 rounded-full flex items-center justify-center">
-          <i class="fas fa-robot text-white"></i>
-        </div>
-        <div>
-          <h3 class="text-xl font-bold gradient-text">Asistente MEROFISE IA</h3>
-          <p class="text-xs text-slate-400">Powered by CEOs María & Antonio</p>
-        </div>
-      </div>
-      <button onclick="closeIaModal()" class="text-slate-400 hover:text-white"><i class="fas fa-times text-xl"></i></button>
-    </div>
-    
-    <div id="iaChat" class="flex-1 overflow-y-auto space-y-4 mb-4 p-4 bg-slate-900/50 rounded-xl">
-      <div class="chat-message">
-        <p class="text-sm">¡Hola! Soy el asistente IA de MEROFISE. Puedo ayudarte a:</p>
-        <ul class="text-sm mt-2 space-y-1 text-slate-300">
-          <li>• Buscar propiedades según tus necesidades</li>
-          <li>• Generar descripciones optimizadas para tus anuncios</li>
-          <li>• Calcular rentabilidad de inversión</li>
-          <li>• Coordinar visitas con nuestros bots</li>
-        </ul>
-      </div>
-    </div>
-    
-    <div class="flex gap-2">
-      <input type="text" id="iaInput" class="input-field flex-1" placeholder="Escribe tu pregunta..." onkeypress="if(event.key==='Enter')sendIaMessage()">
-      <button onclick="sendIaMessage()" class="btn-primary">
-        <i class="fas fa-paper-plane"></i>
-      </button>
-    </div>
-  </div>
-</div>
-
-<!-- Footer -->
-<footer class="bg-slate-950 border-t border-slate-800 py-12 mt-20">
-  <div class="container mx-auto px-6">
-    <div class="grid md:grid-cols-4 gap-8 mb-8">
-      <div>
-        <h4 class="text-2xl font-black font-['Orbitron'] gradient-text mb-4">MEROFISE</h4>
-        <p class="text-slate-500 text-sm">merofise.es - Primera inmobiliaria 100% automatizada con IA y publicación mundial instantánea.</p>
-      </div>
-      <div>
-        <h5 class="font-bold text-slate-300 mb-4">Contacto</h5>
-        <ul class="space-y-2 text-sm text-slate-400">
-          <li><i class="fas fa-envelope mr-2 text-blue-400"></i> info@merofise.es</li>
-          <li><i class="fas fa-phone mr-2 text-green-400"></i> +34 664 037 407</li>
-          <li><i class="fas fa-globe mr-2 text-purple-400"></i> merofise.es</li>
-        </ul>
-      </div>
-      <div>
-        <h5 class="font-bold text-slate-300 mb-4">Redes Automatizadas</h5>
-        <div class="flex gap-3 text-xl">
-          <i class="fab fa-facebook text-blue-500"></i>
-          <i class="fab fa-instagram text-pink-500"></i>
-          <i class="fab fa-tiktok text-white"></i>
-          <i class="fab fa-linkedin text-blue-600"></i>
-          <i class="fab fa-x-twitter text-sky-500"></i>
-        </div>
-      </div>
-      <div>
-        <h5 class="font-bold text-slate-300 mb-4">Estado</h5>
-        <div class="flex items-center gap-2 text-green-400 text-sm">
-          <span class="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span>
-          111 Bots Operativos
-        </div>
-        <p class="text-slate-600 text-xs mt-2">© 2026 MEROFISE</p>
-      </div>
-    </div>
-  </div>
-</footer>
-
-<script>
-// Supabase Configuration
-const SUPABASE_URL = 'https://xfdwygufboazyshcrxwn.supabase.co';
-const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhmZHd5Z3VmYm9henlzaGNyeHduIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzQwMDY5MjYsImV4cCI6MjA0OTU4MjkyNn0.ymWWXnE0V5p1gr3O-0H0iXl3n4j4h4n4j4h4n4j4h4n';
-const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
-// Stripe Configuration (Frontend only - ready for backend)
-const STRIPE_PUBLIC_KEY = 'pk_test_TYooMQauvdEDq54NiTphI7jx';
-const stripe = Stripe(STRIPE_PUBLIC_KEY);
-
-// State
-let currentUser = null;
-let currentSession = null;
-
-// Initialize
-document.addEventListener('DOMContentLoaded', async () => {
-  await checkSession();
-  loadProperties();
-  initBotPanel();
-  
-  // Simulate live counter
-  setInterval(() => {
-    const el = document.getElementById('postsHoy');
-    if (el) {
-      let val = parseInt(el.textContent);
-      el.textContent = val + Math.floor(Math.random() * 3);
-    }
-  }, 5000);
-});
-
-// Auth Functions
-async function checkSession() {
-  const { data: { session }, error } = await supabase.auth.getSession();
-  if (session) {
-    currentSession = session;
-    currentUser = session.user;
-    updateAuthUI();
-  }
-  
-  supabase.auth.onAuthStateChange((event, session) => {
-    if (event === 'SIGNED_IN') {
-      currentSession = session;
-      currentUser = session.user;
-      updateAuthUI();
-      closeAuthModal();
-    } else if (event === 'SIGNED_OUT') {
-      currentUser = null;
-      currentSession = null;
-      updateAuthUI();
-    }
-  });
-}
-
-function updateAuthUI() {
-  const btn = document.getElementById('authBtn');
-  const btnText = document.getElementById('authBtnText');
-  if (currentUser) {
-    btnText.textContent = currentUser.email.split('@')[0];
-    btn.onclick = logout;
-  } else {
-    btnText.textContent = 'Entrar';
-    btn.onclick = openAuthModal;
-  }
-}
-
-async function register() {
-  const email = document.getElementById('authEmail').value;
-  const password = document.getElementById('authPassword').value;
-  const errorDiv = document.getElementById('authError');
-  
-  if (!email || !password) {
-    errorDiv.textContent = 'Completa todos los campos';
-    errorDiv.classList.remove('hidden');
-    return;
-  }
-  
-  const { data, error } = await supabase.auth.signUp({ email, password });
-  
-  if (error) {
-    errorDiv.textContent = error.message;
-    errorDiv.classList.remove('hidden');
-  } else {
-    errorDiv.textContent = '¡Registro exitoso! Revisa tu email para confirmar.';
-    errorDiv.classList.remove('hidden');
-    errorDiv.classList.replace('bg-red-500/20', 'bg-green-500/20');
-    errorDiv.classList.replace('border-red-500/50', 'border-green-500/50');
-    errorDiv.classList.replace('text-red-300', 'text-green-300');
-  }
-}
-
-async function login() {
-  const email = document.getElementById('authEmail').value;
-  const password = document.getElementById('authPassword').value;
-  const errorDiv = document.getElementById('authError');
-  
-  const { data, error } = await supabase.auth.signInWithPassword({ email, password });
-  
-  if (error) {
-    errorDiv.textContent = error.message;
-    errorDiv.classList.remove('hidden');
-  }
-}
-
-async function logout() {
-  await supabase.auth.signOut();
-  showSection('home');
-}
-
-// Modal Functions
-function openAuthModal() {
-  document.getElementById('authModal').classList.remove('hidden-section');
-}
-
-function closeAuthModal() {
-  document.getElementById('authModal').classList.add('hidden-section');
-}
-
-function openPublishModal() {
-  if (!currentUser) {
-    openAuthModal();
-    return;
-  }
-  document.getElementById('publishModal').classList.remove('hidden-section');
-}
-
-function closePublishModal() {
-  document.getElementById('publishModal').classList.add('hidden-section');
-}
-
-function openOfferModal(propertyId, propertyTitle, propertyPrice) {
-  if (!currentUser) {
-    openAuthModal();
-    return;
-  }
-  document.getElementById('offerPropertyId').value = propertyId;
-  document.getElementById('offerPropertyInfo').innerHTML = `
-    <h4 class="font-bold text-lg">${propertyTitle}</h4>
-    <p class="text-purple-400 font-bold text-xl">${propertyPrice}€</p>
-  `;
-  document.getElementById('offerModal').classList.remove('hidden-section');
-}
-
-function closeOfferModal() {
-  document.getElementById('offerModal').classList.add('hidden-section');
-}
-
-function openIaAssistant() {
-  document.getElementById('iaModal').classList.remove('hidden-section');
-}
-
-function closeIaModal() {
-  document.getElementById('iaModal').classList.add('hidden-section');
-}
-
-// Navigation
-function showSection(sectionId) {
-  document.querySelectorAll('main > section').forEach(s => {
-    s.classList.add('hidden-section');
-    s.classList.remove('visible-section');
-  });
-  document.getElementById(sectionId).classList.remove('hidden-section');
-  document.getElementById(sectionId).classList.add('visible-section');
-  
-  if (sectionId === 'dashboard' && currentUser) {
-    loadMyProperties();
-    loadMyOffers();
-  }
-}
-
-// Property Functions
-async function publishProperty(e) {
-  e.preventDefault();
-  
-  if (!currentUser) {
-    openAuthModal();
-    return;
-  }
-  
-  const formData = new FormData(e.target);
-  const property = {
-    title: formData.get('title'),
-    description: formData.get('description'),
-    price: parseInt(formData.get('price')),
-    transaction_type: formData.get('transaction_type'),
-    category: formData.get('category'),
-    location: formData.get('location'),
-    rooms: parseInt(formData.get('rooms')) || 0,
-    image_url: formData.get('image_url') || 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=800',
-    owner_id: currentUser.id,
-    status: 'active',
-    created_at: new Date().toISOString()
-  };
-  
-  const { data, error } = await supabase.from('properties').insert([property]).select();
-  
-  if (error) {
-    alert('Error al publicar: ' + error.message);
-  } else {
-    alert('¡Propiedad publicada! Los bots la están distribuyendo ahora mismo...');
-    closePublishModal();
-    e.target.reset();
-    loadProperties();
-    if (document.getElementById('dashboard').classList.contains('visible-section')) {
-      loadMyProperties();
-    }
-  }
-}
-
-async function loadProperties() {
-  const type = document.getElementById('filterType')?.value;
-  const category = document.getElementById('filterCategory')?.value;
-  const minPrice = document.getElementById('filterMinPrice')?.value;
-  const maxPrice = document.getElementById('filterMaxPrice')?.value;
-  
-  let query = supabase.from('properties').select('*').eq('status', 'active').order('created_at', { ascending: false });
-  
-  if (type) query = query.eq('transaction_type', type);
-  if (category) query = query.eq('category', category);
-  if (minPrice) query = query.gte('price', minPrice);
-  if (maxPrice) query = query.lte('price', maxPrice);
-  
-  const { data, error } = await query;
-  
-  const grid = document.getElementById('propertiesGrid');
-  if (error || !data || data.length === 0) {
-    grid.innerHTML = '<div class="col-span-full text-center text-slate-500 py-12">No hay propiedades disponibles</div>';
-    return;
-  }
-  
-  grid.innerHTML = data.map(p => `
-    <div class="property-card rounded-2xl overflow-hidden group">
-      <div class="relative h-48 overflow-hidden">
-        <img src="${p.image_url}" alt="${p.title}" class="w-full h-full object-cover transition-transform group-hover:scale-110">
-        <div class="absolute top-2 right-2">
-          <span class="bg-${p.transaction_type === 'venta' ? 'blue' : 'green'}-500/80 text-white px-3 py-1 rounded-full text-xs font-bold uppercase">
-            ${p.transaction_type}
-          </span>
-        </div>
-        <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-slate-900 to-transparent p-4">
-          <p class="text-2xl font-black text-white">${p.price.toLocaleString()}€</p>
-        </div>
-      </div>
-      <div class="p-6">
-        <h4 class="text-lg font-bold mb-2 text-white line-clamp-1">${p.title}</h4>
-        <p class="text-slate-400 text-sm mb-4 line-clamp-2">${p.description}</p>
-        <div class="flex items-center gap-4 text-sm text-slate-500 mb-4">
-          <span><i class="fas fa-map-marker-alt mr-1"></i> ${p.location}</span>
-          <span><i class="fas fa-bed mr-1"></i> ${p.rooms} hab</span>
-        </div>
-        <div class="flex gap-2">
-          <button onclick="openOfferModal('${p.id}', '${p.title}', ${p.price})" class="btn-primary flex-1 text-sm py-2">
-            <i class="fas fa-hand-holding-usd mr-1"></i> Ofertar
-          </button>
-          <a href="https://wa.me/34664037407?text=Hola, me interesa la propiedad: ${p.title}" target="_blank" class="btn-secondary px-3 py-2">
-            <i class="fab fa-whatsapp"></i>
-          </a>
-        </div>
-      </div>
-    </div>
-  `).join('');
-}
-
-async function loadMyProperties() {
-  if (!currentUser) return;
-  
-  const { data, error } = await supabase.from('properties')
-    .select('*')
-    .eq('owner_id', currentUser.id)
-    .order('created_at', { ascending: false });
-  
-  const container = document.getElementById('myPropertiesList');
-  if (error || !data || data.length === 0) {
-    container.innerHTML = '<p class="text-slate-500 text-center py-4">No tienes propiedades publicadas</p>';
-    return;
-  }
-  
-  container.innerHTML = data.map(p => `
-    <div class="glass-panel rounded-xl p-4 flex justify-between items-center">
-      <div>
-        <h5 class="font-bold text-white">${p.title}</h5>
-        <p class="text-sm text-slate-400">${p.price.toLocaleString()}€ • ${p.status}</p>
-      </div>
-      <div class="flex gap-2">
-        <span class="text-xs bg-blue-500/20 text-blue-400 px-2 py-1 rounded">Bot activo</span>
-      </div>
-    </div>
-  `).join('');
-}
-
-// Offer Functions
-async function submitOffer(e) {
-  e.preventDefault();
-  
-  const propertyId = document.getElementById('offerPropertyId').value;
-  const amount = document.getElementById('offerAmount').value;
-  const message = document.getElementById('offerMessage').value;
-  
-  const { data: property } = await supabase.from('properties').select('owner_id').eq('id', propertyId).single();
-  
-  const offer = {
-    property_id: propertyId,
-    buyer_id: currentUser.id,
-    seller_id: property.owner_id,
-    amount: parseInt(amount),
-    message: message,
-    status: 'pending',
-    created_at: new Date().toISOString()
-  };
-  
-  const { error } = await supabase.from('offers').insert([offer]);
-  
-  if (error) {
-    alert('Error al enviar oferta: ' + error.message);
-  } else {
-    alert('¡Oferta enviada! María IA está verificando los fondos...');
-    closeOfferModal();
-  }
-}
-
-async function loadMyOffers() {
-  if (!currentUser) return;
-  
-  const { data, error } = await supabase.from('offers')
-    .select('*, properties(title)')
-    .or(`buyer_id.eq.${currentUser.id},seller_id.eq.${currentUser.id}`)
-    .order('created_at', { ascending: false });
-  
-  const container = document.getElementById('myOffersList');
-  if (error || !data || data.length === 0) {
-    container.innerHTML = '<p class="text-slate-500 text-center py-4">No tienes ofertas activas</p>';
-    return;
-  }
-  
-  container.innerHTML = data.map(o => `
-    <div class="offer-card">
-      <div class="flex justify-between items-start mb-2">
-        <div>
-          <h5 class="font-bold text-white">${o.properties.title}</h5>
-          <p class="text-green-400 font-bold text-lg">${o.amount.toLocaleString()}€</p>
-        </div>
-        <span class="text-xs ${o.status === 'pending' ? 'bg-yellow-500/20 text-yellow-400' : o.status === 'accepted' ? 'bg-green-500/20 text-green-400' : 'bg-red-500/20 text-red-400'} px-2 py-1 rounded uppercase">
-          ${o.status}
-        </span>
-      </div>
-      <p class="text-sm text-slate-400 mb-2">${o.message}</p>
-      <p class="text-xs text-slate-500">${new Date(o.created_at).toLocaleDateString()}</p>
-    </div>
-  `).join('');
-}
-
-// IA Assistant Functions
-async function sendIaMessage() {
-  const input = document.getElementById('iaInput');
-  const chat = document.getElementById('iaChat');
-  const message = input.value.trim();
-  
-  if (!message) return;
-  
-  // Add user message
-  chat.innerHTML += `<div class="chat-message user"><p class="text-sm font-bold mb-1">Tú</p><p class="text-sm">${message}</p></div>`;
-  input.value = '';
-  chat.scrollTop = chat.scrollHeight;
-  
-  // Show typing indicator
-  const typingId = 'typing-' + Date.now();
-  chat.innerHTML += `
-    <div id="${typingId}" class="chat-message">
-      <div class="typing-indicator">
-        <div class="typing-dot"></div>
-        <div class="typing-dot"></div>
-        <div class="typing-dot"></div>
-      </div>
-    </div>
-  `;
-  chat.scrollTop = chat.scrollHeight;
-  
-  // Simulate IA response
-  setTimeout(() => {
-    document.getElementById(typingId).remove();
-    
-    let response = '';
-    const lowerMsg = message.toLowerCase();
-    
-    if (lowerMsg.includes('precio') || lowerMsg.includes('coste')) {
-      response = 'Nuestros CEOs han analizado el mercado. Las propiedades en esta zona tienen un valor medio de 2.400€/m². ¿Quieres que busque opciones específicas en tu rango de precios?';
-    } else if (lowerMsg.includes('alquiler') || lowerMsg.includes('renta')) {
-      response = 'Tengo 47 propiedades en alquiler disponibles ahora mismo. Los bots están actualizando la lista cada 5 minutos. ¿Prefieres piso o casa? ¿Cuántas habitaciones necesitas?';
-    } else if (lowerMsg.includes('vender') || lowerMsg.includes('publicar')) {
-      response = '¡Excelente decisión! Con nuestra red de 111 bots, tu propiedad estará publicada en 6 plataformas simultáneamente en menos de 2 minutos. Los CEOs María y Antonio supervisarán cada oferta. ¿Quieres empezar a publicar ahora?';
-    } else if (lowerMsg.includes('descripción') || lowerMsg.includes('anuncio')) {
-      response = 'Puedo generar una descripción optimizada para tu propiedad. Dame los detalles básicos (metros, habitaciones, zona) y crearé un texto profesional que nuestros bots distribuirán automáticamente.';
-    } else if (lowerMsg.includes('hola') || lowerMsg.includes('buenas')) {
-      response = '¡Bienvenido a MEROFISE! Soy el asistente coordinado por Antonio IA. Estoy conectado en tiempo real con 111 bots especializados. ¿En qué puedo ayudarte hoy?';
-    } else {
-      response = 'Entiendo. Déjame consultar con nuestros bots especializados... He encontrado información relevante. ¿Te gustaría que coordine una visita virtual o presencial? Puedo gestionarlo inmediatamente.';
-    }
-    
-    chat.innerHTML += `<div class="chat-message"><p class="text-sm font-bold mb-1 text-purple-400">Asistente IA</p><p class="text-sm">${response}</p></div>`;
-    chat.scrollTop = chat.scrollHeight;
-  }, 1500);
-}
-
-// Stripe Functions (Frontend ready)
-function openStripeCheckout(product) {
-  // Prepared for Stripe integration - shows button UI
-  const prices = {
-    'comision': { price: 'price_1234567890', amount: 2178, name: 'Comisión Venta' },
-    'gestion': { price: 'price_1234567891', amount: 36.30, name: 'Gestión Alquiler' },
-    'shopper': { price: 'price_1234567892', amount: 968, name: 'Personal Shopper' }
-  };
-  
-  const selected = prices[product] || prices['shopper'];
-  
-  // Show coming soon modal
-  alert(`Stripe Checkout preparado para: ${selected.name}\nMonto: ${selected.amount}€\n\nEl sistema está listo para procesar pagos. Contacta con info@merofise.es para activar la pasarela completa.`);
-}
-
-// Personal Shopper Functions
-function submitShopperRequest() {
-  const budget = document.getElementById('shopperBudget').value;
-  const location = document.getElementById('shopperLocation').value;
-  const type = document.getElementById('shopperType').value;
-  const rooms = document.getElementById('shopperRooms').value;
-  const notes = document.getElementById('shopperNotes').value;
-  
-  if (!budget || !location) {
-    alert('Completa al menos el presupuesto y ubicación');
-    return;
-  }
-  
-  const resultsDiv = document.getElementById('shopperResults');
-  const contentDiv = document.getElementById('shopperResultsContent');
-  
-  resultsDiv.classList.remove('hidden');
-  contentDiv.innerHTML = '<div class="text-center py-8"><i class="fas fa-circle-notch fa-spin text-4xl text-purple-500"></i><p class="mt-4 text-slate-400">CEOs María y Antonio analizando el mercado...</p></div>';
-  
-  setTimeout(() => {
-    contentDiv.innerHTML = `
-      <div class="glass-panel rounded-xl p-6 border-l-4 border-green-500">
-        <div class="flex items-center gap-3 mb-4">
-          <div class="w-12 h-12 bg-gradient-to-br from-purple-500 to-pink-500 rounded-full flex items-center justify-center">
-            <i class="fas fa-female text-white text-xl"></i>
-          </div>
-          <div>
-            <h5 class="font-bold text-white">María IA - Análisis Financiero</h5>
-            <p class="text-xs text-slate-400">Verificado hace 2 minutos</p>
-          </div>
-        </div>
-        <p class="text-sm text-slate-300 mb-4">
-          He analizado ${Math.floor(Math.random() * 50 + 100)} propiedades en ${location}. Con tu presupuesto de ${budget}€, 
-          puedes acceder a un ${type} de ${rooms} habitaciones en las zonas recomendadas. 
-          La rentabilidad estimada es del ${(Math.random() * 3 + 4).toFixed(1)}% anual.
-        </p>
-        <div class="bg-slate-800/50 rounded-lg p-4">
-          <h6 class="font-bold text-sm mb-2 text-green-400">Zonas recomendadas por nuestros bots:</h6>
-          <ul class="text-sm text-slate-400 space-y-1">
-            <li>• Zona Centro - Alta demanda de alquiler</li>
-            <li>• Zona Norte - Mejor precio por m²</li>
-            <li>• Zona Este - Mayor potencial de revalorización</li>
-          </ul>
-        </div>
-      </div>
-      
-      <div class="glass-panel rounded-xl p-6 border-l-4 border-blue-500 mt-4">
-        <div class="flex items-center gap-3 mb-4">
-          <div class="w-12 h-12 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-full flex items-center justify-center">
-            <i class="fas fa-male text-white text-xl"></i>
-          </div>
-          <div>
-            <h5 class="font-bold text-white">Antonio IA - Coordinación de Bots</h5>
-            <p class="text-xs text-slate-400">15 bots activos en tu búsqueda</p>
-          </div>
-        </div>
-        <p class="text-sm text-slate-300 mb-4">
-          He desplegado 15 bots especializados en ${location}. Están escaneando nuevas publicaciones 
-          cada 3 minutos en 6 plataformas diferentes. En cuanto aparezca una propiedad que se ajuste 
-          a tus criterios, recibirás notificación inmediata.
-        </p>
-        <div class="flex gap-2">
-          <span class="text-xs bg-blue-500/20 text-blue-400 px-2 py-1 rounded">Bot #42: Buscando...</span>
-          <span class="text-xs bg-blue-500/20 text-blue-400 px-2 py-1 rounded">Bot #87: Analizando...</span>
-          <span class="text-xs bg-blue-500/20 text-blue-400 px-2 py-1 rounded">Bot #103: Filtrando...</span>
-        </div>
-      </div>
-    `;
-  }, 3000);
-}
-
-// Bot Panel
-function initBotPanel() {
-  const bots = [
-    { name: 'Alex', type: 'Venta', status: 'active', color: 'blue' },
-    { name: 'Elena', type: 'Venta', status: 'active', color: 'blue' },
-    { name: 'Marc', type: 'Alquiler', status: 'active', color: 'green' },
-    { name: 'Sara', type: 'Alquiler', status: 'active', color: 'green' },
-    { name: 'Hugo', type: 'Marketing', status: 'active', color: 'purple' },
-    { name: 'Lucia', type: 'Marketing', status: 'active', color: 'purple' },
-    { name: 'Ivan', type: 'Legal', status: 'active', color: 'yellow' },
-    { name: 'Noa', type: 'Legal', status: 'active', color: 'yellow' },
-    { name: 'Raul', type: 'Social', status: 'active', color: 'pink' },
-    { name: 'Julia', type: 'Social', status: 'active', color: 'pink' },
-    { name: 'Toni', type: 'Soporte', status: 'active', color: 'cyan' },
-    { name: 'Clara', type: 'Soporte', status: 'active', color: 'cyan' }
-  ];
-  
-  const container = document.getElementById('botPanel');
-  if (!container) return;
-  
-  container.innerHTML = bots.map(bot => `
-    <div class="glass-panel rounded-lg p-3 text-center cursor-pointer hover:border-${bot.color}-500 transition" onclick="showBotInfo('${bot.name}')">
-      <div class="w-10 h-10 bg-${bot.color}-500/20 rounded-full mx-auto mb-2 flex items-center justify-center">
-        <i class="fas fa-robot text-${bot.color}-400 text-sm"></i>
-      </div>
-      <p class="text-xs font-bold text-slate-300">${bot.name}</p>
-      <p class="text-[10px] text-${bot.color}-400">${bot.type}</p>
-      <span class="inline-block w-2 h-2 bg-green-500 rounded-full mt-1 animate-pulse"></span>
-    </div>
-  `).join('');
-}
-
-function showBotInfo(botName) {
-  alert(`Bot ${botName} está operativo\n\nTareas actuales:\n• Publicando en 6 plataformas\n• Respondiendo consultas\n• Analizando mercado\n\nSupervisado por CEOs María y Antonio`);
-}
-
-// Console branding
-console.log('%c MEROFISE.ES ACTIVADO', 'color:#3b82f6;font-size:24px;font-weight:bold;');
-console.log('%c SOCIALBOT-111: Publicando en 6 plataformas', 'color:#8b5cf6;');
-console.log('%c CEOs María & Antonio: Supervisando operaciones', 'color:#ec4899;');
-</script>
-
-</body>
-</html>
+��i�����D�R{*����/��%�W@�U�"u[��AX\S�NB�e&�@�����sib�V�ڳ��������eӽ^6��f�wS�Y�O���~G���ii���	(�_?7T���IQ��کT=�DQ���=s�+]�����i6<��!
+�=�s��xt�9�*t�l�*�G���[�V[�BI1�ũ�_ع�e�sZ�*�8���J3����xsL3�3�L�7�$�����g�c��.�Zӛ�əy:�56��T������h���5��K��5=M�~6�Ds_���5T�{�x^</����ZU
+2cW.����>�AU#�w�R�KUQ�B����ä��F{l�+����z<�������W���z2�m�ng�]�Q��19qW�V�ܘ���뺢����d�5�y�7::��X2e'{�)�[g�2�'{�Mr��r���R��f�Vk��&�UܵGg�rM���k�s՝>:�Mf�ξ�n8,��D���zS,$�٥Ր��Tf�N'�f����w\��:�*Y��U^�DW���q� s��"��4��f��
+;I'��U���fPS�(����oo��B�޳�ym�Sn�]Scмo%Я�ԃ�h��D���E���+w'eP����a�_>\���
+�h��M	f*p����Lu��l�7t�[�h#S3\;[Kb�S@D5wkB�����h�Y)���ؓ���'�?}����p5(ΫұX�=�h�/���P�C	���^3����*T����Z���M�ЦSh_�H���V<��-}r(�>\�)1��*,`d�{��{�`�mP�ZW6�'��ִ�1����S���V"�m(��*�`��p#��d ��!J�RK;�Mn�>��ڣ.���yEQ���{\X*�k������5h�Ȁz`p���a��V|S���?���5�</ZD�܅�Y^��J����C�6K:��P&e��K��aޘiP��7p�!�-�dc}!���5��[���s�$@8�^�K;���d���E�� ��v>�y��"׬!�$���T�!2N}�
+����P���� &�?9��a���7�_��zY��[Z�[Dm�Q��o�|{s���y�s��6�	��9��/�f]~�?���_�O�E���@���/�������%y���K#ؾ8��g�`hT�{�͛.��w\���f���<��{	�e����yZ�]�T{G�-ȥ|?C��M�W�-�Ծ�'::�z�
+���,k���P�u�Nl>���l���p�׎?�8C�{w��x���x���q���U<���eHm�0̙�/��$��"5���ei��5bԺ��{��E��̙����=����!O��d<�/���A��6�k�_����9��PJR����a�K�,	P�����Ğ?��R�������/���Lz=@��q������Ϙ[�_'sg~��w�*�)���d�V����)��Fa����������#�j����rQ,B)֔۠En^<���0OF�)�E���
+z�b�p��A}�I>�%��	B��I�&B�h
+�_��"��y!��%Kզ����Ԕ��iI:a�m]��k[�n��2���'#@�ރ�S3�Ə��.�7ֻ��,X�oy��G�+��R(��-�QȀ^z�PK=�\BQ$M
+�README_SEGURIDAD.md�Y�n����SL�k;�֒l�W��$ڒ�?���릐G�H��М�$�(PE/�
+��R�����E��"�����G�9CR���A�c�9s���w�3~B����o���ߓ��m�-���]�%���(q��8
+�K]rC�L�,�y�v�[R�G"�Q��}僼G:�8S4�"�%��-1����M_	����#}�1��GIE�*d!�z�9���
+t8c�q�r,^��w��H�%>(�=�[|N�v�k���q8��=b΄�Ba�p��d��đ�~�HE��#Rbv�Fq���s�b!�P�	�P)H�D�+�D�f��a&��94Sr��wo����T]f
+9R�3�P�`� ������则 ��H�΍L1����J�J��q��$�'����1F�����
+�0#�<��J�8������}�C8�	�C�B�M�T苌��G
+>r���r̟_�2���K�_�	�泿b%�z��A*�f��چEL�6�ѭ���6H�
+-�v�.1�=�[*�#�:p���;��+7�V�(7�����e0x|��y��蟖�k뼱���|�;�u�yX{n�^L��,(T�ewy�s�_O��}���yu���M�U����4���e�wz$OS,��5m}�LN��rdSE���� �l>7˵v�4��r1ܢ��:��,�O�K����1ʆez��ˉR�,={�� 7�Q"'��9G���v+6l�S�/�?��a�pH�����E6����h�8yw��[f�_���n;�nbd�yv>�JA@ʑ�Pq2�4mc`T*�e
+����zi�U���R��U�>�ӛ��b�x:��9�����ӳ���yC-{���t��:�VoQ�Yޅ�0+{Wn�<?m,,c���i\za\�Ǣ�{f�y��V��G�������8l����v|r�.]GM����=�^_T��/^;.�(�<5�(;n^�Q�����(����A�f\T/��o�Z�eZ�f���՗�=��-P�Y��Qh�Z6
+%1k�7�v�l��ѩ'��^e�r���_n��j��x�:\��U�;jfz�pC��yg��ܳZ���D��^�y�-v;�mp�t��GF���b�N�N��.3��,ޞW���'�mvQ~ݓ��J���M�ՠ�_�s֫�ӳr�M���N]^�Ζ�e�wh�L�>c�*����Vz���{]s��	eg�[�v���N�\E�����B
+�u� �0�X���- � � �mh ^aD���� ���r%.�CۄŐYz�N((�����,t�#���M�]M.15��k8�ϩ�{��������Т|��t{;C�L�	2�|�E���z��!��"�ލ���'�#&]u�ap�&�/��:A���\�qئ(	�ތ���`a-��V~��<[e�h<fajg��t7쩲�-���7IIңҍrB�܃�����)�;��B�k�G�z������KtN�M��L�m���.��f�b���E>�����mw,���Bc![L�/	�B� N�
+��OC�4ttp�qDI���z/5��%�����
+a������u��܄|<Q���ݛ�)I�n�X������1��4�����
+���*h�|�'�%��� ݓ,�cO&s��|�ٛU�jւ'�G!����W�#�5����g�^�K���!��v���:S4`��|�%0��abȻ��2�<+N���kSA^Bp�U`�1O,��UB���=w%�Q�
+��Bߛ%)}ď؜
+J�E�<��F�Ō�/)���F�@K$5<�'i�CҺ��'Fb�a�jz�z�5�
+4w��@	YM+���b>�h#���i�q0~����
+%�#
+�>�i8DZ�l*��Y�H�]%�qD�+�J.�9N n�l��L����U��"�.	�@��!�|I�R�Br��5 {�
+�+�M���I�僰�Vؾ�G1Ǻ�I
+~���\>1�����2Ϟ��9]��W٤�p0�M?���c�o��"������|����tG�A���ZMx4��P�����Ϸ~7��k��W�*=᮫�ND��O�An/�5�H�W��`���B.���_�3���j����k�<U��$�P�fi���!q��,}m#��c&U��·N/�w�tH�\����|�	+՘��zx>MNو��T#$�
+�U)����*K꘦�u	�&:'�.�	s�"R9		�,#8�]d��N_s��(w$�O���o�1Ja��l<�ц�Dw{ȷ��`c�	���<����#����]E�j��������{�[�ӭ7��k�*.@���H�$�����W���B�5i�_�ի���c�c�w�+�1D���Ho�m���/�[� �+�jN���&��M���fg%�j�o&�G�o��<?��]{�g��1ן~@��$�3��o�����L@U�
+8�Zv
+[�����[1��F/y������EBz��Yό��[d�/���C����vŷ��B6Ɨ�]�x������a��[�\�����A�/!�"�@T��A�WH���
+1����1[hY�v�-|����_b���Ֆ�-LE�s�\���Pb�ȇ���9�W�ÿ��J�h�%����o��L����>�3�j r��i�a<v���0B'��L=����@C�Q��y���)�~Ɯ���\,����z�AG���/��o�3
+�����|��g����t"��ȵ FI�$5�+�rL�(m^��+��g��sӎ�*R����̭C���G����1Mx�E��� @�L�#p�ɚ��5�޻P��.�|
+��]��ݿp�ç�9̎�\�-�1`v!�#�Rȍd�k�ѐ�<�L�UT?�&B0�����}2 �C��1�/҉F͐z��B!-+6!ң��$p�tn���w=�g)�+Գ�|yF�/��*Mص�ƅ�KC�Yr0��g�DҀ_�$�D��Q`��H�����@`�5`��8�%)p��5�ih*z�c!\
+�3;�iT͝�):.�5��JP���t�R�ԧc!�0.�����S�}Q�l���bB�����T�C�K"d8Q��X6����Ez�y�J_f@wӝ�2�~L��Чq��fG�*So�4�ɭ#�_�� csf{�{<���⾿��]�|o?�k�}O�7$}H���>C�(x$��h�������ɥ~W��z�U-����vA�~�v��
+t�������&8�Ψ�t�H���=��-A��q޴�	1=���>�pdhH�<�-���'�~oo������m[��|�>�H������[����>F��BXm��!S7ĺ��)����PK{�\(W[W�^package.jsonM�AKA���a�[w�V/zr�RD�"Lw�Ff3�d������N+�%��K��~`�hn��	�y��0
+y�`Y7uS�=J)�#y�"������F��h�X�У�a���ӗ���r�L��sTͫuȿZY����.�bq�!˔o�y^�^��[A%�(�k;��e�&�tg��'��9cU�����Y�G���I�������(��1ح�<շL�e}u���xv�PK{�\'.�A��vercel.json�RMO�0��+�h��S�c{Z-����
+8�Z��8���ؑgR!�;��[��T��7o�y="[@D|6��T{UY	1���h52��+!^E�Q'�@Uvp�e}����̟0o�]��������v<]�NO���_��J�b�>��
+N���}rC5t�׍]�*�34�|/'�7������,��[�����M�]���	<ɻ�گ��5��0#D�'8��-%R��d�vf�|���:���:�-�:Zj�9`T�H�'=gz#�:ڪ�^�Q��;����9Q���@>'e݋��F�u(��'F\��T��&w҆U��|j|5~�3� �f����8IҵޱBRd��j�Y�Y(R�$t��^���J=*L#7(��ZҴG����������o���PK{�\"�8h8-Y���MEROFISE_v2_0_FINAL.htmlPK9�\��BU�
+�-��n-security/domain-lock.jsPK��\a��\D��j;scripts/install_windows.batPK=�\BQ$M
+����FREADME_SEGURIDAD.mdPK{�\(W[W�^�}Tpackage.jsonPK{�\'.�A����Uvercel.jsonPK�IW
