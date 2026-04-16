@@ -1,926 +1,135 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MEROFISE - Inmobiliaria IA</title>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;900&display=swap');
-        
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
-        body {
-            font-family: 'Inter', sans-serif;
-            background: #0a0a0f;
-            color: #e2e8f0;
-            min-height: 100vh;
-            overflow-x: hidden;
-        }
-        
-        /* Neón glow effects */
-        .neon-text {
-            text-shadow: 0 0 10px rgba(139, 92, 246, 0.5),
-                         0 0 20px rgba(139, 92, 246, 0.3),
-                         0 0 30px rgba(139, 92, 246, 0.2);
-        }
-        
-        .neon-border {
-            box-shadow: 0 0 10px rgba(59, 130, 246, 0.3),
-                        inset 0 0 10px rgba(59, 130, 246, 0.1);
-        }
-        
-        .glass-panel {
-            background: rgba(15, 23, 42, 0.7);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(99, 102, 241, 0.2);
-            border-radius: 1rem;
-        }
-        
-        .glass-panel:hover {
-            border-color: rgba(139, 92, 246, 0.5);
-            box-shadow: 0 0 20px rgba(139, 92, 246, 0.2);
-        }
-        
-        .btn-primary {
-            background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
-            color: white;
-            padding: 0.75rem 1.5rem;
-            border-radius: 0.75rem;
-            font-weight: 600;
-            border: none;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 0 15px rgba(99, 102, 241, 0.4);
-        }
-        
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 0 25px rgba(139, 92, 246, 0.6);
-        }
-        
-        .btn-secondary {
-            background: rgba(30, 41, 59, 0.8);
-            color: #e2e8f0;
-            padding: 0.75rem 1.5rem;
-            border-radius: 0.75rem;
-            font-weight: 600;
-            border: 1px solid rgba(99, 102, 241, 0.3);
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-        
-        .btn-secondary:hover {
-            background: rgba(51, 65, 85, 0.9);
-            border-color: rgba(139, 92, 246, 0.5);
-        }
-        
-        .input-field {
-            width: 100%;
-            background: rgba(15, 23, 42, 0.6);
-            border: 1px solid rgba(99, 102, 241, 0.3);
-            border-radius: 0.75rem;
-            padding: 0.75rem 1rem;
-            color: #e2e8f0;
-            font-size: 0.95rem;
-            transition: all 0.3s ease;
-        }
-        
-        .input-field:focus {
-            outline: none;
-            border-color: #8b5cf6;
-            box-shadow: 0 0 10px rgba(139, 92, 246, 0.3);
-        }
-        
-        .input-field::placeholder {
-            color: #64748b;
-        }
-        
-        .property-card {
-            background: rgba(15, 23, 42, 0.6);
-            border: 1px solid rgba(99, 102, 241, 0.2);
-            border-radius: 1rem;
-            overflow: hidden;
-            transition: all 0.3s ease;
-        }
-        
-        .property-card:hover {
-            transform: translateY(-5px);
-            border-color: rgba(139, 92, 246, 0.5);
-            box-shadow: 0 10px 30px rgba(139, 92, 246, 0.2);
-        }
-        
-        .chat-message {
-            background: rgba(30, 41, 59, 0.8);
-            border-radius: 1rem;
-            padding: 1rem;
-            margin-bottom: 0.75rem;
-            border-left: 3px solid #8b5cf6;
-        }
-        
-        .chat-message.user {
-            background: rgba(99, 102, 241, 0.2);
-            border-left-color: #6366f1;
-            margin-left: 2rem;
-        }
-        
-        .chat-message.ia {
-            background: rgba(139, 92, 246, 0.1);
-            border-left-color: #8b5cf6;
-            margin-right: 2rem;
-        }
-        
-        .status-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            padding: 0.25rem 0.75rem;
-            border-radius: 9999px;
-            font-size: 0.75rem;
-            font-weight: 600;
-        }
-        
-        .status-badge.online {
-            background: rgba(34, 197, 94, 0.2);
-            color: #4ade80;
-            box-shadow: 0 0 10px rgba(34, 197, 94, 0.3);
-        }
-        
-        .nav-link {
-            color: #94a3b8;
-            text-decoration: none;
-            padding: 0.5rem 1rem;
-            border-radius: 0.5rem;
-            transition: all 0.3s ease;
-            position: relative;
-        }
-        
-        .nav-link:hover, .nav-link.active {
-            color: #e2e8f0;
-            background: rgba(99, 102, 241, 0.2);
-        }
-        
-        .nav-link.active::after {
-            content: '';
-            position: absolute;
-            bottom: -2px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 20px;
-            height: 2px;
-            background: #8b5cf6;
-            box-shadow: 0 0 10px #8b5cf6;
-        }
-        
-        /* Animations */
-        @keyframes pulse-glow {
-            0%, 100% { box-shadow: 0 0 15px rgba(139, 92, 246, 0.4); }
-            50% { box-shadow: 0 0 25px rgba(139, 92, 246, 0.7); }
-        }
-        
-        .animate-pulse-glow {
-            animation: pulse-glow 2s ease-in-out infinite;
-        }
-        
-        .bot-avatar {
-            width: 3rem;
-            height: 3rem;
-            background: linear-gradient(135deg, #6366f1, #8b5cf6);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 0 20px rgba(139, 92, 246, 0.5);
-        }
-        
-        .section {
-            display: none;
-            animation: fadeIn 0.5s ease;
-        }
-        
-        .section.active {
-            display: block;
-        }
-        
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        
-        .error-msg {
-            background: rgba(239, 68, 68, 0.2);
-            border: 1px solid rgba(239, 68, 68, 0.5);
-            color: #fca5a5;
-            padding: 0.75rem;
-            border-radius: 0.5rem;
-            margin-bottom: 1rem;
-        }
-        
-        .success-msg {
-            background: rgba(34, 197, 94, 0.2);
-            border: 1px solid rgba(34, 197, 94, 0.5);
-            color: #86efac;
-            padding: 0.75rem;
-            border-radius: 0.5rem;
-            margin-bottom: 1rem;
-        }
-        
-        /* Scrollbar */
-        ::-webkit-scrollbar {
-            width: 8px;
-        }
-        
-        ::-webkit-scrollbar-track {
-            background: #0f172a;
-        }
-        
-        ::-webkit-scrollbar-thumb {
-            background: #4c1d95;
-            border-radius: 4px;
-        }
-        
-        ::-webkit-scrollbar-thumb:hover {
-            background: #5b21b6;
-        }
-    </style>
-</head>
-<body>
-    <!-- Header -->
-    <header class="fixed top-0 left-0 right-0 z-50 glass-panel border-b border-indigo-500/20">
-        <div class="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
-            <div class="flex items-center gap-3">
-                <div class="bot-avatar animate-pulse-glow">
-                    <i class="fas fa-robot text-white text-xl"></i>
-                </div>
-                <div>
-                    <h1 class="text-2xl font-black neon-text bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">MEROFISE</h1>
-                    <div class="flex items-center gap-2 text-xs">
-                        <span class="status-badge online">
-                            <span class="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span>
-                            111 Bots Activos
-                        </span>
-                    </div>
-                </div>
-            </div>
-            
-            <nav class="hidden md:flex items-center gap-2">
-                <a href="#" class="nav-link active" onclick="showSection('home')">Inicio</a>
-                <a href="#" class="nav-link" onclick="showSection('properties')">Propiedades</a>
-                <a href="#" class="nav-link" onclick="showSection('publish')">Publicar</a>
-                <a href="#" class="nav-link" onclick="showSection('ia')">IA</a>
-                <a href="#" class="nav-link" onclick="showSection('auth')" id="authLink">Acceder</a>
-            </nav>
-            
-            <div id="userInfo" class="hidden items-center gap-3">
-                <span class="text-sm text-slate-400" id="userEmail"></span>
-                <button onclick="logout()" class="btn-secondary text-sm py-2 px-4">
-                    <i class="fas fa-sign-out-alt mr-2"></i>Salir
-                </button>
-            </div>
+<!-- 🔥 SUPABASE + FUNCIONALIDAD REAL MEROFISE -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script>
+// ==============================
+// 🔗 CONEXIÓN SUPABASE (TUYA)
+// ==============================
+const SUPABASE_URL = "https://xfdwygufboazyshcrxwn.supabase.co";
+const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhmZHd5Z3VmYm9henlzaGNyeHduIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzYyNDQwNDcsImV4cCI6MjA5MTgyMDA0N30.jphnwycmmv2auhWFGI8NPO2ov8BraNdmyr4Om1zTkwQ";
+
+const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+// ==============================
+// 🔐 REGISTER
+// ==============================
+async function register() {
+  const email = document.getElementById("authEmail").value;
+  const password = document.getElementById("authPassword").value;
+
+  const { error } = await supabaseClient.auth.signUp({
+    email,
+    password
+  });
+
+  if (error) {
+    showError(error.message);
+  } else {
+    showSuccess("Usuario registrado correctamente 🚀");
+  }
+}
+
+// ==============================
+// 🔐 LOGIN
+// ==============================
+async function login() {
+  const email = document.getElementById("authEmail").value;
+  const password = document.getElementById("authPassword").value;
+
+  const { error } = await supabaseClient.auth.signInWithPassword({
+    email,
+    password
+  });
+
+  if (error) {
+    showError(error.message);
+  } else {
+    showSuccess("Login correcto ✅");
+    loadProperties();
+  }
+}
+
+// ==============================
+// 🏠 PUBLICAR PROPIEDAD
+// ==============================
+async function publishProperty(event) {
+  event.preventDefault();
+
+  const form = new FormData(event.target);
+  const { data: userData } = await supabaseClient.auth.getUser();
+
+  if (!userData.user) {
+    showError("Debes iniciar sesión primero");
+    return;
+  }
+
+  const { error } = await supabaseClient.from("properties").insert([
+    {
+      owner_id: userData.user.id,
+      title: form.get("title"),
+      price: form.get("price"),
+      location: form.get("location"),
+      description: form.get("description"),
+      images: [form.get("image_url")]
+    }
+  ]);
+
+  if (error) {
+    showError(error.message);
+  } else {
+    showSuccess("Propiedad publicada 🚀");
+    loadProperties();
+  }
+}
+
+// ==============================
+// 📊 CARGAR PROPIEDADES
+// ==============================
+async function loadProperties() {
+  const { data, error } = await supabaseClient
+    .from("properties")
+    .select("*");
+
+  const container = document.getElementById("propertiesGrid");
+  if (!container) return;
+
+  container.innerHTML = "";
+
+  if (data && data.length > 0) {
+    data.forEach(p => {
+      container.innerHTML += `
+        <div class="glass-panel p-4 rounded-xl">
+          <img src="${p.images?.[0] || 'https://via.placeholder.com/400'}" class="w-full h-40 object-cover rounded mb-2">
+          <h3 class="text-white font-bold">${p.title}</h3>
+          <p class="text-green-400">${p.price}€</p>
+          <p class="text-sm text-slate-400">${p.location}</p>
         </div>
-    </header>
+      `;
+    });
+  } else {
+    container.innerHTML = "<p class='text-slate-400'>No hay propiedades aún</p>";
+  }
+}
 
-    <!-- Main Content -->
-    <main class="pt-24 pb-12 px-4 max-w-7xl mx-auto">
-        
-        <!-- Home Section -->
-        <section id="home" class="section active">
-            <div class="text-center mb-12">
-                <h2 class="text-5xl font-black mb-4 neon-text">La Revolución Inmobiliaria con IA</h2>
-                <p class="text-xl text-slate-400 max-w-2xl mx-auto">
-                    Publica y encuentra propiedades con la ayuda de nuestros 111 bots inteligentes trabajando 24/7
-                </p>
-            </div>
-            
-            <!-- CEOs -->
-            <div class="grid md:grid-cols-2 gap-6 mb-12 max-w-4xl mx-auto">
-                <div class="glass-panel p-6 neon-border">
-                    <div class="flex items-center gap-4 mb-4">
-                        <div class="bot-avatar">
-                            <i class="fas fa-female text-white text-xl"></i>
-                        </div>
-                        <div>
-                            <h3 class="text-xl font-bold text-purple-300">María IA</h3>
-                            <p class="text-xs text-slate-400">CEO Financiera</p>
-                        </div>
-                    </div>
-                    <p class="text-sm text-slate-300">
-                        <i class="fas fa-shield-alt text-green-400 mr-2"></i>Verificando pagos 24/7<br>
-                        <i class="fas fa-chart-line text-purple-400 mr-2"></i>Análisis de mercado en tiempo real
-                    </p>
-                </div>
-                
-                <div class="glass-panel p-6 neon-border">
-                    <div class="flex items-center gap-4 mb-4">
-                        <div class="bot-avatar" style="background: linear-gradient(135deg, #3b82f6, #06b6d4);">
-                            <i class="fas fa-male text-white text-xl"></i>
-                        </div>
-                        <div>
-                            <h3 class="text-xl font-bold text-blue-300">Antonio IA</h3>
-                            <p class="text-xs text-slate-400">CEO Operaciones</p>
-                        </div>
-                    </div>
-                    <p class="text-sm text-slate-300">
-                        <i class="fas fa-robot text-blue-400 mr-2"></i>Coordinando 111 bots activos<br>
-                        <i class="fas fa-globe text-green-400 mr-2"></i>Publicación mundial activa
-                    </p>
-                </div>
-            </div>
-            
-            <!-- Quick Actions -->
-            <div class="flex flex-wrap justify-center gap-4">
-                <button onclick="showSection('properties')" class="btn-primary text-lg px-8 py-4">
-                    <i class="fas fa-search mr-2"></i>Ver Propiedades
-                </button>
-                <button onclick="showSection('publish')" class="btn-secondary text-lg px-8 py-4">
-                    <i class="fas fa-plus mr-2"></i>Publicar Propiedad
-                </button>
-                <button onclick="showSection('ia')" class="btn-secondary text-lg px-8 py-4">
-                    <i class="fas fa-brain mr-2"></i>Asistente IA
-                </button>
-            </div>
-        </section>
+// ==============================
+// 🎯 MENSAJES
+// ==============================
+function showError(msg) {
+  const el = document.getElementById("authError");
+  if (!el) return;
+  el.innerText = msg;
+  el.classList.remove("hidden");
+}
 
-        <!-- Properties Section -->
-        <section id="properties" class="section">
-            <h2 class="text-3xl font-bold mb-8 text-center neon-text">Propiedades Disponibles</h2>
-            
-            <!-- Filters -->
-            <div class="glass-panel p-6 mb-8">
-                <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
-                    <select id="filterType" class="input-field" onchange="loadProperties()">
-                        <option value="">Todos los tipos</option>
-                        <option value="venta">Venta</option>
-                        <option value="alquiler">Alquiler</option>
-                    </select>
-                    <select id="filterCategory" class="input-field" onchange="loadProperties()">
-                        <option value="">Todas las categorías</option>
-                        <option value="casa">Casa</option>
-                        <option value="piso">Piso</option>
-                        <option value="atico">Ático</option>
-                        <option value="local">Local</option>
-                    </select>
-                    <input type="number" id="filterMinPrice" class="input-field" placeholder="Precio mín €" onchange="loadProperties()">
-                    <input type="number" id="filterMaxPrice" class="input-field" placeholder="Precio máx €" onchange="loadProperties()">
-                </div>
-            </div>
-            
-            <!-- Properties Grid -->
-            <div id="propertiesGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <!-- Loaded dynamically -->
-            </div>
-        </section>
+function showSuccess(msg) {
+  const el = document.getElementById("authSuccess");
+  if (!el) return;
+  el.innerText = msg;
+  el.classList.remove("hidden");
+}
 
-        <!-- Publish Section -->
-        <section id="publish" class="section">
-            <h2 class="text-3xl font-bold mb-8 text-center neon-text">Publicar Propiedad</h2>
-            
-            <div class="max-w-2xl mx-auto glass-panel p-8">
-                <div id="publishError" class="error-msg hidden"></div>
-                <div id="publishSuccess" class="success-msg hidden"></div>
-                
-                <form id="publishForm" onsubmit="publishProperty(event)">
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                        <div>
-                            <label class="block text-sm font-bold mb-2 text-slate-300">Título *</label>
-                            <input type="text" name="title" required class="input-field" placeholder="Ej: Ático de lujo en Madrid">
-                        </div>
-                        <div>
-                            <label class="block text-sm font-bold mb-2 text-slate-300">Precio (€) *</label>
-                            <input type="number" name="price" required class="input-field" placeholder="300000">
-                        </div>
-                    </div>
-                    
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
-                        <div>
-                            <label class="block text-sm font-bold mb-2 text-slate-300">Tipo</label>
-                            <select name="transaction_type" class="input-field">
-                                <option value="venta">Venta</option>
-                                <option value="alquiler">Alquiler</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label class="block text-sm font-bold mb-2 text-slate-300">Categoría</label>
-                            <select name="category" class="input-field">
-                                <option value="casa">Casa</option>
-                                <option value="piso">Piso</option>
-                                <option value="atico">Ático</option>
-                                <option value="local">Local</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label class="block text-sm font-bold mb-2 text-slate-300">Habitaciones</label>
-                            <input type="number" name="rooms" class="input-field" min="0" value="2">
-                        </div>
-                    </div>
-                    
-                    <div class="mb-4">
-                        <label class="block text-sm font-bold mb-2 text-slate-300">Ubicación *</label>
-                        <input type="text" name="location" required class="input-field" placeholder="Dirección completa">
-                    </div>
-                    
-                    <div class="mb-4">
-                        <label class="block text-sm font-bold mb-2 text-slate-300">Descripción *</label>
-                        <textarea name="description" required class="input-field h-32" placeholder="Describe la propiedad..."></textarea>
-                    </div>
-                    
-                    <div class="mb-6">
-                        <label class="block text-sm font-bold mb-2 text-slate-300">Imagen URL</label>
-                        <input type="url" name="image_url" class="input-field" placeholder="https://ejemplo.com/imagen.jpg">
-                    </div>
-                    
-                    <div class="flex gap-4">
-                        <button type="submit" class="btn-primary flex-1">
-                            <i class="fas fa-check mr-2"></i>Publicar Ahora
-                        </button>
-                        <button type="button" onclick="showSection('properties')" class="btn-secondary">Cancelar</button>
-                    </div>
-                </form>
-            </div>
-        </section>
-
-        <!-- IA Section -->
-        <section id="ia" class="section">
-            <h2 class="text-3xl font-bold mb-8 text-center neon-text">Asistente MEROFISE IA</h2>
-            <p class="text-center text-slate-400 mb-8">Powered by CEOs María & Antonio</p>
-            
-            <div class="max-w-3xl mx-auto glass-panel p-6 h-[600px] flex flex-col">
-                <div id="iaChat" class="flex-1 overflow-y-auto space-y-4 mb-4 p-4 bg-slate-900/50 rounded-xl">
-                    <div class="chat-message ia">
-                        <p class="text-sm">¡Hola! Soy el asistente IA de MEROFISE. Puedo ayudarte a:</p>
-                        <ul class="text-sm mt-2 space-y-1 text-slate-300">
-                            <li>• Buscar propiedades por ubicación (ej: "piso en Madrid")</li>
-                            <li>• Filtrar por tipo: venta, alquiler, casa, piso</li>
-                            <li>• Ver propiedades con fotos y precios reales</li>
-                            <li>• Hacer ofertas directamente</li>
-                        </ul>
-                        <p class="text-sm mt-3 text-purple-400 font-bold">Prueba: "alquiler en Barcelona" o "casa 3 habitaciones"</p>
-                    </div>
-                </div>
-                
-                <div class="flex gap-2">
-                    <input type="text" id="iaInput" class="input-field flex-1" 
-                           placeholder="Escribe tu búsqueda (ej: piso en Madrid)..." 
-                           onkeypress="if(event.key==='Enter')sendIaMessage()">
-                    <button onclick="sendIaMessage()" class="btn-primary">
-                        <i class="fas fa-paper-plane"></i>
-                    </button>
-                </div>
-            </div>
-        </section>
-
-        <!-- Auth Section -->
-        <section id="auth" class="section">
-            <h2 class="text-3xl font-bold mb-8 text-center neon-text">Acceder a MEROFISE</h2>
-            
-            <div class="max-w-md mx-auto glass-panel p-8">
-                <div id="authError" class="error-msg hidden"></div>
-                <div id="authSuccess" class="success-msg hidden"></div>
-                
-                <div class="space-y-4">
-                    <div>
-                        <label class="block text-sm font-bold mb-2 text-slate-300">Email</label>
-                        <input type="email" id="authEmail" class="input-field" placeholder="tu@email.com">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-bold mb-2 text-slate-300">Contraseña</label>
-                        <input type="password" id="authPassword" class="input-field" placeholder="••••••••">
-                    </div>
-                    
-                    <div class="flex gap-4 pt-4">
-                        <button onclick="login()" class="btn-primary flex-1">
-                            <i class="fas fa-sign-in-alt mr-2"></i>Iniciar Sesión
-                        </button>
-                        <button onclick="register()" class="btn-secondary flex-1">
-                            <i class="fas fa-user-plus mr-2"></i>Registrarse
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </section>
-    </main>
-
-    <!-- Footer -->
-    <footer class="border-t border-indigo-500/20 py-8 mt-12">
-        <div class="max-w-7xl mx-auto px-4 text-center">
-            <p class="text-slate-500 text-sm">
-                <i class="fas fa-robot mr-2"></i>MEROFISE.ES - Primera inmobiliaria 100% automatizada con IA<br>
-                <span class="text-xs">111 Bots Operativos 24/7 | CEOs María & Antonio</span>
-            </p>
-            <p class="text-slate-600 text-xs mt-2">© 2026 MEROFISE</p>
-        </div>
-    </footer>
-
-    <script>
-        // ==========================================
-        // SUPABASE CONFIGURATION
-        // ==========================================
-        const SUPABASE_URL = 'https://xfdwygufboazyshcrxwn.supabase.co';
-        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhmZHd5Z3VmYm9henlzaGNyeHduIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzYyNDQwNDcsImV4cCI6MjA5MTgyMDA0N30.jphnwycmmv2auhWFGI8NPO2ov8BraNdmyr4Om1zTkwQ';
-        
-        // Initialize Supabase client
-        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-        
-        // Global state
-        let currentUser = null;
-        let allProperties = [];
-        
-        // ==========================================
-        // AUTH FUNCTIONS
-        // ==========================================
-        async function register() {
-            const email = document.getElementById('authEmail').value;
-            const password = document.getElementById('authPassword').value;
-            const errorDiv = document.getElementById('authError');
-            const successDiv = document.getElementById('authSuccess');
-            
-            errorDiv.classList.add('hidden');
-            successDiv.classList.add('hidden');
-            
-            if (!email || !password) {
-                errorDiv.textContent = 'Por favor, introduce email y contraseña';
-                errorDiv.classList.remove('hidden');
-                return;
-            }
-            
-            if (password.length < 6) {
-                errorDiv.textContent = 'La contraseña debe tener al menos 6 caracteres';
-                errorDiv.classList.remove('hidden');
-                return;
-            }
-            
-            try {
-                const { data, error } = await supabase.auth.signUp({
-                    email: email,
-                    password: password
-                });
-                
-                if (error) throw error;
-                
-                successDiv.textContent = '¡Registro exitoso! Revisa tu email para confirmar.';
-                successDiv.classList.remove('hidden');
-                
-                // Auto login after registration
-                setTimeout(() => login(), 1500);
-                
-            } catch (error) {
-                errorDiv.textContent = error.message;
-                errorDiv.classList.remove('hidden');
-            }
-        }
-        
-        async function login() {
-            const email = document.getElementById('authEmail').value;
-            const password = document.getElementById('authPassword').value;
-            const errorDiv = document.getElementById('authError');
-            const successDiv = document.getElementById('authSuccess');
-            
-            errorDiv.classList.add('hidden');
-            successDiv.classList.add('hidden');
-            
-            if (!email || !password) {
-                errorDiv.textContent = 'Por favor, introduce email y contraseña';
-                errorDiv.classList.remove('hidden');
-                return;
-            }
-            
-            try {
-                const { data, error } = await supabase.auth.signInWithPassword({
-                    email: email,
-                    password: password
-                });
-                
-                if (error) throw error;
-                
-                currentUser = data.user;
-                updateUIForLoggedInUser();
-                showSection('home');
-                loadProperties();
-                
-            } catch (error) {
-                errorDiv.textContent = error.message;
-                errorDiv.classList.remove('hidden');
-            }
-        }
-        
-        async function logout() {
-            await supabase.auth.signOut();
-            currentUser = null;
-            updateUIForLoggedOutUser();
-            showSection('home');
-        }
-        
-        async function checkSession() {
-            const { data: { session } } = await supabase.auth.getSession();
-            if (session) {
-                currentUser = session.user;
-                updateUIForLoggedInUser();
-            }
-        }
-        
-        function updateUIForLoggedInUser() {
-            document.getElementById('authLink').classList.add('hidden');
-            document.getElementById('userInfo').classList.remove('hidden');
-            document.getElementById('userInfo').classList.add('flex');
-            document.getElementById('userEmail').textContent = currentUser.email;
-        }
-        
-        function updateUIForLoggedOutUser() {
-            document.getElementById('authLink').classList.remove('hidden');
-            document.getElementById('userInfo').classList.add('hidden');
-            document.getElementById('userInfo').classList.remove('flex');
-            document.getElementById('userEmail').textContent = '';
-        }
-        
-        // ==========================================
-        // PROPERTIES FUNCTIONS
-        // ==========================================
-        async function loadProperties() {
-            try {
-                const { data, error } = await supabase
-                    .from('properties')
-                    .select('*')
-                    .order('created_at', { ascending: false });
-                
-                if (error) throw error;
-                
-                allProperties = data || [];
-                renderProperties();
-            } catch (error) {
-                console.error('Error loading properties:', error);
-                // If table doesn't exist, show empty state
-                allProperties = [];
-                renderProperties();
-            }
-        }
-        
-        function renderProperties() {
-            const grid = document.getElementById('propertiesGrid');
-            const filterType = document.getElementById('filterType').value;
-            const filterCategory = document.getElementById('filterCategory').value;
-            const minPrice = parseFloat(document.getElementById('filterMinPrice').value) || 0;
-            const maxPrice = parseFloat(document.getElementById('filterMaxPrice').value) || Infinity;
-            
-            let filtered = allProperties.filter(p => {
-                if (filterType && p.transaction_type !== filterType) return false;
-                if (filterCategory && p.category !== filterCategory) return false;
-                if (p.price < minPrice || p.price > maxPrice) return false;
-                return true;
-            });
-            
-            if (filtered.length === 0) {
-                grid.innerHTML = `
-                    <div class="col-span-full text-center py-12 text-slate-500">
-                        <i class="fas fa-home text-4xl mb-4 opacity-50"></i>
-                        <p>No hay propiedades disponibles</p>
-                        <button onclick="showSection('publish')" class="btn-primary mt-4">
-                            <i class="fas fa-plus mr-2"></i>Publicar la primera
-                        </button>
-                    </div>
-                `;
-                return;
-            }
-            
-            grid.innerHTML = filtered.map(p => `
-                <div class="property-card">
-                    <div class="relative h-48 overflow-hidden">
-                        <img src="${p.image_url || 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=800'}" 
-                             class="w-full h-full object-cover" alt="${p.title}">
-                        <div class="absolute top-2 right-2">
-                            <span class="bg-purple-500/80 text-white px-3 py-1 rounded-full text-xs font-bold">
-                                ${p.transaction_type === 'venta' ? 'Venta' : 'Alquiler'}
-                            </span>
-                        </div>
-                    </div>
-                    <div class="p-5">
-                        <div class="flex justify-between items-start mb-2">
-                            <h3 class="text-lg font-bold text-white">${p.title}</h3>
-                            <span class="text-xl font-black text-purple-400">${p.price.toLocaleString()}€</span>
-                        </div>
-                        <p class="text-slate-400 text-sm mb-3"><i class="fas fa-map-marker-alt mr-2 text-red-400"></i>${p.location}</p>
-                        <div class="flex gap-2 mb-3">
-                            <span class="bg-slate-700/50 px-2 py-1 rounded text-xs text-slate-300">
-                                <i class="fas fa-bed mr-1"></i>${p.rooms} hab
-                            </span>
-                            <span class="bg-slate-700/50 px-2 py-1 rounded text-xs text-slate-300 capitalize">
-                                ${p.category}
-                            </span>
-                        </div>
-                        <p class="text-slate-400 text-sm line-clamp-2">${p.description}</p>
-                    </div>
-                </div>
-            `).join('');
-        }
-        
-        async function publishProperty(e) {
-            e.preventDefault();
-            
-            if (!currentUser) {
-                showSection('auth');
-                return;
-            }
-            
-            const form = e.target;
-            const errorDiv = document.getElementById('publishError');
-            const successDiv = document.getElementById('publishSuccess');
-            
-            errorDiv.classList.add('hidden');
-            successDiv.classList.add('hidden');
-            
-            const property = {
-                title: form.title.value,
-                price: parseFloat(form.price.value),
-                transaction_type: form.transaction_type.value,
-                category: form.category.value,
-                rooms: parseInt(form.rooms.value),
-                location: form.location.value,
-                description: form.description.value,
-                image_url: form.image_url.value || null,
-                user_id: currentUser.id
-            };
-            
-            try {
-                const { data, error } = await supabase
-                    .from('properties')
-                    .insert([property])
-                    .select();
-                
-                if (error) throw error;
-                
-                successDiv.textContent = '¡Propiedad publicada exitosamente!';
-                successDiv.classList.remove('hidden');
-                form.reset();
-                
-                setTimeout(() => {
-                    showSection('properties');
-                    loadProperties();
-                }, 1500);
-                
-            } catch (error) {
-                errorDiv.textContent = 'Error: ' + error.message;
-                errorDiv.classList.remove('hidden');
-            }
-        }
-        
-        // ==========================================
-        // IA CHAT FUNCTIONS
-        // ==========================================
-        async function sendIaMessage() {
-            const input = document.getElementById('iaInput');
-            const message = input.value.trim();
-            const chat = document.getElementById('iaChat');
-            
-            if (!message) return;
-            
-            // Add user message
-            chat.innerHTML += `
-                <div class="chat-message user">
-                    <p class="text-sm font-semibold text-purple-300 mb-1">Tú</p>
-                    <p class="text-sm">${message}</p>
-                </div>
-            `;
-            
-            input.value = '';
-            chat.scrollTop = chat.scrollHeight;
-            
-            // Process IA response
-            setTimeout(async () => {
-                const response = await processIaQuery(message);
-                chat.innerHTML += `
-                    <div class="chat-message ia">
-                        <p class="text-sm font-semibold text-blue-300 mb-1">Asistente IA</p>
-                        <div class="text-sm">${response}</div>
-                    </div>
-                `;
-                chat.scrollTop = chat.scrollHeight;
-            }, 500);
-        }
-        
-        async function processIaQuery(query) {
-            const lowerQuery = query.toLowerCase();
-            
-            // Parse query for location and type
-            let location = null;
-            let type = null;
-            let category = null;
-            
-            // Extract location
-            const cities = ['madrid', 'barcelona', 'valencia', 'sevilla', 'zaragoza', 'malaga', 'bilbao'];
-            for (const city of cities) {
-                if (lowerQuery.includes(city)) {
-                    location = city.charAt(0).toUpperCase() + city.slice(1);
-                    break;
-                }
-            }
-            
-            // Extract type
-            if (lowerQuery.includes('alquiler')) type = 'alquiler';
-            else if (lowerQuery.includes('venta') || lowerQuery.includes('comprar')) type = 'venta';
-            
-            // Extract category
-            if (lowerQuery.includes('piso')) category = 'piso';
-            else if (lowerQuery.includes('casa')) category = 'casa';
-            else if (lowerQuery.includes('ático') || lowerQuery.includes('atico')) category = 'atico';
-            else if (lowerQuery.includes('local')) category = 'local';
-            
-            // Filter properties
-            let results = allProperties;
-            if (location) {
-                results = results.filter(p => p.location.toLowerCase().includes(location.toLowerCase()));
-            }
-            if (type) {
-                results = results.filter(p => p.transaction_type === type);
-            }
-            if (category) {
-                results = results.filter(p => p.category === category);
-            }
-            
-            // Generate response
-            if (results.length === 0) {
-                let response = 'No he encontrado propiedades';
-                if (category) response += ` de tipo ${category}`;
-                if (location) response += ` en ${location}`;
-                if (type) response += ` en ${type}`;
-                response += '.<br><br>Prueba con otra búsqueda o <a href="#" onclick="showSection(\'publish\')" class="text-purple-400 underline">publica una propiedad</a>.';
-                return response;
-            }
-            
-            let response = `He encontrado <strong>${results.length} propiedad(es)</strong>`;
-            if (category) response += ` de tipo ${category}`;
-            if (location) response += ` en ${location}`;
-            if (type) response += ` en ${type}`;
-            response += ':<br><br>';
-            
-            response += '<div class="grid gap-3">';
-            results.slice(0, 5).forEach(p => {
-                response += `
-                    <div class="bg-slate-800/50 p-3 rounded-lg border border-indigo-500/20">
-                        <div class="flex justify-between items-start">
-                            <span class="font-bold text-white">${p.title}</span>
-                            <span class="text-purple-400 font-bold">${p.price.toLocaleString()}€</span>
-                        </div>
-                        <p class="text-xs text-slate-400 mt-1">${p.location} • ${p.rooms} hab • ${p.category}</p>
-                    </div>
-                `;
-            });
-            response += '</div>';
-            
-            if (results.length > 5) {
-                response += `<p class="mt-3 text-sm text-slate-400">Y ${results.length - 5} más... <a href="#" onclick="showSection('properties')" class="text-purple-400 underline">Ver todas</a></p>`;
-            }
-            
-            return response;
-        }
-        
-        // ==========================================
-        // UI FUNCTIONS
-        // ==========================================
-        function showSection(sectionId) {
-            // Hide all sections
-            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-            
-            // Show target section
-            const target = document.getElementById(sectionId);
-            if (target) {
-                target.classList.add('active');
-            }
-            
-            // Update nav
-            document.querySelectorAll('.nav-link').forEach(link => link.classList.remove('active'));
-            
-            // Load data if needed
-            if (sectionId === 'properties') {
-                loadProperties();
-            }
-            
-            // Scroll to top
-            window.scrollTo(0, 0);
-        }
-        
-        // ==========================================
-        // INITIALIZATION
-        // ==========================================
-        document.addEventListener('DOMContentLoaded', () => {
-            checkSession();
-            loadProperties();
-        });
-        
-        // Auth state listener
-        supabase.auth.onAuthStateChange((event, session) => {
-            if (session) {
-                currentUser = session.user;
-                updateUIForLoggedInUser();
-            } else {
-                currentUser = null;
-                updateUIForLoggedOutUser();
-            }
-        });
-    </script>
-</body>
-</html>
+// ==============================
+// 🚀 AUTO START
+// ==============================
+window.addEventListener("load", loadProperties);
+</script>
