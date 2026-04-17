@@ -2702,7 +2702,7 @@ async function register() {
   const email = document.getElementById("authEmail").value;
   const password = document.getElementById("authPassword").value;
 
-  const { error } = await supabase.auth.signUp({
+  const { data, error } = await supabase.auth.signUp({
     email,
     password
   });
@@ -2710,7 +2710,16 @@ async function register() {
   if (error) {
     alert(error.message);
   } else {
-    alert("Registro exitoso. Revisa tu email y luego inicia sesión.");
+    const user = data.user;
+
+    await supabase.from("profiles").insert([
+      {
+        id: user.id,
+        email: email
+      }
+    ]);
+
+    alert("Usuario registrado y guardado");
   }
 }
 </script> 
