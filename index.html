@@ -1476,49 +1476,30 @@ try {
 
   
 
-async function login() { 
+async function login() {
+  const email = document.getElementById("authEmail").value;
+  const password = document.getElementById("authPassword").value;
 
-console.log('🔑 Intentando login...'); 
+  const { data, error } = await supabase.auth.signInWithPassword({
+    email,
+    password
+  });
 
-const email = document.getElementById('authEmail').value; 
+  if (error) {
+    alert(error.message);
+  } else {
+    const user = data.user;
 
-const password = document.getElementById('authPassword').value; 
+    await supabase.from("profiles").upsert([
+      {
+        id: user.id,
+        email: user.email
+      }
+    ]);
 
-  
-
-if (!email || !password) { 
-
-   showAuthError('Completa todos los campos'); 
-
-   return; 
-
-} 
-
-  
-
-try { 
-
-   console.log('📤 Enviando credenciales a Supabase...'); 
-
-   const { data, error } = await supabase.auth.signInWithPassword({  
-
-     email: email,  
-
-     password: password  
-
-   }); 
-
-    
-
-   if (error) { 
-
-     console.error('❌ Error de login:', error); 
-
-     showAuthError(error.message); 
-
-     return; 
-
-   } 
+    alert("Sesión iniciada correctamente");
+  }
+}
 
     
 
