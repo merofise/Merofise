@@ -1,118 +1,1085 @@
-                            <li><i class="fas fa-check text-green-400 mr-2"></i>Publicación Meta Ads</li>
-                            <li><i class="fas fa-check text-green-400 mr-2"></i>15 portales inmobiliarios</li>
-                            <li><i class="fas fa-check text-green-400 mr-2"></i>Abogado dedicado</li>
-                        </ul>
-                        <button onclick="stripeCheckout('prod_UKLB3CxryhXq3F')" class="btn-gold w-full justify-center text-black font-bold">
-                            <i class="fas fa-crown mr-2"></i>Contratar Premium
-                        </button>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+    <title>MEROFISE | Max el Cazador de Propiedades Globales</title>
+    <meta name="description" content="Max el Pastor Alemán caza propiedades en BOE, Catastro, Registro y Notarías. La primera inmobiliaria IA mundial con exclusivas reales.">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.0/dist/umd/supabase.min.js"></script>
+    <script src="https://js.stripe.com/v3/"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <style>
+        :root {
+            --primary: #3b82f6;
+            --secondary: #8b5cf6;
+            --accent: #ec4899;
+            --success: #22c55e;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --gold: #fbbf24;
+            --dark: #0a0a0f;
+            --darker: #050508;
+            --glass: rgba(15, 23, 42, 0.6);
+        }
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            background: var(--darker);
+            color: #e2e8f0;
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+        
+        /* MAX LOGO - Pastor Alemán Realista Estilo Caza */
+        .max-logo-container {
+            position: relative;
+            width: 70px;
+            height: 70px;
+            cursor: pointer;
+        }
+        
+        .max-realistic {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            border: 3px solid var(--primary);
+            overflow: hidden;
+            position: relative;
+            box-shadow: 0 0 20px rgba(59, 130, 246, 0.4);
+            transition: all 0.3s ease;
+        }
+        
+        .max-realistic:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 30px rgba(59, 130, 246, 0.6);
+        }
+        
+        .max-realistic img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .max-hunting-badge {
+            position: absolute;
+            bottom: -5px;
+            right: -5px;
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+            color: white;
+            font-size: 0.65rem;
+            font-weight: 900;
+            padding: 2px 8px;
+            border-radius: 10px;
+            border: 2px solid var(--darker);
+            animation: huntPulse 2s infinite;
+            text-transform: uppercase;
+        }
+        
+        @keyframes huntPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); box-shadow: 0 0 10px rgba(239, 68, 68, 0.5); }
+        }
+        
+        /* Background */
+        .hunt-bg {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background-image: 
+                radial-gradient(circle at 20% 50%, rgba(59, 130, 246, 0.05) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(139, 92, 246, 0.05) 0%, transparent 50%);
+            z-index: -2;
+            pointer-events: none;
+        }
+        
+        .grid-overlay {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background-image: 
+                linear-gradient(rgba(59, 130, 246, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(59, 130, 246, 0.03) 1px, transparent 1px);
+            background-size: 60px 60px;
+            z-index: -1;
+            pointer-events: none;
+        }
+        
+        /* Typography */
+        .gradient-text {
+            background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 50%, #ec4899 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .gold-text {
+            background: linear-gradient(135deg, #fbbf24, #f59e0b);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .font-orbitron { font-family: 'Orbitron', sans-serif; }
+        
+        /* Glass */
+        .glass-panel {
+            background: var(--glass);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(139, 92, 246, 0.2);
+            border-radius: 20px;
+        }
+        
+        .glass-nav {
+            background: rgba(10, 10, 15, 0.9);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(139, 92, 246, 0.3);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        
+        /* Buttons */
+        .btn-primary {
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            color: white;
+            padding: 0.875rem 1.5rem;
+            border-radius: 12px;
+            font-weight: 700;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.95rem;
+            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(59, 130, 246, 0.5);
+        }
+        
+        .btn-gold {
+            background: linear-gradient(135deg, #f59e0b, #fbbf24);
+            color: #000;
+            font-weight: 800;
+        }
+        
+        .btn-gold:hover {
+            box-shadow: 0 8px 25px rgba(245, 158, 11, 0.5);
+        }
+        
+        .btn-hunt {
+            background: linear-gradient(135deg, #dc2626, #ef4444);
+            color: white;
+            font-weight: 800;
+            animation: huntGlow 2s infinite;
+        }
+        
+        @keyframes huntGlow {
+            0%, 100% { box-shadow: 0 0 5px rgba(239, 68, 68, 0.5); }
+            50% { box-shadow: 0 0 20px rgba(239, 68, 68, 0.8); }
+        }
+        
+        .btn-secondary {
+            background: rgba(30, 41, 59, 0.8);
+            color: #e2e8f0;
+            padding: 0.875rem 1.5rem;
+            border-radius: 12px;
+            font-weight: 600;
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .btn-secondary:hover {
+            border-color: #8b5cf6;
+            background: rgba(139, 92, 246, 0.1);
+        }
+        
+        /* Property Cards - FOTOS PROTAGONISTAS */
+        .property-hero-card {
+            background: linear-gradient(145deg, rgba(15, 23, 42, 0.98), rgba(30, 41, 59, 0.98));
+            border: 1px solid rgba(139, 92, 246, 0.2);
+            border-radius: 24px;
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+        }
+        
+        .property-hero-card:hover {
+            transform: translateY(-8px);
+            border-color: #8b5cf6;
+            box-shadow: 0 25px 50px rgba(139, 92, 246, 0.25);
+        }
+        
+        .property-image-container {
+            position: relative;
+            height: 280px;
+            overflow: hidden;
+        }
+        
+        .property-image-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.6s ease;
+        }
+        
+        .property-hero-card:hover .property-image-container img {
+            transform: scale(1.1);
+        }
+        
+        .property-image-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to top, rgba(10, 10, 15, 0.95) 0%, transparent 60%);
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            padding: 1.5rem;
+        }
+        
+        .property-price-tag {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 12px;
+            font-weight: 900;
+            font-size: 1.25rem;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        }
+        
+        .property-badge-exclusive {
+            position: absolute;
+            top: 1rem;
+            left: 1rem;
+            background: linear-gradient(135deg, #fbbf24, #f59e0b);
+            color: #000;
+            padding: 0.35rem 0.75rem;
+            border-radius: 8px;
+            font-weight: 800;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            display: flex;
+            align-items: center;
+            gap: 0.35rem;
+        }
+        
+        /* Gallery Grid for Property Detail */
+        .photo-gallery {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            grid-template-rows: 200px 200px;
+            gap: 0.5rem;
+            border-radius: 20px;
+            overflow: hidden;
+        }
+        
+        .photo-gallery .main-photo {
+            grid-row: 1 / -1;
+            position: relative;
+        }
+        
+        .photo-gallery img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+        
+        .photo-gallery img:hover {
+            transform: scale(1.05);
+        }
+        
+        .photo-count {
+            position: absolute;
+            bottom: 1rem;
+            right: 1rem;
+            background: rgba(0,0,0,0.7);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        
+        /* AI Agents Cards */
+        .agent-card {
+            background: linear-gradient(145deg, rgba(15, 23, 42, 0.9), rgba(30, 41, 59, 0.9));
+            border: 2px solid rgba(59, 130, 246, 0.3);
+            border-radius: 20px;
+            padding: 1.5rem;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .agent-card:hover {
+            border-color: #3b82f6;
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(59, 130, 246, 0.2);
+        }
+        
+        .agent-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 3px;
+            background: linear-gradient(90deg, #3b82f6, #8b5cf6, #ec4899);
+        }
+        
+        .agent-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: #22c55e;
+            margin-top: 0.5rem;
+        }
+        
+        .agent-status::before {
+            content: '';
+            width: 8px; height: 8px;
+            background: #22c55e;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(1.2); }
+        }
+        
+        /* Language Selector */
+        .lang-selector {
+            position: relative;
+        }
+        
+        .lang-btn {
+            background: rgba(30, 41, 59, 0.8);
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .lang-btn:hover {
+            border-color: #8b5cf6;
+            background: rgba(139, 92, 246, 0.1);
+        }
+        
+        .lang-dropdown {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            margin-top: 0.5rem;
+            background: rgba(15, 23, 42, 0.98);
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            border-radius: 12px;
+            padding: 0.5rem;
+            min-width: 150px;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: all 0.3s ease;
+            z-index: 100;
+        }
+        
+        .lang-dropdown.active {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+        
+        .lang-option {
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            transition: all 0.2s ease;
+        }
+        
+        .lang-option:hover {
+            background: rgba(139, 92, 246, 0.2);
+        }
+        
+        /* Contract Section */
+        .contract-panel {
+            background: linear-gradient(145deg, rgba(15, 23, 42, 0.95), rgba(30, 41, 59, 0.95));
+            border: 2px solid rgba(251, 191, 36, 0.3);
+            border-radius: 20px;
+            padding: 2rem;
+            position: relative;
+        }
+        
+        .contract-panel::before {
+            content: '⚖️';
+            position: absolute;
+            top: -20px;
+            right: 2rem;
+            font-size: 2.5rem;
+            background: var(--darker);
+            padding: 0 0.5rem;
+        }
+        
+        .price-highlight {
+            font-size: 3rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, #fbbf24, #f59e0b);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            line-height: 1;
+        }
+        
+        /* Stats Counter */
+        .hunt-stat {
+            text-align: center;
+            padding: 1.5rem;
+            background: rgba(15, 23, 42, 0.6);
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            border-radius: 16px;
+            transition: all 0.3s ease;
+        }
+        
+        .hunt-stat:hover {
+            border-color: #3b82f6;
+            transform: translateY(-4px);
+        }
+        
+        .hunt-stat-number {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 900;
+            color: #3b82f6;
+            line-height: 1;
+        }
+        
+        /* Source Badges */
+        .source-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: rgba(59, 130, 246, 0.1);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            border-radius: 20px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: #3b82f6;
+        }
+        
+        /* Ticker */
+        .hunt-ticker {
+            background: linear-gradient(90deg, rgba(220, 38, 38, 0.2), rgba(239, 68, 68, 0.2));
+            border-bottom: 1px solid rgba(239, 68, 68, 0.3);
+            padding: 0.5rem 0;
+            overflow: hidden;
+            white-space: nowrap;
+            font-family: 'Orbitron', monospace;
+            font-size: 0.8rem;
+            color: #fca5a5;
+        }
+        
+        .ticker-content {
+            display: inline-block;
+            animation: marquee 25s linear infinite;
+        }
+        
+        @keyframes marquee {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+        
+        /* Modals */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.92);
+            backdrop-filter: blur(10px);
+            z-index: 10000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .modal-content {
+            background: linear-gradient(145deg, rgba(15, 23, 42, 0.98), rgba(30, 41, 59, 0.98));
+            border: 2px solid rgba(139, 92, 246, 0.4);
+            border-radius: 24px;
+            padding: 2rem;
+            max-width: 700px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            transform: scale(0.9) translateY(20px);
+            transition: all 0.3s ease;
+        }
+        
+        .modal-overlay.active .modal-content {
+            transform: scale(1) translateY(0);
+        }
+        
+        /* Forms */
+        .input-field {
+            width: 100%;
+            background: rgba(15, 23, 42, 0.8);
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            border-radius: 12px;
+            padding: 1rem 1.25rem;
+            color: #e2e8f0;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            font-family: 'Inter', sans-serif;
+        }
+        
+        .input-field:focus {
+            outline: none;
+            border-color: #8b5cf6;
+            box-shadow: 0 0 20px rgba(139, 92, 246, 0.2);
+        }
+        
+        /* Toast */
+        .toast {
+            position: fixed;
+            top: 100px;
+            right: 20px;
+            padding: 1rem 1.5rem;
+            border-radius: 12px;
+            color: white;
+            font-weight: 600;
+            z-index: 10001;
+            transform: translateX(400px);
+            transition: transform 0.3s ease;
+            max-width: 350px;
+        }
+        
+        .toast.show { transform: translateX(0); }
+        .toast-success { background: linear-gradient(135deg, #22c55e, #16a34a); }
+        .toast-error { background: linear-gradient(135deg, #ef4444, #dc2626); }
+        .toast-gold { background: linear-gradient(135deg, #f59e0b, #fbbf24); color: #000; }
+        .toast-info { background: linear-gradient(135deg, #3b82f6, #8b5cf6); }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .photo-gallery {
+                grid-template-columns: 1fr;
+                grid-template-rows: 250px 120px 120px;
+            }
+            .photo-gallery .main-photo { grid-row: 1; }
+            .property-image-container { height: 220px; }
+            .hunt-stat-number { font-size: 2rem; }
+            .price-highlight { font-size: 2.5rem; }
+        }
+        
+        /* Utility */
+        .hidden { display: none !important; }
+        .flex { display: flex; }
+        .grid { display: grid; }
+        .container { max-width: 1280px; margin: 0 auto; padding: 0 1rem; }
+        .text-center { text-align: center; }
+        .items-center { align-items: center; }
+        .justify-between { justify-content: space-between; }
+        .gap-2 { gap: 0.5rem; }
+        .gap-4 { gap: 1rem; }
+        .gap-6 { gap: 1.5rem; }
+        .p-4 { padding: 1rem; }
+        .p-6 { padding: 1.5rem; }
+        .py-4 { padding-top: 1rem; padding-bottom: 1rem; }
+        .px-4 { padding-left: 1rem; padding-right: 1rem; }
+        .mt-4 { margin-top: 1rem; }
+        .mb-4 { margin-bottom: 1rem; }
+        .mb-6 { margin-bottom: 1.5rem; }
+        .mb-8 { margin-bottom: 2rem; }
+        .w-full { width: 100%; }
+        .rounded-xl { border-radius: 16px; }
+        .rounded-2xl { border-radius: 20px; }
+        .font-bold { font-weight: 700; }
+        .font-black { font-weight: 900; }
+        .text-sm { font-size: 0.875rem; }
+        .text-xs { font-size: 0.75rem; }
+        .text-xl { font-size: 1.25rem; }
+        .text-2xl { font-size: 1.5rem; }
+        .text-3xl { font-size: 1.875rem; }
+        .text-4xl { font-size: 2.25rem; }
+        .text-5xl { font-size: 3rem; }
+        .leading-tight { line-height: 1.2; }
+        .uppercase { text-transform: uppercase; }
+        .tracking-wider { letter-spacing: 0.1em; }
+        .relative { position: relative; }
+        .overflow-hidden { overflow: hidden; }
+        .object-cover { object-fit: cover; }
+        .cursor-pointer { cursor: pointer; }
+        
+        @media (min-width: 768px) {
+            .md\:flex { display: flex; }
+            .md\:grid-cols-2 { grid-template-columns: repeat(2, 1fr); }
+            .md\:grid-cols-3 { grid-template-columns: repeat(3, 1fr); }
+            .md\:grid-cols-4 { grid-template-columns: repeat(4, 1fr); }
+            .md\:text-4xl { font-size: 2.25rem; }
+            .md\:text-6xl { font-size: 3.75rem; }
+            .container { padding: 0 1.5rem; }
+        }
+        
+        @media (min-width: 1024px) {
+            .lg\:grid-cols-3 { grid-template-columns: repeat(3, 1fr); }
+            .lg\:grid-cols-4 { grid-template-columns: repeat(4, 1fr); }
+        }
+        
+        /* Animations */
+        .fade-in { animation: fadeIn 0.5s ease; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        
+        .slide-up { animation: slideUp 0.5s ease; }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body>
+    <div class="hunt-bg"></div>
+    <div class="grid-overlay"></div>
+    
+    <!-- Hunt Ticker -->
+    <div class="hunt-ticker">
+        <div class="ticker-content">
+            🔴 MAX CAZANDO EN: BOE | CATASTRO | REGISTRO PROPIEDAD | NOTARÍAS | IDEALISTA | FOTOCASA | MIL ANUNCIOS || 847 PROPIEDADES LOCALIZADAS HOY || 234 PROPIETARIOS CONTACTADOS || 89 EXCLUSIVAS FIRMADAS || IA REDACTANDO CONTRATOS 24/7 || MEROFISE.ES DOMINANDO EL MERCADO GLOBAL
+        </div>
+    </div>
+    
+    <!-- Navigation -->
+    <nav class="glass-nav">
+        <div class="container flex justify-between items-center py-3">
+            <div class="flex items-center gap-4 cursor-pointer" onclick="showSection('home')">
+                <!-- MAX LOGO -->
+                <div class="max-logo-container">
+                    <div class="max-realistic">
+                        <img src="https://images.unsplash.com/photo-1589941013453-ec89f33b5e95?w=200&h=200&fit=crop" alt="Max el Pastor Alemán">
+                    </div>
+                    <div class="max-hunting-badge">Cazando</div>
+                </div>
+                <div>
+                    <h1 class="text-2xl md:text-3xl font-black font-orbitron gradient-text tracking-wider">MEROFISE</h1>
+                    <p class="text-xs text-slate-400 font-bold uppercase tracking-tight flex items-center gap-2">
+                        <span style="color: #22c55e;">●</span> merofise.es
+                        <span style="color: #8b5cf6;">|</span>
+                        <span style="color: #fbbf24;">Max IA Global</span>
+                    </p>
+                </div>
+            </div>
+            
+            <div class="hidden md:flex items-center gap-3">
+                <!-- Language Selector -->
+                <div class="lang-selector">
+                    <button class="lang-btn" onclick="toggleLang()">
+                        <span id="currentLang">🇪🇸 ES</span>
+                        <i class="fas fa-chevron-down text-xs"></i>
+                    </button>
+                    <div class="lang-dropdown" id="langDropdown">
+                        <div class="lang-option" onclick="setLang('es')"><span>🇪🇸</span> Español</div>
+                        <div class="lang-option" onclick="setLang('en')"><span>🇬🇧</span> English</div>
+                        <div class="lang-option" onclick="setLang('fr')"><span>🇫🇷</span> Français</div>
+                        <div class="lang-option" onclick="setLang('de')"><span>🇩🇪</span> Deutsch</div>
+                        <div class="lang-option" onclick="setLang('it')"><span>🇮🇹</span> Italiano</div>
+                        <div class="lang-option" onclick="setLang('pt')"><span>🇵🇹</span> Português</div>
+                        <div class="lang-option" onclick="setLang('zh')"><span>🇨🇳</span> 中文</div>
+                        <div class="lang-option" onclick="setLang('ar')"><span>🇸🇦</span> العربية</div>
+                    </div>
+                </div>
+                
+                <button onclick="showSection('dashboard')" class="btn-secondary text-sm">
+                    <i class="fas fa-chart-line"></i> Panel
+                </button>
+                
+                <button id="authBtn" onclick="toggleAuth()" class="btn-primary text-sm">
+                    <i class="fas fa-user"></i> <span id="authBtnText">Entrar</span>
+                </button>
+                
+                <a href="https://wa.me/34664037407" target="_blank" class="btn-primary text-sm" style="background: linear-gradient(135deg, #22c55e, #16a34a);">
+                    <i class="fab fa-whatsapp"></i> +34 664 037 407
+                </a>
+            </div>
+            
+            <button class="md:hidden btn-secondary" onclick="toggleMobileMenu()" style="padding: 0.5rem;">
+                <i class="fas fa-bars text-xl"></i>
+            </button>
+        </div>
+        
+        <!-- Mobile Menu -->
+        <div id="mobileMenu" class="hidden md:hidden border-t border-slate-700/50">
+            <div class="container py-4 flex flex-col gap-3">
+                <div class="flex gap-2 flex-wrap">
+                    <button class="lang-btn text-sm" onclick="setLang('es')">🇪🇸 ES</button>
+                    <button class="lang-btn text-sm" onclick="setLang('en')">🇬🇧 EN</button>
+                    <button class="lang-btn text-sm" onclick="setLang('fr')">🇫🇷 FR</button>
+                </div>
+                <button onclick="showSection('dashboard')" class="btn-secondary w-full justify-center">
+                    <i class="fas fa-chart-line"></i> Panel de Control
+                </button>
+                <button onclick="toggleAuth()" class="btn-primary w-full justify-center">
+                    <i class="fas fa-user"></i> <span id="mobileAuthText">Entrar</span>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- MAIN CONTENT -->
+    <main id="mainContent" style="padding-top: 20px;">
+        
+        <!-- HOME SECTION -->
+        <section id="home" class="visible-section">
+            <!-- Hero -->
+            <header class="relative min-h-[85vh] flex items-center justify-center py-16 px-4">
+                <div class="container mx-auto text-center">
+                    
+                    <!-- Hunt Status -->
+                    <div class="inline-flex items-center gap-2 glass-panel px-4 py-2 mb-6 cursor-pointer" style="border-radius: 50px; border-color: rgba(239, 68, 68, 0.4);">
+                        <span class="w-2 h-2 bg-red-500 rounded-full animate-pulse"></span>
+                        <span class="text-red-300 text-sm font-mono font-bold">Max está cazando ahora mismo</span>
                     </div>
                     
-                    <!-- Venta <600k -->
-                    <div class="price-card">
-                        <div class="text-center">
-                            <div class="text-4xl mb-4">🏡</div>
-                            <h4 class="text-xl font-bold text-white mb-2">Venta Estándar</h4>
-                            <p class="text-sm text-slate-400">Propiedades &lt;€600.000</p>
-                            <div class="price-amount gradient-text">€2.178</div>
-                            <p class="text-sm text-slate-400 mb-4">Comisión + IVA incl.</p>
-                        </div>
-                        <ul class="space-y-3 text-sm text-slate-300 mb-6">
-                            <li><i class="fas fa-check text-green-400 mr-2"></i>50 bots promocionando</li>
-                            <li><i class="fas fa-check text-green-400 mr-2"></i>Fotografía IA profesional</li>
-                            <li><i class="fas fa-check text-green-400 mr-2"></i>Visitas virtuales</li>
-                            <li><i class="fas fa-check text-green-400 mr-2"></i>Negociación IA</li>
-                            <li><i class="fas fa-check text-green-400 mr-2"></i>10 portales inmobiliarios</li>
-                            <li><i class="fas fa-check text-green-400 mr-2"></i>Gestión legal incluida</li>
-                        </ul>
-                        <button onclick="stripeCheckout('prod_UID3xa1QEh46rg')" class="btn-primary w-full justify-center font-bold">
-                            <i class="fas fa-rocket mr-2"></i>Contratar Estándar
-                        </button>
+                    <h2 class="text-4xl md:text-6xl font-black font-orbitron mb-6 leading-tight">
+                        Max el Pastor Alemán<br>
+                        <span class="gradient-text">Caza Propiedades</span><br>
+                        <span class="text-white text-2xl md:text-4xl">En Todo el Mundo</span>
+                    </h2>
+                    
+                    <p class="text-slate-400 text-lg md:text-xl mb-8 max-w-3xl mx-auto">
+                        Nuestras IAs rastrean <strong style="color: #fbbf24;">BOE, Catastro, Registro, Notarías</strong> y todos los portales. 
+                        Contactamos propietarios, negociamos exclusivas y encontramos compradores/inquilinos automáticamente.
+                    </p>
+                    
+                    <!-- Hunt Sources -->
+                    <div class="flex flex-wrap justify-center gap-2 mb-8">
+                        <span class="source-badge"><i class="fas fa-landmark"></i> BOE</span>
+                        <span class="source-badge"><i class="fas fa-map"></i> Catastro</span>
+                        <span class="source-badge"><i class="fas fa-file-contract"></i> Registro</span>
+                        <span class="source-badge"><i class="fas fa-stamp"></i> Notarías</span>
+                        <span class="source-badge"><i class="fas fa-home"></i> Idealista</span>
+                        <span class="source-badge"><i class="fas fa-search"></i> Fotocasa</span>
                     </div>
                     
-                    <!-- Alquiler -->
-                    <div class="price-card featured">
-                        <div class="absolute top-0 right-0 bg-yellow-400 text-black text-xs font-bold px-3 py-1 rounded-bl-lg">MÁS POPULAR</div>
-                        <div class="text-center">
-                            <div class="text-4xl mb-4">🔑</div>
-                            <h4 class="text-xl font-bold text-white mb-2">Gestión Alquiler</h4>
-                            <p class="text-sm text-slate-400">Solo paga el propietario</p>
-                            <div class="price-amount gold-text">€36,30</div>
-                            <p class="text-sm text-slate-400 mb-4">/mes (IVA incl.)</p>
+                    <!-- Stats -->
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto mb-12">
+                        <div class="hunt-stat">
+                            <div class="hunt-stat-number" id="statsFound">12,847</div>
+                            <div class="text-xs text-slate-500 uppercase mt-1">Propiedades Cazadas</div>
                         </div>
-                        <div class="bg-green-500/10 border border-green-500/30 rounded-lg p-3 mb-4">
-                            <p class="text-sm text-green-300 font-bold text-center">
-                                <i class="fas fa-info-circle mr-2"></i>El inquilino NO PAGA NADA
+                        <div class="hunt-stat">
+                            <div class="hunt-stat-number" style="color: #8b5cf6;" id="statsContacted">3,421</div>
+                            <div class="text-xs text-slate-500 uppercase mt-1">Propietarios Contactados</div>
+                        </div>
+                        <div class="hunt-stat">
+                            <div class="hunt-stat-number" style="color: #22c55e;" id="statsExclusive">892</div>
+                            <div class="text-xs text-slate-500 uppercase mt-1">Exclusivas Firmadas</div>
+                        </div>
+                        <div class="hunt-stat">
+                            <div class="hunt-stat-number" style="color: #fbbf24;" id="statsSold">234</div>
+                            <div class="text-xs text-slate-500 uppercase mt-1">Vendidas Este Mes</div>
+                        </div>
+                    </div>
+                    
+                    <!-- CTA Buttons -->
+                    <div class="flex flex-col sm:flex-row justify-center gap-4">
+                        <button onclick="showSection('properties')" class="btn-hunt text-lg px-8 py-4">
+                            <i class="fas fa-search mr-2"></i>Ver Propiedades Cazadas
+                        </button>
+                        <button onclick="openPublishModal()" class="btn-primary text-lg px-8 py-4">
+                            <i class="fas fa-handshake mr-2"></i>Quiero Vender/Alquilar
+                        </button>
+                        <button onclick="openContractModal()" class="btn-gold text-lg px-8 py-4">
+                            <i class="fas fa-file-signature mr-2"></i>Contrato Exclusiva
+                        </button>
+                    </div>
+                </div>
+            </header>
+            
+            <!-- AI Agents Section -->
+            <section class="py-16 px-4 bg-gradient-to-b from-transparent to-slate-900/50">
+                <div class="container mx-auto">
+                    <div class="text-center mb-12">
+                        <h3 class="text-3xl md:text-4xl font-black font-orbitron mb-4 gradient-text">Nuestro Ejército de IAs</h3>
+                        <p class="text-slate-400">Cada IA especializada en una misión: cazar, convencer, vender y redactar</p>
+                    </div>
+                    
+                    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <!-- Hunter AI -->
+                        <div class="agent-card">
+                            <div class="flex items-center gap-4 mb-4">
+                                <div class="w-14 h-14 bg-gradient-to-br from-blue-500 to-blue-700 rounded-xl flex items-center justify-center text-2xl">
+                                    🐕
+                                </div>
+                                <div>
+                                    <h4 class="font-bold text-xl text-blue-300">Max Hunter</h4>
+                                    <p class="text-xs text-slate-400">Pastor Alemán Cazador</p>
+                                </div>
+                            </div>
+                            <p class="text-sm text-slate-300 mb-4">
+                                Rastrea 24/7: BOE, Catastro, Registro de la Propiedad, Notarías y todos los portales inmobiliarios. Detecta oportunidades antes que nadie.
                             </p>
+                            <div class="flex flex-wrap gap-2 mb-3">
+                                <span class="text-xs bg-blue-500/20 text-blue-300 px-2 py-1 rounded">BOE</span>
+                                <span class="text-xs bg-blue-500/20 text-blue-300 px-2 py-1 rounded">Catastro</span>
+                                <span class="text-xs bg-blue-500/20 text-blue-300 px-2 py-1 rounded">Registro</span>
+                            </div>
+                            <div class="agent-status">Cazando ahora • 847 hoy</div>
                         </div>
-                        <ul class="space-y-3 text-sm text-slate-300 mb-6">
-                            <li><i class="fas fa-check text-green-400 mr-2"></i>Publicación 10+ portales</li>
-                            <li><i class="fas fa-check text-green-400 mr-2"></i>Filtrado inquilinos IA</li>
-                            <li><i class="fas fa-check text-green-400 mr-2"></i>Contrato legal adaptado</li>
-                            <li><i class="fas fa-check text-green-400 mr-2"></i>Cobro rentas garantizado</li>
-                            <li><i class="fas fa-check text-green-400 mr-2"></i>Gestión incidencias 24/7</li>
-                            <li><i class="fas fa-check text-green-400 mr-2"></i>110 bots buscando inquilinos</li>
-                        </ul>
-                        <button onclick="stripeCheckout('prod_UIDCPujOw1Hrbn')" class="btn-gold w-full justify-center text-black font-bold">
-                            <i class="fas fa-key mr-2"></i>Activar Gestión
-                        </button>
+                        
+                        <!-- Convencer AI -->
+                        <div class="agent-card">
+                            <div class="flex items-center gap-4 mb-4">
+                                <div class="w-14 h-14 bg-gradient-to-br from-purple-500 to-pink-500 rounded-xl flex items-center justify-center text-2xl">
+                                    💬
+                                </div>
+                                <div>
+                                    <h4 class="font-bold text-xl text-purple-300">Lucía Convencer</h4>
+                                    <p class="text-xs text-slate-400">IA de Negociación</p>
+                                </div>
+                            </div>
+                            <p class="text-sm text-slate-300 mb-4">
+                                Contacta propietarios por teléfono, email y WhatsApp. Les explica las ventajas de nuestra exclusiva y cierra el trato.
+                            </p>
+                            <div class="flex flex-wrap gap-2 mb-3">
+                                <span class="text-xs bg-purple-500/20 text-purple-300 px-2 py-1 rounded">Calls</span>
+                                <span class="text-xs bg-purple-500/20 text-purple-300 px-2 py-1 rounded">Email</span>
+                                <span class="text-xs bg-purple-500/20 text-purple-300 px-2 py-1 rounded">WhatsApp</span>
+                            </div>
+                            <div class="agent-status">Llamando • 23 activas</div>
+                        </div>
+                        
+                        <!-- Buyer Hunter AI -->
+                        <div class="agent-card">
+                            <div class="flex items-center gap-4 mb-4">
+                                <div class="w-14 h-14 bg-gradient-to-br from-green-500 to-emerald-600 rounded-xl flex items-center justify-center text-2xl">
+                                    🎯
+                                </div>
+                                <div>
+                                    <h4 class="font-bold text-xl text-green-300">Carlos Buyer</h4>
+                                    <p class="text-xs text-slate-400">Cazador de Compradores</p>
+                                </div>
+                            </div>
+                            <p class="text-sm text-slate-300 mb-4">
+                                Busca compradores potenciales en redes sociales, foros y portales. Les envía propiedades a medida y los guía hasta la compra.
+                            </p>
+                            <div class="flex flex-wrap gap-2 mb-3">
+                                <span class="text-xs bg-green-500/20 text-green-300 px-2 py-1 rounded">Facebook</span>
+                                <span class="text-xs bg-green-500/20 text-green-300 px-2 py-1 rounded">LinkedIn</span>
+                                <span class="text-xs bg-green-500/20 text-green-300 px-2 py-1 rounded">TikTok</span>
+                            </div>
+                            <div class="agent-status">Buscando • 156 leads hoy</div>
+                        </div>
+                        
+                        <!-- Renter Hunter AI -->
+                        <div class="agent-card">
+                            <div class="flex items-center gap-4 mb-4">
+                                <div class="w-14 h-14 bg-gradient-to-br from-orange-500 to-red-500 rounded-xl flex items-center justify-center text-2xl">
+                                    🏠
+                                </div>
+                                <div>
+                                    <h4 class="font-bold text-xl text-orange-300">Sofía Renter</h4>
+                                    <p class="text-xs text-slate-400">Cazadora de Inquilinos</p>
+                                </div>
+                            </div>
+                            <p class="text-sm text-slate-300 mb-4">
+                                Encuentra personas buscando alquiler. Filtra por capacidad de pago, historial y urgencia. Solo presenta inquilinos de calidad.
+                            </p>
+                            <div class="flex flex-wrap gap-2 mb-3">
+                                <span class="text-xs bg-orange-500/20 text-orange-300 px-2 py-1 rounded">Verificación</span>
+                                <span class="text-xs bg-orange-500/20 text-orange-300 px-2 py-1 rounded">Historial</span>
+                            </div>
+                            <div class="agent-status">Filtrando • 89 candidatos</div>
+                        </div>
+                        
+                        <!-- Contract AI -->
+                        <div class="agent-card">
+                            <div class="flex items-center gap-4 mb-4">
+                                <div class="w-14 h-14 bg-gradient-to-br from-yellow-500 to-amber-600 rounded-xl flex items-center justify-center text-2xl">
+                                    ⚖️
+                                </div>
+                                <div>
+                                    <h4 class="font-bold text-xl text-yellow-300">Juez Contract</h4>
+                                    <p class="text-xs text-slate-400">Redactor Legal IA</p>
+                                </div>
+                            </div>
+                            <p class="text-sm text-slate-300 mb-4">
+                                Redacta contratos de exclusiva para venta y alquiler. Cumple con la legislación de cada país. Revisa cláusulas y protege al propietario.
+                            </p>
+                            <div class="flex flex-wrap gap-2 mb-3">
+                                <span class="text-xs bg-yellow-500/20 text-yellow-300 px-2 py-1 rounded">Legal</span>
+                                <span class="text-xs bg-yellow-500/20 text-yellow-300 px-2 py-1 rounded">Exclusiva</span>
+                                <span class="text-xs bg-yellow-500/20 text-yellow-300 px-2 py-1 rounded">Multi-país</span>
+                            </div>
+                            <div class="agent-status">Redactando • 12 contratos hoy</div>
+                        </div>
+                        
+                        <!-- Coordinator AI -->
+                        <div class="agent-card">
+                            <div class="flex items-center gap-4 mb-4">
+                                <div class="w-14 h-14 bg-gradient-to-br from-cyan-500 to-blue-600 rounded-xl flex items-center justify-center text-2xl">
+                                    🧠
+                                </div>
+                                <div>
+                                    <h4 class="font-bold text-xl text-cyan-300">Antonio CEO</h4>
+                                    <p class="text-xs text-slate-400">Coordinador General</p>
+                                </div>
+                            </div>
+                            <p class="text-sm text-slate-300 mb-4">
+                                Supervisa a todas las IAs, optimiza procesos, toma decisiones estratégicas y coordina las 111 unidades de procesamiento.
+                            </p>
+                            <div class="flex flex-wrap gap-2 mb-3">
+                                <span class="text-xs bg-cyan-500/20 text-cyan-300 px-2 py-1 rounded">Supervisión</span>
+                                <span class="text-xs bg-cyan-500/20 text-cyan-300 px-2 py-1 rounded">Optimización</span>
+                            </div>
+                            <div class="agent-status">Coordinando • 111 bots activos</div>
+                        </div>
                     </div>
                 </div>
-                
-                <!-- Personal Shopper -->
-                <div class="mt-12 grid md:grid-cols-2 gap-8">
-                    <div class="price-card">
-                        <div class="text-center">
-                            <div class="text-4xl mb-4">🛍️</div>
-                            <h4 class="text-xl font-bold text-white mb-2">Personal Shopper</h4>
-                            <p class="text-sm text-slate-400">Encuentra tu propiedad ideal</p>
-                            <div class="price-amount gradient-text">€968</div>
-                            <p class="text-sm text-slate-400 mb-4">Servicio completo</p>
-                        </div>
-                        <ul class="space-y-3 text-sm text-slate-300 mb-6">
-                            <li><i class="fas fa-check text-green-400 mr-2"></i>Max busca según criterios</li>
-                            <li><i class="fas fa-check text-green-400 mr-2"></i>Visitas personalizadas</li>
-                            <li><i class="fas fa-check text-green-400 mr-2"></i>Negociación exclusiva</li>
-                            <li><i class="fas fa-check text-green-400 mr-2"></i>Asesoramiento legal</li>
-                        </ul>
-                        <button onclick="stripeCheckout('prod_UKLENOERbIfYaY')" class="btn-blue w-full justify-center font-bold">
-                            <i class="fas fa-search mr-2"></i>Contratar Shopper
-                        </button>
+            </section>
+            
+            <!-- Pricing Section -->
+            <section class="py-16 px-4">
+                <div class="container mx-auto max-w-4xl">
+                    <div class="text-center mb-12">
+                        <h3 class="text-3xl md:text-4xl font-black font-orbitron mb-4 gold-text">Modelo de Negocio Transparente</h3>
+                        <p class="text-slate-400">Sin sorpresas. Solo pagas si vendemos o alquilamos tu propiedad.</p>
                     </div>
                     
-                    <div class="price-card">
-                        <div class="text-center">
-                            <div class="text-4xl mb-4">📸</div>
-                            <h4 class="text-xl font-bold text-white mb-2">Reportaje Fotográfico</h4>
-                            <p class="text-sm text-slate-400">Fotos profesionales IA</p>
-                            <div class="price-amount gradient-text">€242</div>
-                            <p class="text-sm text-slate-400 mb-4">Sesión completa</p>
+                    <div class="grid md:grid-cols-2 gap-8">
+                        <!-- Venta -->
+                        <div class="contract-panel">
+                            <div class="flex items-center gap-3 mb-6">
+                                <div class="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-500 rounded-xl flex items-center justify-center text-2xl">🏡</div>
+                                <div>
+                                    <h4 class="text-2xl font-bold text-white">Exclusiva de Venta</h4>
+                                    <p class="text-sm text-slate-400">Para propietarios vendedores</p>
+                                </div>
+                            </div>
+                            
+                            <div class="mb-6">
+                                <div class="text-sm text-slate-400 mb-2">Comisión por venta exitosa:</div>
+                                <div class="price-highlight">3%</div>
+                                <div class="text-sm text-slate-400">Sobre el precio de venta final</div>
+                            </div>
+                            
+                            <ul class="space-y-3 text-sm text-slate-300 mb-6">
+                                <li class="flex items-start gap-2"><i class="fas fa-check text-green-400 mt-1"></i> Publicación en 15+ portales</li>
+                                <li class="flex items-start gap-2"><i class="fas fa-check text-green-400 mt-1"></i> Fotografía profesional IA</li>
+                                <li class="flex items-start gap-2"><i class="fas fa-check text-green-400 mt-1"></i> Visitas virtuales 3D</li>
+                                <li class="flex items-start gap-2"><i class="fas fa-check text-green-400 mt-1"></i> Negociación por expertos IA</li>
+                                <li class="flex items-start gap-2"><i class="fas fa-check text-green-400 mt-1"></i> Gestión legal completa</li>
+                            </ul>
+                            
+                            <button onclick="openContractModal('venta')" class="btn-primary w-full justify-center text-lg">
+                                <i class="fas fa-file-signature mr-2"></i>Firmar Exclusiva Venta
+                            </button>
                         </div>
-                        <ul class="space-y-3 text-sm text-slate-300 mb-6">
-                            <li><i class="fas fa-check text-green-400 mr-2"></i>50 fotos profesionales</li>
-                            <li><i class="fas fa-check text-green-400 mr-2"></i>Tour virtual 360°</li>
-                            <li><i class="fas fa-check text-green-400 mr-2"></i>Video dron (si aplica)</li>
-                            <li><i class="fas fa-check text-green-400 mr-2"></i>Edición profesional</li>
-                        </ul>
-                        <button onclick="stripeCheckout('prod_UKMQgh5rEkFEuw')" class="btn-blue w-full justify-center font-bold">
-                            <i class="fas fa-camera mr-2"></i>Contratar Reportaje
-                        </button>
+                        
+                        <!-- Alquiler -->
+                        <div class="contract-panel" style="border-color: rgba(34, 197, 94, 0.3);">
+                            <div class="flex items-center gap-3 mb-6">
+                                <div class="w-12 h-12 bg-gradient-to-br from-green-500 to-emerald-600 rounded-xl flex items-center justify-center text-2xl">🔑</div>
+                                <div>
+                                    <h4 class="text-2xl font-bold text-white">Exclusiva de Alquiler</h4>
+                                    <p class="text-sm text-slate-400">Solo paga el propietario</p>
+                                </div>
+                            </div>
+                            
+                            <div class="mb-6">
+                                <div class="text-sm text-slate-400 mb-2">Cuota mensual fija:</div>
+                                <div class="price-highlight">30€</div>
+                                <div class="text-sm text-slate-400">+ IVA (21%) = 36,30€/mes</div>
+                            </div>
+                            
+                            <div class="bg-green-500/10 border border-green-500/30 rounded-lg p-3 mb-6">
+                                <p class="text-sm text-green-300 font-bold text-center">
+                                    <i class="fas fa-info-circle mr-2"></i>
+                                    El inquilino NO PAGA NADA
+                                </p>
+                            </div>
+                            
+                            <ul class="space-y-3 text-sm text-slate-300 mb-6">
+                                <li class="flex items-start gap-2"><i class="fas fa-check text-green-400 mt-1"></i> Publicación en 10+ portales</li>
+                                <li class="flex items-start gap-2"><i class="fas fa-check text-green-400 mt-1"></i> Filtrado de inquilinos (nómina, aval)</li>
+                                <li class="flex items-start gap-2"><i class="fas fa-check text-green-400 mt-1"></i> Contrato legal adaptado</li>
+                                <li class="flex items-start gap-2"><i class="fas fa-check text-green-400 mt-1"></i> Cobro de rentas garantizado</li>
+                                <li class="flex items-start gap-2"><i class="fas fa-check text-green-400 mt-1"></i> Gestión de incidencias 24/7</li>
+                            </ul>
+                            
+                            <button onclick="openContractModal('alquiler')" class="btn-primary w-full justify-center text-lg" style="background: linear-gradient(135deg, #22c55e, #16a34a);">
+                                <i class="fas fa-file-signature mr-2"></i>Firmar Exclusiva Alquiler
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </section>
+
+        <!-- PROPERTIES SECTION - FOTOS PROTAGONISTAS -->
+        <section id="properties" class="hidden-section py-16 px-4">
+            <div class="container mx-auto">
+                <div class="text-center mb-12">
+                    <h3 class="text-3xl md:text-4xl font-black font-orbitron mb-4 gradient-text">Propiedades Cazadas por Max</h3>
+                    <p class="text-slate-400">De lujo, clase media y low cost. Todas con fotos reales verificadas.</p>
+                    
+                    <!-- Category Filter -->
+                    <div class="flex flex-wrap justify-center gap-2 mt-6">
+                        <button onclick="filterCategory('all')" class="btn-primary text-sm">Todas</button>
+                        <button onclick="filterCategory('lujo')" class="btn-secondary text-sm">🏰 Lujo</button>
+                        <button onclick="filterCategory('media')" class="btn-secondary text-sm">🏠 Clase Media</button>
+                        <button onclick="filterCategory('lowcost')" class="btn-secondary text-sm">💰 Low Cost</button>
+                        <button onclick="filterCategory('alquiler')" class="btn-secondary text-sm">🔑 Alquiler</button>
                     </div>
                 </div>
                 
-                <!-- Personal Shopper Premium Alquileres -->
-                <div class="mt-8 price-card max-w-2xl mx-auto">
-                    <div class="flex flex-col md:flex-row items-center gap-6">
-                        <div class="text-center md:text-left flex-1">
-                            <div class="text-4xl mb-4">👑</div>
-                            <h4 class="text-2xl font-bold text-white mb-2">Personal Shopper Premium Alquileres</h4>
-                            <p class="text-slate-400 mb-4">Servicio VIP para encontrar el alquiler perfecto</p>
-                            <div class="price-amount gold-text">€1.815</div>
-                            <p class="text-sm text-slate-400">Incluye gestión completa</p>
-                        </div>
-                        <button onclick="stripeCheckout('prod_UKLDjp1Lv5Vb9q')" class="btn-gold text-lg px-8 py-4 text-black font-bold">
-                            <i class="fas fa-crown mr-2"></i>Contratar VIP
-                        </button>
-                    </div>
+                <!-- Properties Grid -->
+                <div id="propertiesGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <!-- Loaded dynamically -->
+                </div>
+            </div>
+        </section>
+
+        <!-- PROPERTY DETAIL SECTION -->
+        <section id="propertyDetail" class="hidden-section py-16 px-4">
+            <div class="container mx-auto max-w-5xl">
+                <button onclick="showSection('properties')" class="btn-secondary mb-6">
+                    <i class="fas fa-arrow-left mr-2"></i>Volver
+                </button>
+                
+                <div id="propertyDetailContent">
+                    <!-- Loaded dynamically -->
                 </div>
             </div>
         </section>
@@ -122,54 +1089,50 @@
             <div class="container mx-auto">
                 <div class="text-center mb-12">
                     <h3 class="text-3xl md:text-4xl font-black font-orbitron mb-4 gradient-text">Panel de Control</h3>
-                    <p class="text-slate-400">Gestiona tus propiedades, ofertas y llamadas</p>
+                    <p class="text-slate-400">Gestiona tus propiedades, contratos y ganancias</p>
                 </div>
                 
+                <!-- Stats Cards -->
                 <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
                     <div class="glass-panel p-6 text-center">
-                        <div class="text-3xl font-black text-red-400" id="dashProperties">0</div>
+                        <div class="text-3xl font-black text-blue-400" id="dashProperties">0</div>
                         <div class="text-xs text-slate-500 uppercase mt-1">Mis Propiedades</div>
                     </div>
                     <div class="glass-panel p-6 text-center">
-                        <div class="text-3xl font-black text-blue-400" id="dashOffers">0</div>
-                        <div class="text-xs text-slate-500 uppercase mt-1">Ofertas Recibidas</div>
+                        <div class="text-3xl font-black text-purple-400" id="dashExclusives">0</div>
+                        <div class="text-xs text-slate-500 uppercase mt-1">Exclusivas Activas</div>
                     </div>
                     <div class="glass-panel p-6 text-center">
-                        <div class="text-3xl font-black text-green-400" id="dashCalls">0</div>
-                        <div class="text-xs text-slate-500 uppercase mt-1">Llamadas Realizadas</div>
-                    </div>
-                    <div class="glass-panel p-6 text-center">
-                        <div class="text-3xl font-black text-yellow-400" id="dashEarnings">€0</div>
+                        <div class="text-3xl font-black text-green-400" id="dashEarnings">0€</div>
                         <div class="text-xs text-slate-500 uppercase mt-1">Ganancias</div>
+                    </div>
+                    <div class="glass-panel p-6 text-center">
+                        <div class="text-3xl font-black text-yellow-400" id="dashViews">0</div>
+                        <div class="text-xs text-slate-500 uppercase mt-1">Visitas</div>
                     </div>
                 </div>
                 
                 <div class="grid lg:grid-cols-2 gap-8">
                     <!-- My Properties -->
                     <div class="glass-panel rounded-2xl p-6">
-                        <h4 class="text-xl font-bold text-white mb-4"><i class="fas fa-home mr-2 text-red-400"></i>Mis Propiedades</h4>
-                        <div id="myPropertiesList" class="space-y-4 max-h-96 overflow-y-auto">
+                        <h4 class="text-xl font-bold text-white mb-4"><i class="fas fa-home mr-2 text-blue-400"></i>Mis Propiedades</h4>
+                        <div id="myPropertiesList" class="space-y-4">
                             <p class="text-slate-500 text-center py-8">No tienes propiedades registradas</p>
                         </div>
-                        <button onclick="openCaptureModal()" class="btn-primary w-full mt-6 justify-center">
+                        <button onclick="openPublishModal()" class="btn-primary w-full mt-6 justify-center">
                             <i class="fas fa-plus mr-2"></i>Añadir Propiedad
                         </button>
                     </div>
                     
-                    <!-- Offers Received -->
+                    <!-- Contracts -->
                     <div class="glass-panel rounded-2xl p-6">
-                        <h4 class="text-xl font-bold text-white mb-4"><i class="fas fa-hand-holding-usd mr-2 text-blue-400"></i>Ofertas Recibidas</h4>
-                        <div id="myOffersList" class="space-y-4 max-h-96 overflow-y-auto">
-                            <p class="text-slate-500 text-center py-8">No tienes ofertas pendientes</p>
+                        <h4 class="text-xl font-bold text-white mb-4"><i class="fas fa-file-contract mr-2 text-yellow-400"></i>Mis Contratos</h4>
+                        <div id="myContractsList" class="space-y-4">
+                            <p class="text-slate-500 text-center py-8">No tienes contratos activos</p>
                         </div>
-                    </div>
-                </div>
-                
-                <!-- Live Calls History -->
-                <div class="glass-panel rounded-2xl p-6 mt-8">
-                    <h4 class="text-xl font-bold text-white mb-4"><i class="fas fa-video mr-2 text-green-400"></i>Llamadas en Vivo Realizadas</h4>
-                    <div id="callsHistory" class="space-y-4">
-                        <p class="text-slate-500 text-center py-8">No hay llamadas registradas</p>
+                        <button onclick="openContractModal()" class="btn-gold w-full mt-6 justify-center text-black">
+                            <i class="fas fa-file-signature mr-2"></i>Nuevo Contrato
+                        </button>
                     </div>
                 </div>
             </div>
@@ -182,31 +1145,24 @@
             <div class="grid md:grid-cols-4 gap-8 mb-8">
                 <div>
                     <div class="flex items-center gap-3 mb-4">
-                        <div class="w-10 h-10">
-                            <svg viewBox="0 0 100 100" fill="none">
-                                <path d="M15 40 L5 5 L35 25 Z" fill="#1e293b" stroke="#ef4444" stroke-width="2"/>
-                                <path d="M85 40 L95 5 L65 25 Z" fill="#1e293b" stroke="#ef4444" stroke-width="2"/>
-                                <path d="M20 45 Q50 20 80 45 Q85 60 75 75 Q50 90 25 75 Q15 60 20 45 Z" fill="#0f172a" stroke="#ef4444" stroke-width="2"/>
-                                <ellipse cx="50" cy="62" rx="6" ry="5" fill="#000"/>
-                                <path d="M32 48 Q38 42 44 48 Q38 52 32 48 Z" fill="#fbbf24"/>
-                                <path d="M56 48 Q62 42 68 48 Q62 52 56 48 Z" fill="#fbbf24"/>
-                            </svg>
+                        <div class="w-10 h-10 rounded-full overflow-hidden border-2 border-blue-500">
+                            <img src="https://images.unsplash.com/photo-1589941013453-ec89f33b5e95?w=100&h=100&fit=crop" alt="Max" class="w-full h-full object-cover">
                         </div>
                         <h4 class="text-2xl font-black font-orbitron gradient-text">MEROFISE</h4>
                     </div>
                     <p class="text-slate-500 text-sm">
-                        Max el Pastor Alemán y 110 bots IA cazan propiedades mundialmente. 
-                        Exclusivas reales, negociación IA y pagos seguros.
+                        Max el Pastor Alemán y nuestro ejército de IAs cazan propiedades en todo el mundo. 
+                        Exclusivas reales, contratos legales y resultados garantizados.
                     </p>
                 </div>
                 
                 <div>
                     <h5 class="font-bold text-slate-300 mb-4">Servicios</h5>
                     <ul class="space-y-2 text-sm text-slate-400">
-                        <li><i class="fas fa-search mr-2 text-red-400"></i>Caza de propiedades</li>
-                        <li><i class="fas fa-handshake mr-2 text-blue-400"></i>Exclusivas venta</li>
-                        <li><i class="fas fa-key mr-2 text-green-400"></i>Gestión alquiler</li>
-                        <li><i class="fas fa-robot mr-2 text-purple-400"></i>Negociación IA</li>
+                        <li><i class="fas fa-search mr-2 text-blue-400"></i>Caza de propiedades</li>
+                        <li><i class="fas fa-handshake mr-2 text-purple-400"></i>Exclusivas de venta</li>
+                        <li><i class="fas fa-key mr-2 text-green-400"></i>Gestión de alquiler</li>
+                        <li><i class="fas fa-file-contract mr-2 text-yellow-400"></i>Contratos legales IA</li>
                     </ul>
                 </div>
                 
@@ -222,21 +1178,21 @@
                 <div>
                     <h5 class="font-bold text-slate-300 mb-4">Estado IAs</h5>
                     <div class="space-y-2 text-sm">
-                        <div class="flex items-center gap-2 text-red-400">
-                            <span class="w-2 h-2 bg-red-400 rounded-full animate-pulse"></span>
-                            Max Cazando
+                        <div class="flex items-center gap-2 text-green-400">
+                            <span class="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span>
+                            Max Hunter Activo
                         </div>
                         <div class="flex items-center gap-2 text-blue-400">
                             <span class="w-2 h-2 bg-blue-400 rounded-full animate-pulse"></span>
-                            110 Bots Activos
-                        </div>
-                        <div class="flex items-center gap-2 text-green-400">
-                            <span class="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span>
-                            Stripe Conectado
+                            Lucía Contactando
                         </div>
                         <div class="flex items-center gap-2 text-purple-400">
                             <span class="w-2 h-2 bg-purple-400 rounded-full animate-pulse"></span>
-                            Meta Ads Activo
+                            Carlos Buscando Buyers
+                        </div>
+                        <div class="flex items-center gap-2 text-yellow-400">
+                            <span class="w-2 h-2 bg-yellow-400 rounded-full animate-pulse"></span>
+                            Juez Redactando
                         </div>
                     </div>
                 </div>
@@ -248,7 +1204,7 @@
     </footer>
 
     <!-- MODALS -->
-
+    
     <!-- Auth Modal -->
     <div id="authModal" class="modal-overlay">
         <div class="modal-content">
@@ -271,205 +1227,172 @@
                 </div>
                 
                 <div class="flex gap-4 pt-4">
-                    <button onclick="login()" class="btn-blue flex-1 justify-center">Entrar</button>
+                    <button onclick="login()" class="btn-primary flex-1 justify-center">Entrar</button>
                     <button onclick="register()" class="btn-secondary flex-1 justify-center">Crear Cuenta</button>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Capture Modal (Vender/Alquilar) -->
-    <div id="captureModal" class="modal-overlay">
+    <!-- Publish Modal -->
+    <div id="publishModal" class="modal-overlay">
         <div class="modal-content max-w-2xl">
             <div class="flex justify-between items-center mb-6">
-                <h3 class="text-2xl font-bold gradient-text">Captar mi Propiedad</h3>
-                <button onclick="closeCaptureModal()" class="text-slate-400 hover:text-white"><i class="fas fa-times text-xl"></i></button>
+                <h3 class="text-2xl font-bold gradient-text">Publicar Propiedad</h3>
+                <button onclick="closePublishModal()" class="text-slate-400 hover:text-white"><i class="fas fa-times text-xl"></i></button>
             </div>
             
-            <form id="captureForm" onsubmit="submitCapture(event)" class="space-y-4">
+            <form id="publishForm" onsubmit="publishProperty(event)" class="space-y-4">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-bold mb-2 text-slate-300">Título *</label>
+                        <input type="text" name="title" required class="input-field" placeholder="Piso céntrico reformado">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-bold mb-2 text-slate-300">Precio (€) *</label>
+                        <input type="number" name="price" required class="input-field" placeholder="150000">
+                    </div>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div>
+                        <label class="block text-sm font-bold mb-2 text-slate-300">Tipo</label>
+                        <select name="transaction_type" class="input-field">
+                            <option value="venta">Venta</option>
+                            <option value="alquiler">Alquiler</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-bold mb-2 text-slate-300">Categoría</label>
+                        <select name="category" class="input-field">
+                            <option value="lujo">Lujo</option>
+                            <option value="media">Clase Media</option>
+                            <option value="lowcost">Low Cost</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-bold mb-2 text-slate-300">Habitaciones</label>
+                        <input type="number" name="rooms" class="input-field" min="0" value="2">
+                    </div>
+                </div>
+                
+                <div>
+                    <label class="block text-sm font-bold mb-2 text-slate-300">Ubicación *</label>
+                    <input type="text" name="location" required class="input-field" placeholder="Calle Ejemplo, 123, Madrid">
+                </div>
+                
+                <div>
+                    <label class="block text-sm font-bold mb-2 text-slate-300">Descripción *</label>
+                    <textarea name="description" required class="input-field h-32" placeholder="Describe la propiedad..."></textarea>
+                </div>
+                
+                <div>
+                    <label class="block text-sm font-bold mb-2 text-slate-300">Fotos (URLs separadas por coma)</label>
+                    <textarea name="photos" class="input-field h-24" placeholder="https://... , https://..."></textarea>
+                </div>
+                
+                <div id="publishError" class="hidden bg-red-500/20 border border-red-500/50 rounded-lg p-3 text-red-300 text-sm"></div>
+                <div id="publishSuccess" class="hidden bg-green-500/20 border border-green-500/50 rounded-lg p-3 text-green-300 text-sm"></div>
+                
+                <div class="flex gap-4 pt-4">
+                    <button type="submit" class="btn-primary flex-1 justify-center text-lg">
+                        <i class="fas fa-rocket mr-2"></i>Publicar y Cazar
+                    </button>
+                    <button type="button" onclick="closePublishModal()" class="btn-secondary">Cancelar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Contract Modal -->
+    <div id="contractModal" class="modal-overlay">
+        <div class="modal-content max-w-3xl">
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="text-2xl font-bold gold-text">Contrato de Exclusiva</h3>
+                <button onclick="closeContractModal()" class="text-slate-400 hover:text-white"><i class="fas fa-times text-xl"></i></button>
+            </div>
+            
+            <div id="contractTypeSelector" class="grid md:grid-cols-2 gap-4 mb-6">
+                <div class="glass-panel p-6 cursor-pointer hover:border-blue-500 transition" onclick="selectContractType('venta')">
+                    <div class="text-4xl mb-3">🏡</div>
+                    <h4 class="text-xl font-bold text-white mb-2">Exclusiva de Venta</h4>
+                    <p class="text-sm text-slate-400">Comisión del 3% sobre precio final. Sin cuotas mensuales.</p>
+                </div>
+                <div class="glass-panel p-6 cursor-pointer hover:border-green-500 transition" onclick="selectContractType('alquiler')">
+                    <div class="text-4xl mb-3">🔑</div>
+                    <h4 class="text-xl font-bold text-white mb-2">Exclusiva de Alquiler</h4>
+                    <p class="text-sm text-slate-400">30€ + IVA/mes. El inquilino no paga nada.</p>
+                </div>
+            </div>
+            
+            <form id="contractForm" onsubmit="generateContract(event)" class="hidden space-y-4">
+                <input type="hidden" id="contractType" name="type">
+                
                 <div class="grid md:grid-cols-2 gap-4">
                     <div>
                         <label class="block text-sm font-bold mb-2 text-slate-300">Nombre completo *</label>
                         <input type="text" name="fullName" required class="input-field">
                     </div>
                     <div>
-                        <label class="block text-sm font-bold mb-2 text-slate-300">Teléfono *</label>
-                        <input type="tel" name="phone" required class="input-field">
-                    </div>
-                </div>
-                
-                <div>
-                    <label class="block text-sm font-bold mb-2 text-slate-300">Email *</label>
-                    <input type="email" name="email" required class="input-field">
-                </div>
-                
-                <div class="grid md:grid-cols-2 gap-4">
-                    <div>
-                        <label class="block text-sm font-bold mb-2 text-slate-300">Tipo de operación *</label>
-                        <select name="operation" class="input-field" onchange="updateCapturePrice()">
-                            <option value="venta">Venta</option>
-                            <option value="alquiler">Alquiler</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label class="block text-sm font-bold mb-2 text-slate-300">Precio estimado (€) *</label>
-                        <input type="number" name="estimatedPrice" required class="input-field" onchange="updateCapturePrice()">
+                        <label class="block text-sm font-bold mb-2 text-slate-300">DNI/NIE *</label>
+                        <input type="text" name="dni" required class="input-field">
                     </div>
                 </div>
                 
                 <div>
                     <label class="block text-sm font-bold mb-2 text-slate-300">Dirección de la propiedad *</label>
-                    <input type="text" name="address" required class="input-field">
+                    <input type="text" name="propertyAddress" required class="input-field">
                 </div>
                 
-                <div>
-                    <label class="block text-sm font-bold mb-2 text-slate-300">Descripción</label>
-                    <textarea name="description" class="input-field h-24" placeholder="Metros, habitaciones, estado..."></textarea>
-                </div>
-                
-                <!-- Price Preview -->
-                <div id="capturePricePreview" class="bg-yellow-500/10 border border-yellow-500/30 rounded-lg p-4 hidden">
-                    <div class="flex justify-between items-center">
-                        <div>
-                            <p class="text-sm text-yellow-300 font-bold">Tarifa calculada por IA:</p>
-                            <p class="text-xs text-slate-400" id="capturePriceText"></p>
-                        </div>
-                        <div class="text-2xl font-black gold-text" id="capturePriceAmount"></div>
+                <div class="grid md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-bold mb-2 text-slate-300">Precio (€) *</label>
+                        <input type="number" name="contractPrice" required class="input-field">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-bold mb-2 text-slate-300">Superficie (m²)</label>
+                        <input type="number" name="surface" class="input-field">
                     </div>
                 </div>
                 
+                <div>
+                    <label class="block text-sm font-bold mb-2 text-slate-300">Condiciones especiales</label>
+                    <textarea name="conditions" class="input-field h-24" placeholder="Muebles incluidos, plazo de venta, etc."></textarea>
+                </div>
+                
+                <div class="bg-yellow-500/10 border border-yellow-500/30 rounded-lg p-4">
+                    <h5 class="font-bold text-yellow-400 mb-2"><i class="fas fa-robot mr-2"></i>Juez Contract redactará:</h5>
+                    <ul class="text-sm text-slate-300 space-y-1">
+                        <li>• Contrato de exclusiva adaptado a la legislación vigente</li>
+                        <li>• Protección al propietario (cláusulas de rescisión)</li>
+                        <li>• Compromiso de publicación en 15+ portales</li>
+                        <li>• Plazo máximo de exclusividad</li>
+                    </ul>
+                </div>
+                
                 <div class="flex items-center gap-2">
-                    <input type="checkbox" id="captureTerms" required class="w-5 h-5 rounded">
-                    <label for="captureTerms" class="text-sm text-slate-300">Autorizo a MEROFISE a contactarme y gestionar mi propiedad</label>
+                    <input type="checkbox" id="acceptTerms" required class="w-5 h-5 rounded border-slate-600">
+                    <label for="acceptTerms" class="text-sm text-slate-300">Acepto los términos y autorizo a MEROFISE a gestionar mi propiedad</label>
                 </div>
                 
                 <div class="flex gap-4 pt-4">
-                    <button type="submit" class="btn-primary flex-1 justify-center text-lg">
-                        <i class="fas fa-paper-plane mr-2"></i>Enviar a Max
+                    <button type="submit" class="btn-gold flex-1 justify-center text-lg text-black">
+                        <i class="fas fa-file-signature mr-2"></i>Generar Contrato con IA
                     </button>
-                    <button type="button" onclick="closeCaptureModal()" class="btn-secondary">Cancelar</button>
+                    <button type="button" onclick="closeContractModal()" class="btn-secondary">Cancelar</button>
                 </div>
             </form>
         </div>
     </div>
 
-    <!-- Offer Modal with Negotiation -->
-    <div id="offerModal" class="modal-overlay">
-        <div class="modal-content max-w-3xl">
+    <!-- Property Detail Modal -->
+    <div id="propertyDetailModal" class="modal-overlay">
+        <div class="modal-content max-w-4xl">
             <div class="flex justify-between items-center mb-6">
-                <h3 class="text-2xl font-bold gradient-text">Hacer Oferta con IA</h3>
-                <button onclick="closeOfferModal()" class="text-slate-400 hover:text-white"><i class="fas fa-times text-xl"></i></button>
+                <h3 id="detailTitle" class="text-2xl font-bold gradient-text"></h3>
+                <button onclick="closePropertyDetail()" class="text-slate-400 hover:text-white"><i class="fas fa-times text-xl"></i></button>
             </div>
-            
-            <div id="offerPropertyInfo" class="mb-6 p-4 bg-slate-800/50 rounded-xl"></div>
-            
-            <!-- Video Call Option -->
-            <div class="bg-green-500/10 border border-green-500/30 rounded-lg p-4 mb-6">
-                <div class="flex items-center justify-between">
-                    <div>
-                        <p class="text-green-300 font-bold"><i class="fas fa-video mr-2"></i>¿Quieres ver la propiedad en vivo?</p>
-                        <p class="text-sm text-slate-400">Agenda una videollamada con el propietario</p>
-                    </div>
-                    <button onclick="scheduleVideoCall()" class="video-call-btn">
-                        <i class="fas fa-video"></i> Agendar Visita Live
-                    </button>
-                </div>
-            </div>
-            
-            <!-- Negotiation Chat -->
-            <div class="offer-panel">
-                <h4 class="text-lg font-bold text-white mb-4"><i class="fas fa-robot mr-2 text-yellow-400"></i>Negociación IA en Tiempo Real</h4>
-                
-                <div class="negotiation-chat" id="negotiationChat">
-                    <div class="negotiation-msg ai">
-                        <p class="text-sm"><strong>Max IA:</strong> Hola, soy Max. Voy a ayudarte a negociar la mejor oferta. ¿Cuánto ofreces por esta propiedad?</p>
-                    </div>
-                </div>
-                
-                <form id="offerForm" onsubmit="submitOffer(event)" class="space-y-4">
-                    <input type="hidden" id="offerPropertyId">
-                    <input type="hidden" id="offerPropertyPrice">
-                    
-                    <div class="grid md:grid-cols-2 gap-4">
-                        <div>
-                            <label class="block text-sm font-bold mb-2 text-slate-300">Tu oferta (€) *</label>
-                            <input type="number" id="offerAmount" required class="input-field" placeholder="400000" onchange="analyzeOffer()">
-                        </div>
-                        <div>
-                            <label class="block text-sm font-bold mb-2 text-slate-300">Entrada inicial (€)</label>
-                            <input type="number" id="offerDeposit" class="input-field" placeholder="80000">
-                        </div>
-                    </div>
-                    
-                    <!-- AI Analysis -->
-                    <div id="aiAnalysis" class="hidden bg-blue-500/10 border border-blue-500/30 rounded-lg p-4">
-                        <p class="text-sm text-blue-300 font-bold mb-2"><i class="fas fa-brain mr-2"></i>Análisis de Max IA:</p>
-                        <p class="text-sm text-slate-300" id="aiAnalysisText"></p>
-                    </div>
-                    
-                    <div>
-                        <label class="block text-sm font-bold mb-2 text-slate-300">Mensaje (opcional)</label>
-                        <textarea id="offerMessage" class="input-field h-24" placeholder="Soy comprador serio, tengo financiación aprobada..."></textarea>
-                    </div>
-                    
-                    <div class="bg-yellow-500/10 border border-yellow-500/30 rounded-lg p-3">
-                        <p class="text-sm text-yellow-300">
-                            <i class="fas fa-shield-alt mr-2"></i>
-                            <strong>Seguridad:</strong> Tu oferta se bloquea con Stripe. Si el vendedor acepta, se procesa el pago de forma segura. Si no hay acuerdo, recuperas tu dinero.
-                        </p>
-                    </div>
-                    
-                    <div id="offerError" class="hidden bg-red-500/20 border border-red-500/50 rounded-lg p-3 text-red-300 text-sm"></div>
-                    
-                    <div class="flex gap-4">
-                        <button type="submit" class="btn-primary flex-1 justify-center">
-                            <i class="fas fa-lock mr-2"></i>Bloquear Oferta Segura
-                        </button>
-                        <button type="button" onclick="closeOfferModal()" class="btn-secondary">Cancelar</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-
-    <!-- Video Call Modal -->
-    <div id="videoCallModal" class="modal-overlay">
-        <div class="modal-content max-w-2xl">
-            <div class="flex justify-between items-center mb-6">
-                <h3 class="text-2xl font-bold gradient-text">Visita Virtual en Vivo</h3>
-                <button onclick="closeVideoCallModal()" class="text-slate-400 hover:text-white"><i class="fas fa-times text-xl"></i></button>
-            </div>
-            
-            <div class="bg-slate-900 rounded-xl overflow-hidden mb-6" style="aspect-ratio: 16/9;">
-                <div class="w-full h-full flex items-center justify-center bg-gradient-to-br from-slate-800 to-slate-900">
-                    <div class="text-center">
-                        <div class="text-6xl mb-4">📹</div>
-                        <p class="text-white font-bold mb-2">Sala de Visita Virtual</p>
-                        <p class="text-slate-400 text-sm">Conectando con el propietario...</p>
-                        <div class="mt-4 flex justify-center gap-2">
-                            <div class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-                            <div class="w-2 h-2 bg-green-500 rounded-full animate-pulse" style="animation-delay: 0.2s"></div>
-                            <div class="w-2 h-2 bg-green-500 rounded-full animate-pulse" style="animation-delay: 0.4s"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="grid md:grid-cols-2 gap-4">
-                <button onclick="startVideoCall()" class="btn-green justify-center w-full">
-                    <i class="fas fa-video mr-2"></i>Iniciar Llamada
-                </button>
-                <button onclick="scheduleLater()" class="btn-secondary justify-center w-full">
-                    <i class="fas fa-calendar mr-2"></i>Agendar para Después
-                </button>
-            </div>
-            
-            <div class="mt-4 text-center">
-                <p class="text-xs text-slate-500">
-                    <i class="fas fa-shield-alt mr-1"></i>
-                    Las llamadas están grabadas para seguridad de ambas partes
-                </p>
-            </div>
+            <div id="propertyDetailContent"></div>
         </div>
     </div>
 
@@ -478,113 +1401,65 @@
 
     <script>
         // ==========================================
-        // CONFIGURACIÓN SUPABASE & STRIPE
+        // CONFIGURACIÓN
         // ==========================================
         const SUPABASE_URL = 'https://xfdwygufboazyshcrxwn.supabase.co';
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhmZHd5Z3VmYm9henlzaGNyeHduIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzYyNDQwNDcsImV4cCI6MjA5MTgyMDA0N30.jphnwycmmv2auhWFGI8NPO2ov8BraNdmyr4Om1zTkwQ';
         
-        // STRIPE PRODUCT IDs REALES
-        const STRIPE_PRODUCTS = {
-            'venta_premium': { id: 'prod_UKLB3CxryhXq3F', price: 7260, name: 'Comisión Venta Premium (>600k)' },
-            'venta_standard': { id: 'prod_UID3xa1QEh46rg', price: 2178, name: 'Comisión Venta Estándar (<600k)' },
-            'alquiler_gestion': { id: 'prod_UIDCPujOw1Hrbn', price: 36.30, name: 'Gestión Alquiler Mensual', recurring: true },
-            'personal_shopper': { id: 'prod_UKLENOERbIfYaY', price: 968, name: 'Personal Shopper' },
-            'reportaje_foto': { id: 'prod_UKMQgh5rEkFEuw', price: 242, name: 'Reportaje Fotográfico' },
-            'shopper_premium': { id: 'prod_UKLDjp1Lv5Vb9q', price: 1815, name: 'Personal Shopper Premium Alquileres' },
-            'shopper_compras': { id: 'prod_UKMX3etmvqOesS', price: 24200, name: 'Personal Shopper Compras' }
-        };
-        
         let supabase = null;
         let currentUser = null;
-        let stripe = null;
+        let currentLang = 'es';
+        
+        // Traducciones
+        const translations = {
+            es: {
+                hunt: 'Cazando', properties: 'Propiedades', sell: 'Vender', rent: 'Alquilar',
+                contract: 'Contrato', dashboard: 'Panel', login: 'Entrar', logout: 'Salir'
+            },
+            en: {
+                hunt: 'Hunting', properties: 'Properties', sell: 'Sell', rent: 'Rent',
+                contract: 'Contract', dashboard: 'Dashboard', login: 'Login', logout: 'Logout'
+            },
+            fr: {
+                hunt: 'Chasse', properties: 'Propriétés', sell: 'Vendre', rent: 'Louer',
+                contract: 'Contrat', dashboard: 'Tableau', login: 'Entrer', logout: 'Sortir'
+            }
+        };
         
         // ==========================================
         // INICIALIZACIÓN
         // ==========================================
         document.addEventListener('DOMContentLoaded', async function() {
             try {
-                // Supabase
                 if (typeof window.supabase !== 'undefined') {
                     supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
                         auth: { autoRefreshToken: true, persistSession: true, detectSessionInUrl: true }
                     });
                 }
                 
-                // Stripe
-                if (typeof Stripe !== 'undefined') {
-                    stripe = Stripe('pk_live_YOUR_STRIPE_KEY'); // Reemplazar con tu PK real
-                }
-                
                 await checkSession();
-                generateBotArmy();
                 loadProperties();
-                startCounters();
+                startHuntCounters();
                 
             } catch (error) {
-                console.error('Init error:', error);
-                generateBotArmy();
+                console.error('Error init:', error);
                 loadDemoProperties();
             }
         });
         
         // ==========================================
-        // 110 BOTS IA ARMY
+        // IDIOMA
         // ==========================================
-        function generateBotArmy() {
-            const container = document.getElementById('botArmy');
-            const botTypes = [
-                { name: 'Max', role: 'Cazador Jefe', icon: '🐕', color: 'red', special: true },
-                { name: 'Hunter-1', role: 'BOE Scanner', icon: '📄', color: 'blue' },
-                { name: 'Hunter-2', role: 'Catastro', icon: '🗺️', color: 'blue' },
-                { name: 'Hunter-3', role: 'Registro', icon: '📋', color: 'blue' },
-                { name: 'Hunter-4', role: 'Notarías', icon: '⚖️', color: 'blue' },
-                { name: 'Hunter-5', role: 'Idealista', icon: '🏠', color: 'blue' },
-                { name: 'Hunter-6', role: 'Fotocasa', icon: '📸', color: 'blue' },
-                { name: 'Hunter-7', role: 'Mil Anuncios', icon: '🔍', color: 'blue' },
-                { name: 'Hunter-8', role: 'Meta Ads', icon: '📱', color: 'purple' },
-                { name: 'Conv-1', role: 'Call Center IA', icon: '📞', color: 'purple' },
-                { name: 'Conv-2', role: 'Email IA', icon: '✉️', color: 'purple' },
-                { name: 'Conv-3', role: 'WhatsApp IA', icon: '💬', color: 'purple' },
-                { name: 'Buyer-1', role: 'Facebook Leads', icon: '👥', color: 'green' },
-                { name: 'Buyer-2', role: 'LinkedIn Pros', icon: '💼', color: 'green' },
-                { name: 'Buyer-3', role: 'TikTok Viral', icon: '🎵', color: 'green' },
-                { name: 'Buyer-4', role: 'Instagram', icon: '📷', color: 'green' },
-                { name: 'Rent-1', role: 'Filtra Inquilinos', icon: '🔑', color: 'yellow' },
-                { name: 'Rent-2', role: 'Verifica Nóminas', icon: '💰', color: 'yellow' },
-                { name: 'Legal-1', role: 'Contratos Venta', icon: '⚖️', color: 'gold' },
-                { name: 'Legal-2', role: 'Contratos Alq', icon: '📜', color: 'gold' },
-                { name: 'Nego-1', role: 'Negociador IA', icon: '🤝', color: 'pink' },
-                { name: 'Nego-2', role: 'Counter Offer', icon: '💪', color: 'pink' },
-                { name: 'Photo-1', role: 'Fotos IA', icon: '📸', color: 'cyan' },
-                { name: 'Photo-2', role: 'Tour 360°', icon: '🥽', color: 'cyan' }
-            ];
-            
-            // Generate remaining bots (86 more)
-            for (let i = 25; i <= 110; i++) {
-                const roles = ['Scanner', 'Parser', 'Classifier', 'Notifier', 'Sync', 'Backup'];
-                const role = roles[Math.floor(Math.random() * roles.length)];
-                botTypes.push({ 
-                    name: `Bot-${i}`, 
-                    role: `${role} IA`, 
-                    icon: '🤖', 
-                    color: 'slate' 
-                });
-            }
-            
-            container.innerHTML = botTypes.map(bot => `
-                <div class="bot-card cursor-pointer" onclick="showBotInfo('${bot.name}', '${bot.role}')">
-                    <div class="bot-avatar">
-                        <span class="text-2xl">${bot.icon}</span>
-                        <div class="bot-status"></div>
-                    </div>
-                    <p class="text-xs font-bold text-white">${bot.name}</p>
-                    <p class="text-[10px] text-slate-500">${bot.role}</p>
-                </div>
-            `).join('');
+        function toggleLang() {
+            document.getElementById('langDropdown').classList.toggle('active');
         }
         
-        function showBotInfo(name, role) {
-            showToast(`${name} - ${role}\n\nEstado: ACTIVO\nÚltima acción: Hace 2 segundos\nTareas pendientes: ${Math.floor(Math.random() * 10 + 1)}`, 'info');
+        function setLang(lang) {
+            currentLang = lang;
+            const flags = { es: '🇪🇸', en: '🇬🇧', fr: '🇫🇷', de: '🇩🇪', it: '🇮🇹', pt: '🇵🇹', zh: '🇨🇳', ar: '🇸🇦' };
+            document.getElementById('currentLang').textContent = `${flags[lang]} ${lang.toUpperCase()}`;
+            document.getElementById('langDropdown').classList.remove('active');
+            showToast(`Idioma cambiado a ${lang.toUpperCase()}`, 'success');
         }
         
         // ==========================================
@@ -677,116 +1552,138 @@
         }
         
         // ==========================================
-        // PROPIEDADES CON OFERTAS
+        // PROPIEDADES - FOTOS PROTAGONISTAS
         // ==========================================
-        function loadProperties(filter = 'all') {
+        function loadProperties(category = 'all') {
             const grid = document.getElementById('propertiesGrid');
             
-            const properties = [
+            // Demo properties with high-quality photos
+            const demoProperties = [
                 {
                     id: 1,
-                    title: 'Ático Lujo Gran Vía',
+                    title: 'Ático de Lujo Gran Vía',
                     price: 850000,
-                    type: 'venta',
+                    transaction_type: 'venta',
                     category: 'lujo',
-                    location: 'Madrid Centro',
+                    location: 'Gran Vía, Madrid',
                     rooms: 3,
                     bathrooms: 2,
                     surface: 180,
-                    photos: ['https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=800'],
+                    photos: [
+                        'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=800',
+                        'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=400',
+                        'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=400'
+                    ],
                     exclusive: true,
-                    owner: 'Juan P.'
+                    description: 'Espectacular ático con terraza de 40m², vistas panorámicas a la ciudad, acabados de lujo, cocina equipada con electrodomésticos Bosch.'
                 },
                 {
                     id: 2,
                     title: 'Piso Reformado Chamberí',
                     price: 320000,
-                    type: 'venta',
+                    transaction_type: 'venta',
                     category: 'media',
                     location: 'Chamberí, Madrid',
                     rooms: 2,
                     bathrooms: 1,
                     surface: 85,
-                    photos: ['https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=800'],
+                    photos: [
+                        'https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=800',
+                        'https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=400',
+                        'https://images.unsplash.com/photo-1484154218962-a1c002085d2f?w=400'
+                    ],
                     exclusive: true,
-                    owner: 'María L.'
+                    description: 'Piso recién reformado, parquet, ventanas climalit, cocina abierta, excelente ubicación cerca del metro.'
                 },
                 {
                     id: 3,
-                    title: 'Estudio Low Cost',
+                    title: 'Estudio Céntrico Low Cost',
                     price: 95000,
-                    type: 'venta',
+                    transaction_type: 'venta',
                     category: 'lowcost',
                     location: 'Lavapiés, Madrid',
                     rooms: 1,
                     bathrooms: 1,
                     surface: 35,
-                    photos: ['https://images.unsplash.com/photo-1536376072261-38c75010e6c9?w=800'],
+                    photos: [
+                        'https://images.unsplash.com/photo-1536376072261-38c75010e6c9?w=800',
+                        'https://images.unsplash.com/photo-1493809842364-78817add7ffb?w=400'
+                    ],
                     exclusive: false,
-                    owner: 'Carlos R.'
+                    description: 'Estudio ideal inversores, buena rentabilidad por alquiler turístico, zona en plena gentrificación.'
                 },
                 {
                     id: 4,
-                    title: 'Villa Marbella Premium',
+                    title: 'Villa Exclusiva Marbella',
                     price: 2400000,
-                    type: 'venta',
+                    transaction_type: 'venta',
                     category: 'lujo',
                     location: 'Puerto Banús, Marbella',
                     rooms: 5,
                     bathrooms: 4,
                     surface: 450,
-                    photos: ['https://images.unsplash.com/photo-1613490493576-7fde63acd811?w=800'],
+                    photos: [
+                        'https://images.unsplash.com/photo-1613490493576-7fde63acd811?w=800',
+                        'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=400',
+                        'https://images.unsplash.com/photo-1600585154526-990dced4db0d?w=400'
+                    ],
                     exclusive: true,
-                    owner: 'Ana K.'
+                    description: 'Villa de diseño con piscina infinita, jardín privado, vistas al mar, seguridad 24h, garaje 3 coches.'
                 },
                 {
                     id: 5,
                     title: 'Piso Alquiler Centro',
                     price: 1200,
-                    type: 'alquiler',
+                    transaction_type: 'alquiler',
                     category: 'media',
                     location: 'Sol, Madrid',
                     rooms: 2,
                     bathrooms: 1,
                     surface: 70,
-                    photos: ['https://images.unsplash.com/photo-1502005229762-cf1b2da7c5d6?w=800'],
+                    photos: [
+                        'https://images.unsplash.com/photo-1502005229762-cf1b2da7c5d6?w=800',
+                        'https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=400'
+                    ],
                     exclusive: true,
-                    owner: 'Pedro M.'
+                    description: 'Piso luminoso en pleno centro, exterior, ascensor, calefacción central, disponible inmediatamente.'
                 },
                 {
                     id: 6,
-                    title: 'Dúplex Alquiler Económico',
+                    title: 'Dúplex Alquiler Low Cost',
                     price: 650,
-                    type: 'alquiler',
+                    transaction_type: 'alquiler',
                     category: 'lowcost',
                     location: 'Vallecas, Madrid',
                     rooms: 2,
                     bathrooms: 1,
                     surface: 55,
-                    photos: ['https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=800'],
+                    photos: [
+                        'https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=800',
+                        'https://images.unsplash.com/photo-1484154218962-a1c002085d2f?w=400'
+                    ],
                     exclusive: false,
-                    owner: 'Laura S.'
+                    description: 'Dúplex económico, ideal parejas, zona tranquila, bien comunicado con metro.'
                 }
             ];
             
-            let filtered = properties;
-            if (filter !== 'all') {
-                filtered = properties.filter(p => p.type === filter || p.category === filter);
+            let filtered = demoProperties;
+            if (category !== 'all') {
+                filtered = demoProperties.filter(p => p.category === category || (category === 'alquiler' && p.transaction_type === 'alquiler'));
             }
             
             grid.innerHTML = filtered.map(p => `
-                <div class="property-hero">
-                    <div class="property-img">
+                <div class="property-hero-card cursor-pointer" onclick="showPropertyDetail(${p.id})">
+                    <div class="property-image-container">
                         <img src="${p.photos[0]}" alt="${p.title}" loading="lazy">
-                        <div class="property-overlay">
-                            <h4 class="text-xl font-bold text-white">${p.title}</h4>
+                        <div class="property-image-overlay">
+                            <h4 class="text-xl font-bold text-white mb-1">${p.title}</h4>
                             <p class="text-slate-300 text-sm"><i class="fas fa-map-marker-alt mr-1"></i>${p.location}</p>
                         </div>
-                        <div class="price-tag">
-                            ${p.price.toLocaleString()}€${p.type === 'alquiler' ? '/mes' : ''}
+                        <div class="property-price-tag">
+                            ${p.price.toLocaleString()}€${p.transaction_type === 'alquiler' ? '/mes' : ''}
                         </div>
                         ${p.exclusive ? `
-                            <div class="exclusive-badge">
+                            <div class="property-badge-exclusive">
                                 <i class="fas fa-crown"></i> Exclusiva Max
                             </div>
                         ` : ''}
@@ -802,303 +1699,186 @@
                                 ${p.category}
                             </span>
                         </div>
-                        <div class="flex gap-2">
-                            <button onclick="openOfferModal(${p.id}, '${p.title}', ${p.price}, '${p.owner}')" class="btn-primary flex-1 text-sm py-2 justify-center">
-                                <i class="fas fa-hand-holding-usd mr-1"></i>Hacer Oferta IA
+                        <p class="text-slate-400 text-sm line-clamp-2">${p.description}</p>
+                        <div class="mt-4 flex gap-2">
+                            <button class="btn-primary flex-1 text-sm py-2 justify-center" onclick="event.stopPropagation(); openOfferModal(${p.id}, '${p.title}', ${p.price})">
+                                <i class="fas fa-hand-holding-usd mr-1"></i>Ofertar
                             </button>
-                            <button onclick="openVideoCallModal(${p.id})" class="video-call-btn text-sm py-2">
-                                <i class="fas fa-video"></i> Live
-                            </button>
+                            <a href="https://wa.me/34664037407?text=Hola, me interesa: ${encodeURIComponent(p.title)}" target="_blank" class="btn-secondary px-3 py-2" onclick="event.stopPropagation()">
+                                <i class="fab fa-whatsapp"></i>
+                            </a>
                         </div>
                     </div>
                 </div>
             `).join('');
         }
         
-        function filterProperties(filter) {
-            loadProperties(filter);
+        function filterCategory(cat) {
+            loadProperties(cat);
+        }
+        
+        function showPropertyDetail(id) {
+            // In real app, fetch from DB
+            showToast('Cargando detalle con fotos HD...', 'info');
+            // For demo, just show modal with gallery
+            const property = {
+                title: 'Ático de Lujo Gran Vía',
+                photos: [
+                    'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=1200',
+                    'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=600',
+                    'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=600',
+                    'https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?w=600'
+                ]
+            };
+            
+            document.getElementById('detailTitle').textContent = property.title;
+            document.getElementById('propertyDetailContent').innerHTML = `
+                <div class="photo-gallery mb-6">
+                    <div class="main-photo">
+                        <img src="${property.photos[0]}" alt="Main" onclick="window.open('${property.photos[0]}')">
+                        <div class="photo-count" onclick="showAllPhotos()">
+                            <i class="fas fa-images mr-1"></i> +${property.photos.length - 1} fotos
+                        </div>
+                    </div>
+                    ${property.photos.slice(1, 3).map(photo => `
+                        <div class="overflow-hidden rounded-xl">
+                            <img src="${photo}" alt="Detail" onclick="window.open('${photo}')">
+                        </div>
+                    `).join('')}
+                </div>
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div>
+                        <h4 class="text-xl font-bold text-white mb-4">Características</h4>
+                        <ul class="space-y-2 text-slate-300">
+                            <li><i class="fas fa-check text-green-400 mr-2"></i>Terraza 40m²</li>
+                            <li><i class="fas fa-check text-green-400 mr-2"></i>Vistas panorámicas</li>
+                            <li><i class="fas fa-check text-green-400 mr-2"></i>Ascensor privado</li>
+                            <li><i class="fas fa-check text-green-400 mr-2"></i>Plaza garaje incluida</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 class="text-xl font-bold text-white mb-4">Contacto Rápido</h4>
+                        <button class="btn-primary w-full mb-3 justify-center" onclick="openOfferModal(1, 'Ático Gran Vía', 850000)">
+                            <i class="fas fa-hand-holding-usd mr-2"></i>Hacer Oferta
+                        </button>
+                        <a href="https://wa.me/34664037407" target="_blank" class="btn-secondary w-full justify-center">
+                            <i class="fab fa-whatsapp mr-2"></i>WhatsApp con Max
+                        </a>
+                    </div>
+                </div>
+            `;
+            
+            document.getElementById('propertyDetailModal').classList.add('active');
+        }
+        
+        function closePropertyDetail() {
+            document.getElementById('propertyDetailModal').classList.remove('active');
         }
         
         // ==========================================
-        // SISTEMA DE OFERTAS CON NEGOCIACIÓN IA
+        // PUBLICAR
         // ==========================================
-        function openOfferModal(propertyId, title, price, owner) {
+        async function publishProperty(e) {
+            e.preventDefault();
+            
+            if (!currentUser) {
+                showToast('Debes iniciar sesión para publicar', 'error');
+                openAuthModal();
+                return;
+            }
+            
+            const formData = new FormData(e.target);
+            const property = {
+                title: formData.get('title'),
+                description: formData.get('description'),
+                price: parseInt(formData.get('price')),
+                transaction_type: formData.get('transaction_type'),
+                category: formData.get('category'),
+                location: formData.get('location'),
+                rooms: parseInt(formData.get('rooms')) || 0,
+                photos: formData.get('photos').split(',').map(p => p.trim()).filter(p => p),
+                owner_id: currentUser.id,
+                status: 'active',
+                created_at: new Date().toISOString()
+            };
+            
+            try {
+                if (supabase) {
+                    const { error } = await supabase.from('properties').insert([property]);
+                    if (error) throw error;
+                }
+                
+                showToast('¡Propiedad publicada! Max la está distribuyendo...', 'success');
+                closePublishModal();
+                e.target.reset();
+                showSection('properties');
+                loadProperties();
+                
+            } catch (error) {
+                document.getElementById('publishError').textContent = error.message;
+                document.getElementById('publishError').classList.remove('hidden');
+            }
+        }
+        
+        // ==========================================
+        // CONTRATOS
+        // ==========================================
+        function openContractModal(type) {
+            document.getElementById('contractModal').classList.add('active');
+            if (type) selectContractType(type);
+        }
+        
+        function closeContractModal() {
+            document.getElementById('contractModal').classList.remove('active');
+            document.getElementById('contractForm').classList.add('hidden');
+            document.getElementById('contractTypeSelector').classList.remove('hidden');
+        }
+        
+        function selectContractType(type) {
+            document.getElementById('contractType').value = type;
+            document.getElementById('contractTypeSelector').classList.add('hidden');
+            document.getElementById('contractForm').classList.remove('hidden');
+        }
+        
+        function generateContract(e) {
+            e.preventDefault();
+            
+            if (!currentUser) {
+                showToast('Inicia sesión para generar contratos', 'error');
+                openAuthModal();
+                return;
+            }
+            
+            const formData = new FormData(e.target);
+            const type = formData.get('type');
+            
+            showToast('Juez Contract está redactando tu contrato...', 'info');
+            
+            setTimeout(() => {
+                showToast(`¡Contrato de ${type} generado! Revisa tu email`, 'success');
+                closeContractModal();
+                
+                // Enviar email simulado
+                console.log('Contrato generado:', {
+                    type,
+                    name: formData.get('fullName'),
+                    property: formData.get('propertyAddress'),
+                    price: formData.get('contractPrice')
+                });
+            }, 2000);
+        }
+        
+        // ==========================================
+        // OFERTAS
+        // ==========================================
+        function openOfferModal(propertyId, title, price) {
             if (!currentUser) {
                 showToast('Inicia sesión para ofertar', 'error');
                 openAuthModal();
                 return;
             }
-            
-            document.getElementById('offerPropertyId').value = propertyId;
-            document.getElementById('offerPropertyPrice').value = price;
-            
-            document.getElementById('offerPropertyInfo').innerHTML = `
-                <div class="flex justify-between items-center">
-                    <div>
-                        <h4 class="font-bold text-lg text-white">${title}</h4>
-                        <p class="text-slate-400 text-sm">Propietario: ${owner || 'Confidencial'}</p>
-                    </div>
-                    <div class="text-right">
-                        <p class="text-2xl font-black gradient-text">${price.toLocaleString()}€</p>
-                        <p class="text-xs text-slate-500">Precio de salida</p>
-                    </div>
-                </div>
-            `;
-            
-            // Reset chat
-            document.getElementById('negotiationChat').innerHTML = `
-                <div class="negotiation-msg ai">
-                    <p class="text-sm"><strong>Max IA:</strong> Hola ${currentUser.email.split('@')[0]}, voy a ayudarte a negociar esta propiedad. El precio de salida es ${price.toLocaleString()}€. ¿Cuánto ofreces? Te recomiendo entre el 85-90% para empezar.</p>
-                </div>
-            `;
-            
-            document.getElementById('offerModal').classList.add('active');
-        }
-        
-        function closeOfferModal() {
-            document.getElementById('offerModal').classList.remove('active');
-        }
-        
-        function analyzeOffer() {
-            const offerAmount = parseInt(document.getElementById('offerAmount').value);
-            const propertyPrice = parseInt(document.getElementById('offerPropertyPrice').value);
-            
-            if (!offerAmount || !propertyPrice) return;
-            
-            const percentage = (offerAmount / propertyPrice) * 100;
-            const analysisDiv = document.getElementById('aiAnalysis');
-            const analysisText = document.getElementById('aiAnalysisText');
-            
-            let message = '';
-            let color = '';
-            
-            if (percentage >= 95) {
-                message = '✅ Oferta muy fuerte. Probabilidad de aceptación: 95%. El vendedor probablemente acepte inmediatamente.';
-                color = 'green';
-            } else if (percentage >= 85) {
-                message = '⚡ Oferta estratégica. Probabilidad de aceptación: 75%. Buen punto de partida para negociar.';
-                color = 'blue';
-            } else if (percentage >= 70) {
-                message = '🤔 Oferta baja. Probabilidad de aceptación: 40%. Prepárate para una contraoferta del vendedor.';
-                color = 'yellow';
-            } else {
-                message = '⚠️ Oferta muy baja. Probabilidad de aceptación: 15%. Riesgo de que el vendedor rechace sin negociar.';
-                color = 'red';
-            }
-            
-            analysisText.textContent = message;
-            analysisDiv.classList.remove('hidden');
-        }
-        
-        async function submitOffer(e) {
-            e.preventDefault();
-            
-            const propertyId = document.getElementById('offerPropertyId').value;
-            const amount = parseInt(document.getElementById('offerAmount').value);
-            const deposit = parseInt(document.getElementById('offerDeposit').value) || 0;
-            const message = document.getElementById('offerMessage').value;
-            const propertyPrice = parseInt(document.getElementById('offerPropertyPrice').value);
-            
-            // Add to chat
-            const chat = document.getElementById('negotiationChat');
-            chat.innerHTML += `
-                <div class="negotiation-msg buyer">
-                    <p class="text-sm"><strong>Tú:</strong> Ofrezco ${amount.toLocaleString()}€${deposit > 0 ? ` (entrada: ${deposit.toLocaleString()}€)` : ''}. ${message || ''}</p>
-                </div>
-            `;
-            chat.scrollTop = chat.scrollHeight;
-            
-            // AI Response simulation
-            setTimeout(() => {
-                const percentage = (amount / propertyPrice) * 100;
-                let aiResponse = '';
-                
-                if (percentage >= 90) {
-                    aiResponse = '✅ ¡Excelente oferta! Voy a contactar al vendedor inmediatamente. Probabilidad de aceptación muy alta.';
-                } else if (percentage >= 80) {
-                    aiResponse = '⚡ Buena oferta. Voy a negociar con el vendedor. Espera su respuesta en menos de 24h.';
-                } else {
-                    aiResponse = '🤔 La oferta es baja. Voy a intentar convencer al vendedor, pero prepárate para subir. ¿Puedes llegar al ' + Math.round(propertyPrice * 0.9).toLocaleString() + '€?';
-                }
-                
-                chat.innerHTML += `
-                    <div class="negotiation-msg ai">
-                        <p class="text-sm"><strong>Max IA:</strong> ${aiResponse}</p>
-                    </div>
-                `;
-                chat.scrollTop = chat.scrollHeight;
-                
-                // Store offer in DB
-                saveOffer(propertyId, amount, deposit, message);
-                
-            }, 1500);
-            
-            // Clear form
-            document.getElementById('offerAmount').value = '';
-            document.getElementById('offerDeposit').value = '';
-            document.getElementById('offerMessage').value = '';
-        }
-        
-        async function saveOffer(propertyId, amount, deposit, message) {
-            try {
-                if (supabase) {
-                    await supabase.from('offers').insert([{
-                        property_id: propertyId,
-                        buyer_id: currentUser.id,
-                        amount: amount,
-                        deposit: deposit,
-                        message: message,
-                        status: 'pending',
-                        created_at: new Date().toISOString()
-                    }]);
-                }
-                
-                showToast('¡Oferta enviada! Max está negociando con el vendedor...', 'success');
-                
-                // Send WhatsApp notification
-                const text = `Nueva oferta de ${amount.toLocaleString()}€ para propiedad #${propertyId}. Ver panel: https://merofise.es/dashboard`;
-                window.open(`https://wa.me/34664037407?text=${encodeURIComponent(text)}`, '_blank');
-                
-            } catch (error) {
-                console.error('Error saving offer:', error);
-            }
-        }
-        
-        // ==========================================
-        // VIDEO CALL SYSTEM
-        // ==========================================
-        function openVideoCallModal(propertyId) {
-            document.getElementById('videoCallModal').classList.add('active');
-        }
-        
-        function closeVideoCallModal() {
-            document.getElementById('videoCallModal').classList.remove('active');
-        }
-        
-        function scheduleVideoCall() {
-            closeOfferModal();
-            openVideoCallModal();
-        }
-        
-        function startVideoCall() {
-            showToast('Iniciando llamada segura... Se está grabando para protección de ambas partes.', 'info');
-            
-            // Simulate call start
-            setTimeout(() => {
-                showToast('¡Videollamada conectada! El propietario está en línea.', 'success');
-                
-                // Add to history
-                addCallToHistory('Propiedad #' + Math.floor(Math.random() * 100), 'Completada', '15 min');
-            }, 2000);
-        }
-        
-        function scheduleLater() {
-            closeVideoCallModal();
-            showToast('Visita virtual agendada. Recibirás confirmación por email y WhatsApp.', 'success');
-        }
-        
-        function addCallToHistory(property, status, duration) {
-            const history = document.getElementById('callsHistory');
-            const emptyMsg = history.querySelector('p');
-            if (emptyMsg) emptyMsg.remove();
-            
-            const div = document.createElement('div');
-            div.className = 'glass-panel p-4 rounded-xl flex justify-between items-center';
-            div.innerHTML = `
-                <div>
-                    <p class="font-bold text-white">${property}</p>
-                    <p class="text-sm text-slate-400"><i class="fas fa-video mr-1 text-green-400"></i>${duration} • Grabada</p>
-                </div>
-                <span class="px-3 py-1 rounded-full text-xs font-bold ${status === 'Completada' ? 'bg-green-500/20 text-green-400' : 'bg-yellow-500/20 text-yellow-400'}">
-                    ${status}
-                </span>
-            `;
-            history.insertBefore(div, history.firstChild);
-        }
-        
-        // ==========================================
-        // CAPTURA DE PROPIEDADES
-        // ==========================================
-        function openCaptureModal() {
-            document.getElementById('captureModal').classList.add('active');
-        }
-        
-        function closeCaptureModal() {
-            document.getElementById('captureModal').classList.remove('active');
-            document.getElementById('capturePricePreview').classList.add('hidden');
-        }
-        
-        function updateCapturePrice() {
-            const operation = document.querySelector('[name="operation"]').value;
-            const price = parseInt(document.querySelector('[name="estimatedPrice"]').value) || 0;
-            const preview = document.getElementById('capturePricePreview');
-            const text = document.getElementById('capturePriceText');
-            const amount = document.getElementById('capturePriceAmount');
-            
-            if (!price) {
-                preview.classList.add('hidden');
-                return;
-            }
-            
-            preview.classList.remove('hidden');
-            
-            if (operation === 'venta') {
-                if (price > 600000) {
-                    text.textContent = 'Venta Premium (>600.000€) - Comisión completa';
-                    amount.textContent = '€7.260';
-                } else {
-                    text.textContent = 'Venta Estándar (<600.000€) - Comisión reducida';
-                    amount.textContent = '€2.178';
-                }
-            } else {
-                text.textContent = 'Gestión Alquiler - Cuota mensual';
-                amount.textContent = '€36,30/mes';
-            }
-        }
-        
-        async function submitCapture(e) {
-            e.preventDefault();
-            
-            const formData = new FormData(e.target);
-            const data = Object.fromEntries(formData);
-            
-            showToast('Max ha recibido tu solicitud. Un bot IA te contactará en menos de 5 minutos.', 'success');
-            
-            // Send WhatsApp to admin
-            const text = `NUEVA CAPTURA\nNombre: ${data.fullName}\nTel: ${data.phone}\nTipo: ${data.operation}\nPrecio: ${data.estimatedPrice}€\nDirección: ${data.address}`;
-            window.open(`https://wa.me/34664037407?text=${encodeURIComponent(text)}`, '_blank');
-            
-            closeCaptureModal();
-            e.target.reset();
-        }
-        
-        // ==========================================
-        // STRIPE CHECKOUT
-        // ==========================================
-        async function stripeCheckout(productKey) {
-            const product = STRIPE_PRODUCTS[productKey];
-            if (!product) {
-                showToast('Producto no encontrado', 'error');
-                return;
-            }
-            
-            showToast(`Conectando con Stripe para: ${product.name}...`, 'info');
-            
-            // In production, this would create a checkout session on your backend
-            // For now, simulate the flow
-            setTimeout(() => {
-                showToast(`Redirigiendo a pago seguro: ${product.name} - ${product.price}€`, 'gold');
-                
-                // Simulate successful payment
-                setTimeout(() => {
-                    showToast('¡Pago completado! Max ha activado tu servicio.', 'success');
-                    
-                    // If it's a capture, redirect to form
-                    if (productKey.includes('venta') || productKey.includes('alquiler')) {
-                        openCaptureModal();
-                    }
-                }, 2000);
-            }, 1000);
+            // Implementar modal de oferta
+            showToast(`Preparando oferta para: ${title}`, 'info');
         }
         
         // ==========================================
@@ -1125,9 +1905,17 @@
             document.getElementById('mobileMenu').classList.toggle('hidden');
         }
         
-        // Modals
+        // Modales
         function openAuthModal() { document.getElementById('authModal').classList.add('active'); }
         function closeAuthModal() { document.getElementById('authModal').classList.remove('active'); }
+        function openPublishModal() {
+            if (!currentUser) { openAuthModal(); return; }
+            document.getElementById('publishModal').classList.add('active');
+        }
+        function closePublishModal() {
+            document.getElementById('publishModal').classList.remove('active');
+            document.getElementById('publishError')?.classList.add('hidden');
+        }
         
         function showAuthError(msg) {
             const el = document.getElementById('authError');
@@ -1144,32 +1932,32 @@
             const container = document.getElementById('toastContainer');
             const toast = document.createElement('div');
             toast.className = `toast toast-${type}`;
-            toast.innerHTML = `<i class="fas ${type === 'success' ? 'fa-check' : type === 'error' ? 'fa-exclamation' : type === 'gold' ? 'fa-crown' : 'fa-info'} mr-2"></i>${message}`;
+            toast.innerHTML = `<i class="fas ${type === 'success' ? 'fa-check' : type === 'error' ? 'fa-exclamation' : 'fa-info'} mr-2"></i>${message}`;
             container.appendChild(toast);
             setTimeout(() => toast.classList.add('show'), 100);
-            setTimeout(() => { toast.classList.remove('show'); setTimeout(() => toast.remove(), 300); }, 5000);
+            setTimeout(() => { toast.classList.remove('show'); setTimeout(() => toast.remove(), 300); }, 4000);
         }
         
         // ==========================================
         // CONTADORES
         // ==========================================
-        function startCounters() {
+        function startHuntCounters() {
             setInterval(() => {
-                const stats = ['statCazadas', 'statContactados', 'statExclusivas'];
+                const stats = ['statsFound', 'statsContacted', 'statsExclusive', 'statsSold'];
                 const stat = stats[Math.floor(Math.random() * stats.length)];
                 const el = document.getElementById(stat);
                 if (el) {
-                    let val = parseInt(el.textContent.replace(/[,.]/g, ''));
+                    let val = parseInt(el.textContent.replace(/,/g, ''));
                     el.textContent = (val + Math.floor(Math.random() * 3)).toLocaleString();
                 }
-            }, 4000);
+            }, 3000);
         }
         
         // Console
-        console.log('%c🐕 MEROFISE - MAX EL CAZADOR ACTIVADO', 'color:#ef4444;font-size:24px;font-weight:bold;');
-        console.log('%c110 Bots IA listos para captar propiedades', 'color:#3b82f6;');
-        console.log('%cStripe conectado: 7 productos activos', 'color:#22c55e;');
-        console.log('%cMeta Ads: Publicando en 6 plataformas', 'color:#8b5cf6;');
+        console.log('%c🐕 MEROFISE - Max el Pastor Alemán ACTIVADO', 'color:#3b82f6;font-size:20px;font-weight:bold;');
+        console.log('%cCazando en: BOE | Catastro | Registro | Notarías', 'color:#8b5cf6;');
+        console.log('%cLucía contactando propietarios...', 'color:#ec4899;');
+        console.log('%cCarlos buscando buyers...', 'color:#22c55e;');
     </script>
 </body>
 </html>
