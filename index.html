@@ -2717,7 +2717,30 @@ console.log('%c MEROFISE.ES ACTIVADO', 'color:#3b82f6;font-size:24px;font-weight
 console.log('%c SOCIALBOT-111: Publicando en 6 plataformas', 'color:#8b5cf6;'); 
 
 console.log('%c CEOs María & Antonio: Supervisando operaciones', 'color:#ec4899;'); 
+async function register() {
+  const email = document.getElementById("authEmail").value;
+  const password = document.getElementById("authPassword").value;
 
+  const { data, error } = await supabase.auth.signUp({
+    email,
+    password
+  });
+
+  if (error) {
+    alert(error.message);
+  } else {
+    const user = data.user;
+
+    await supabase.from("profiles").insert([
+      {
+        id: user.id,
+        email: email
+      }
+    ]);
+
+    alert("Usuario registrado y guardado");
+  }
+}
 </script> 
 
   
