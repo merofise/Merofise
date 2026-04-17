@@ -3,15 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
-    <title>MEROFISE | Inmobiliaria IA Global - Max el Rastreador #1</title>
-    <meta name="description" content="La primera inmobiliaria 100% IA del mundo. Max, nuestro Pastor Alemán línea checa, rastrea las propiedades más exclusivas. 111 bots publicando mundialmente.">
+    <title>MEROFISE | Max el Cazador de Propiedades Globales</title>
+    <meta name="description" content="Max el Pastor Alemán caza propiedades en BOE, Catastro, Registro y Notarías. La primera inmobiliaria IA mundial con exclusivas reales.">
+    
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.0/dist/umd/supabase.min.js"></script>
     <script src="https://js.stripe.com/v3/"></script>
-    <script src="https://cdn.emailjs.com/dist/email.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
     <style>
         :root {
             --primary: #3b82f6;
@@ -20,121 +22,94 @@
             --success: #22c55e;
             --warning: #f59e0b;
             --danger: #ef4444;
-            --dark: #050508;
-            --glass: rgba(15, 23, 42, 0.7);
+            --gold: #fbbf24;
+            --dark: #0a0a0f;
+            --darker: #050508;
+            --glass: rgba(15, 23, 42, 0.6);
         }
         
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         
         body {
-            background: var(--dark);
+            background: var(--darker);
             color: #e2e8f0;
             font-family: 'Inter', sans-serif;
             overflow-x: hidden;
             line-height: 1.6;
         }
         
-        /* MAX LOGO - Pastor Alemán Línea Checa */
-        .max-logo {
-            width: 60px;
-            height: 60px;
+        /* MAX LOGO - Pastor Alemán Realista Estilo Caza */
+        .max-logo-container {
             position: relative;
+            width: 70px;
+            height: 70px;
             cursor: pointer;
-            transition: transform 0.3s ease;
         }
         
-        .max-logo:hover {
-            transform: scale(1.1) rotate(5deg);
-        }
-        
-        .max-svg {
+        .max-realistic {
             width: 100%;
             height: 100%;
-            filter: drop-shadow(0 0 10px rgba(59, 130, 246, 0.5));
+            border-radius: 50%;
+            border: 3px solid var(--primary);
+            overflow: hidden;
+            position: relative;
+            box-shadow: 0 0 20px rgba(59, 130, 246, 0.4);
+            transition: all 0.3s ease;
         }
         
-        .max-eye {
-            animation: maxBlink 4s infinite;
-            transform-origin: center;
+        .max-realistic:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 30px rgba(59, 130, 246, 0.6);
         }
         
-        @keyframes maxBlink {
-            0%, 96%, 100% { transform: scaleY(1); }
-            98% { transform: scaleY(0.1); }
+        .max-realistic img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
         }
         
-        .max-ear {
-            animation: maxAlert 3s ease-in-out infinite;
+        .max-hunting-badge {
+            position: absolute;
+            bottom: -5px;
+            right: -5px;
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+            color: white;
+            font-size: 0.65rem;
+            font-weight: 900;
+            padding: 2px 8px;
+            border-radius: 10px;
+            border: 2px solid var(--darker);
+            animation: huntPulse 2s infinite;
+            text-transform: uppercase;
         }
         
-        @keyframes maxAlert {
-            0%, 100% { transform: rotate(0deg); }
-            5% { transform: rotate(-5deg); }
-            10% { transform: rotate(5deg); }
-            15% { transform: rotate(0deg); }
+        @keyframes huntPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); box-shadow: 0 0 10px rgba(239, 68, 68, 0.5); }
         }
         
-        /* Background Effects */
-        .grid-bg {
+        /* Background */
+        .hunt-bg {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
             background-image: 
-                linear-gradient(rgba(59, 130, 246, 0.03) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(59, 130, 246, 0.03) 1px, transparent 1px);
-            background-size: 50px 50px;
+                radial-gradient(circle at 20% 50%, rgba(59, 130, 246, 0.05) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(139, 92, 246, 0.05) 0%, transparent 50%);
             z-index: -2;
             pointer-events: none;
         }
         
-        .scan-line {
+        .grid-overlay {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 2px;
-            background: linear-gradient(90deg, transparent, #3b82f6, transparent);
-            animation: scan 4s linear infinite;
-            pointer-events: none;
-            z-index: 9999;
-            box-shadow: 0 0 10px #3b82f6;
-        }
-        
-        @keyframes scan {
-            0% { transform: translateY(-100vh); }
-            100% { transform: translateY(100vh); }
-        }
-        
-        .particles {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background-image: 
+                linear-gradient(rgba(59, 130, 246, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(59, 130, 246, 0.03) 1px, transparent 1px);
+            background-size: 60px 60px;
             z-index: -1;
-        }
-        
-        .particle {
-            position: absolute;
-            width: 2px;
-            height: 2px;
-            background: rgba(59, 130, 246, 0.5);
-            border-radius: 50%;
-            animation: float 20s infinite linear;
-        }
-        
-        @keyframes float {
-            from { transform: translateY(100vh) translateX(0); opacity: 0; }
-            10% { opacity: 1; }
-            90% { opacity: 1; }
-            to { transform: translateY(-100vh) translateX(100px); opacity: 0; }
+            pointer-events: none;
         }
         
         /* Typography */
@@ -145,23 +120,27 @@
             background-clip: text;
         }
         
-        .font-orbitron {
-            font-family: 'Orbitron', sans-serif;
+        .gold-text {
+            background: linear-gradient(135deg, #fbbf24, #f59e0b);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
         
-        /* Glass Components */
+        .font-orbitron { font-family: 'Orbitron', sans-serif; }
+        
+        /* Glass */
         .glass-panel {
-            background: rgba(15, 23, 42, 0.7);
+            background: var(--glass);
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
             border: 1px solid rgba(139, 92, 246, 0.2);
-            border-radius: 16px;
+            border-radius: 20px;
         }
         
         .glass-nav {
-            background: rgba(15, 23, 42, 0.85);
+            background: rgba(10, 10, 15, 0.9);
             backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
             border-bottom: 1px solid rgba(139, 92, 246, 0.3);
             position: sticky;
             top: 0;
@@ -200,6 +179,18 @@
             box-shadow: 0 8px 25px rgba(245, 158, 11, 0.5);
         }
         
+        .btn-hunt {
+            background: linear-gradient(135deg, #dc2626, #ef4444);
+            color: white;
+            font-weight: 800;
+            animation: huntGlow 2s infinite;
+        }
+        
+        @keyframes huntGlow {
+            0%, 100% { box-shadow: 0 0 5px rgba(239, 68, 68, 0.5); }
+            50% { box-shadow: 0 0 20px rgba(239, 68, 68, 0.8); }
+        }
+        
         .btn-secondary {
             background: rgba(30, 41, 59, 0.8);
             color: #e2e8f0;
@@ -219,187 +210,306 @@
             background: rgba(139, 92, 246, 0.1);
         }
         
-        /* Cards */
-        .property-card {
-            background: linear-gradient(145deg, rgba(15, 23, 42, 0.95), rgba(30, 41, 59, 0.95));
+        /* Property Cards - FOTOS PROTAGONISTAS */
+        .property-hero-card {
+            background: linear-gradient(145deg, rgba(15, 23, 42, 0.98), rgba(30, 41, 59, 0.98));
             border: 1px solid rgba(139, 92, 246, 0.2);
-            border-radius: 20px;
+            border-radius: 24px;
             overflow: hidden;
             transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             position: relative;
         }
         
-        .property-card:hover {
-            transform: translateY(-8px) scale(1.02);
+        .property-hero-card:hover {
+            transform: translateY(-8px);
             border-color: #8b5cf6;
-            box-shadow: 0 20px 40px rgba(139, 92, 246, 0.3);
+            box-shadow: 0 25px 50px rgba(139, 92, 246, 0.25);
         }
         
-        .property-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
-            transition: left 0.5s;
-        }
-        
-        .property-card:hover::before {
-            left: 100%;
-        }
-        
-        /* Bot Cards */
-        .bot-avatar {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 800;
-            font-size: 1.2rem;
+        .property-image-container {
             position: relative;
+            height: 280px;
             overflow: hidden;
         }
         
-        .bot-avatar::after {
-            content: '';
+        .property-image-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.6s ease;
+        }
+        
+        .property-hero-card:hover .property-image-container img {
+            transform: scale(1.1);
+        }
+        
+        .property-image-overlay {
             position: absolute;
-            inset: -2px;
-            border-radius: 50%;
-            padding: 2px;
+            inset: 0;
+            background: linear-gradient(to top, rgba(10, 10, 15, 0.95) 0%, transparent 60%);
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            padding: 1.5rem;
+        }
+        
+        .property-price-tag {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
             background: linear-gradient(135deg, #3b82f6, #8b5cf6);
-            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-            mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-            -webkit-mask-composite: xor;
-            mask-composite: exclude;
-            animation: rotate 3s linear infinite;
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 12px;
+            font-weight: 900;
+            font-size: 1.25rem;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
         }
         
-        @keyframes rotate {
-            to { transform: rotate(360deg); }
-        }
-        
-        .bot-pulse {
+        .property-badge-exclusive {
             position: absolute;
-            bottom: 0;
-            right: 0;
-            width: 12px;
-            height: 12px;
-            background: #22c55e;
-            border-radius: 50%;
-            border: 2px solid var(--dark);
-            animation: pulse 2s infinite;
+            top: 1rem;
+            left: 1rem;
+            background: linear-gradient(135deg, #fbbf24, #f59e0b);
+            color: #000;
+            padding: 0.35rem 0.75rem;
+            border-radius: 8px;
+            font-weight: 800;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            display: flex;
+            align-items: center;
+            gap: 0.35rem;
         }
         
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); opacity: 1; }
-            50% { transform: scale(1.3); opacity: 0.7; }
+        /* Gallery Grid for Property Detail */
+        .photo-gallery {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            grid-template-rows: 200px 200px;
+            gap: 0.5rem;
+            border-radius: 20px;
+            overflow: hidden;
         }
         
-        /* CEO Cards */
-        .ceo-card {
-            background: linear-gradient(135deg, rgba(139, 92, 246, 0.15), rgba(59, 130, 246, 0.15));
-            border: 2px solid rgba(139, 92, 246, 0.4);
+        .photo-gallery .main-photo {
+            grid-row: 1 / -1;
+            position: relative;
+        }
+        
+        .photo-gallery img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+        
+        .photo-gallery img:hover {
+            transform: scale(1.05);
+        }
+        
+        .photo-count {
+            position: absolute;
+            bottom: 1rem;
+            right: 1rem;
+            background: rgba(0,0,0,0.7);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        
+        /* AI Agents Cards */
+        .agent-card {
+            background: linear-gradient(145deg, rgba(15, 23, 42, 0.9), rgba(30, 41, 59, 0.9));
+            border: 2px solid rgba(59, 130, 246, 0.3);
             border-radius: 20px;
             padding: 1.5rem;
             position: relative;
             overflow: hidden;
+            transition: all 0.3s ease;
         }
         
-        .ceo-card::before {
+        .agent-card:hover {
+            border-color: #3b82f6;
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(59, 130, 246, 0.2);
+        }
+        
+        .agent-card::before {
             content: '';
             position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle, rgba(139, 92, 246, 0.1) 0%, transparent 70%);
-            animation: glow 4s ease-in-out infinite;
+            top: 0; left: 0;
+            width: 100%; height: 3px;
+            background: linear-gradient(90deg, #3b82f6, #8b5cf6, #ec4899);
         }
         
-        @keyframes glow {
-            0%, 100% { transform: scale(1); opacity: 0.5; }
-            50% { transform: scale(1.1); opacity: 1; }
-        }
-        
-        /* Viral Elements */
-        .urgency-badge {
-            background: linear-gradient(135deg, #ef4444, #f59e0b);
-            color: white;
-            padding: 0.25rem 0.75rem;
-            border-radius: 20px;
-            font-size: 0.75rem;
-            font-weight: 700;
-            animation: urgentPulse 1.5s infinite;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.25rem;
-        }
-        
-        @keyframes urgentPulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-        }
-        
-        .social-proof-bar {
-            background: rgba(34, 197, 94, 0.1);
-            border-left: 3px solid #22c55e;
-            padding: 0.75rem 1rem;
-            border-radius: 0 8px 8px 0;
-            font-size: 0.875rem;
-            margin: 0.5rem 0;
-            animation: slideIn 0.5s ease;
-        }
-        
-        @keyframes slideIn {
-            from { transform: translateX(-20px); opacity: 0; }
-            to { transform: translateX(0); opacity: 1; }
-        }
-        
-        .live-indicator {
+        .agent-status {
             display: inline-flex;
             align-items: center;
             gap: 0.5rem;
             font-size: 0.75rem;
+            font-weight: 700;
             color: #22c55e;
-            font-weight: 600;
+            margin-top: 0.5rem;
         }
         
-        .live-dot {
-            width: 8px;
-            height: 8px;
+        .agent-status::before {
+            content: '';
+            width: 8px; height: 8px;
             background: #22c55e;
             border-radius: 50%;
-            animation: livePulse 2s infinite;
+            animation: pulse 2s infinite;
         }
         
-        @keyframes livePulse {
+        @keyframes pulse {
             0%, 100% { opacity: 1; transform: scale(1); }
             50% { opacity: 0.5; transform: scale(1.2); }
         }
         
+        /* Language Selector */
+        .lang-selector {
+            position: relative;
+        }
+        
+        .lang-btn {
+            background: rgba(30, 41, 59, 0.8);
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .lang-btn:hover {
+            border-color: #8b5cf6;
+            background: rgba(139, 92, 246, 0.1);
+        }
+        
+        .lang-dropdown {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            margin-top: 0.5rem;
+            background: rgba(15, 23, 42, 0.98);
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            border-radius: 12px;
+            padding: 0.5rem;
+            min-width: 150px;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: all 0.3s ease;
+            z-index: 100;
+        }
+        
+        .lang-dropdown.active {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+        
+        .lang-option {
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            transition: all 0.2s ease;
+        }
+        
+        .lang-option:hover {
+            background: rgba(139, 92, 246, 0.2);
+        }
+        
+        /* Contract Section */
+        .contract-panel {
+            background: linear-gradient(145deg, rgba(15, 23, 42, 0.95), rgba(30, 41, 59, 0.95));
+            border: 2px solid rgba(251, 191, 36, 0.3);
+            border-radius: 20px;
+            padding: 2rem;
+            position: relative;
+        }
+        
+        .contract-panel::before {
+            content: '⚖️';
+            position: absolute;
+            top: -20px;
+            right: 2rem;
+            font-size: 2.5rem;
+            background: var(--darker);
+            padding: 0 0.5rem;
+        }
+        
+        .price-highlight {
+            font-size: 3rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, #fbbf24, #f59e0b);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            line-height: 1;
+        }
+        
+        /* Stats Counter */
+        .hunt-stat {
+            text-align: center;
+            padding: 1.5rem;
+            background: rgba(15, 23, 42, 0.6);
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            border-radius: 16px;
+            transition: all 0.3s ease;
+        }
+        
+        .hunt-stat:hover {
+            border-color: #3b82f6;
+            transform: translateY(-4px);
+        }
+        
+        .hunt-stat-number {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 900;
+            color: #3b82f6;
+            line-height: 1;
+        }
+        
+        /* Source Badges */
+        .source-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: rgba(59, 130, 246, 0.1);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            border-radius: 20px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: #3b82f6;
+        }
+        
         /* Ticker */
-        .ticker {
-            background: rgba(15, 23, 42, 0.95);
-            border-bottom: 1px solid rgba(59, 130, 246, 0.3);
+        .hunt-ticker {
+            background: linear-gradient(90deg, rgba(220, 38, 38, 0.2), rgba(239, 68, 68, 0.2));
+            border-bottom: 1px solid rgba(239, 68, 68, 0.3);
             padding: 0.5rem 0;
             overflow: hidden;
             white-space: nowrap;
-            position: fixed;
-            top: 0;
-            width: 100%;
-            z-index: 1001;
             font-family: 'Orbitron', monospace;
-            font-size: 0.75rem;
-            color: #3b82f6;
+            font-size: 0.8rem;
+            color: #fca5a5;
         }
         
         .ticker-content {
             display: inline-block;
-            animation: marquee 30s linear infinite;
+            animation: marquee 25s linear infinite;
         }
         
         @keyframes marquee {
@@ -411,7 +521,7 @@
         .modal-overlay {
             position: fixed;
             inset: 0;
-            background: rgba(0, 0, 0, 0.9);
+            background: rgba(0, 0, 0, 0.92);
             backdrop-filter: blur(10px);
             z-index: 10000;
             display: flex;
@@ -430,10 +540,10 @@
         
         .modal-content {
             background: linear-gradient(145deg, rgba(15, 23, 42, 0.98), rgba(30, 41, 59, 0.98));
-            border: 2px solid rgba(139, 92, 246, 0.5);
+            border: 2px solid rgba(139, 92, 246, 0.4);
             border-radius: 24px;
             padding: 2rem;
-            max-width: 600px;
+            max-width: 700px;
             width: 100%;
             max-height: 90vh;
             overflow-y: auto;
@@ -445,7 +555,7 @@
             transform: scale(1) translateY(0);
         }
         
-        /* Form Elements */
+        /* Forms */
         .input-field {
             width: 100%;
             background: rgba(15, 23, 42, 0.8);
@@ -464,76 +574,7 @@
             box-shadow: 0 0 20px rgba(139, 92, 246, 0.2);
         }
         
-        .input-field::placeholder {
-            color: #64748b;
-        }
-        
-        /* Platform Badges */
-        .platform-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.4rem;
-            padding: 0.35rem 0.75rem;
-            border-radius: 20px;
-            font-size: 0.7rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-        
-        .badge-facebook { background: rgba(24, 119, 242, 0.2); color: #1877f2; border: 1px solid rgba(24, 119, 242, 0.4); }
-        .badge-instagram { background: rgba(225, 48, 108, 0.2); color: #e1306c; border: 1px solid rgba(225, 48, 108, 0.4); }
-        .badge-tiktok { background: rgba(0, 0, 0, 0.5); color: #fff; border: 1px solid rgba(255, 255, 255, 0.3); }
-        .badge-linkedin { background: rgba(10, 102, 194, 0.2); color: #0a66c2; border: 1px solid rgba(10, 102, 194, 0.4); }
-        .badge-twitter { background: rgba(29, 161, 242, 0.2); color: #1da1f2; border: 1px solid rgba(29, 161, 242, 0.4); }
-        .badge-youtube { background: rgba(255, 0, 0, 0.2); color: #ff0000; border: 1px solid rgba(255, 0, 0, 0.4); }
-        
-        /* Stats Counter */
-        .stat-card {
-            background: rgba(15, 23, 42, 0.6);
-            border: 1px solid rgba(139, 92, 246, 0.2);
-            border-radius: 16px;
-            padding: 1.5rem;
-            text-align: center;
-            transition: all 0.3s ease;
-        }
-        
-        .stat-card:hover {
-            border-color: #8b5cf6;
-            transform: translateY(-4px);
-        }
-        
-        .stat-number {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 2.5rem;
-            font-weight: 900;
-            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            line-height: 1;
-        }
-        
-        /* Chat Interface */
-        .chat-message {
-            background: rgba(30, 41, 59, 0.8);
-            border-radius: 16px;
-            padding: 1rem 1.25rem;
-            margin: 0.5rem 0;
-            border-left: 3px solid #8b5cf6;
-            animation: messageSlide 0.3s ease;
-        }
-        
-        @keyframes messageSlide {
-            from { opacity: 0; transform: translateX(-10px); }
-            to { opacity: 1; transform: translateX(0); }
-        }
-        
-        .chat-message.user {
-            border-left-color: #3b82f6;
-            background: rgba(59, 130, 246, 0.1);
-        }
-        
-        /* Toast Notifications */
+        /* Toast */
         .toast {
             position: fixed;
             top: 100px;
@@ -548,52 +589,51 @@
             max-width: 350px;
         }
         
-        .toast.show {
-            transform: translateX(0);
-        }
-        
-        .toast-success { background: linear-gradient(135deg, #22c55e, #16a34a); box-shadow: 0 10px 30px rgba(34, 197, 94, 0.3); }
-        .toast-error { background: linear-gradient(135deg, #ef4444, #dc2626); box-shadow: 0 10px 30px rgba(239, 68, 68, 0.3); }
-        .toast-gold { background: linear-gradient(135deg, #f59e0b, #fbbf24); color: #000; box-shadow: 0 10px 30px rgba(245, 158, 11, 0.3); }
+        .toast.show { transform: translateX(0); }
+        .toast-success { background: linear-gradient(135deg, #22c55e, #16a34a); }
+        .toast-error { background: linear-gradient(135deg, #ef4444, #dc2626); }
+        .toast-gold { background: linear-gradient(135deg, #f59e0b, #fbbf24); color: #000; }
+        .toast-info { background: linear-gradient(135deg, #3b82f6, #8b5cf6); }
         
         /* Responsive */
         @media (max-width: 768px) {
-            .ticker { font-size: 0.65rem; }
-            .max-logo { width: 45px; height: 45px; }
-            .stat-number { font-size: 1.75rem; }
-            .btn-primary, .btn-secondary { padding: 0.75rem 1rem; font-size: 0.875rem; }
-            .modal-content { padding: 1.5rem; }
-            .glass-nav .container { padding: 0.75rem 1rem; }
+            .photo-gallery {
+                grid-template-columns: 1fr;
+                grid-template-rows: 250px 120px 120px;
+            }
+            .photo-gallery .main-photo { grid-row: 1; }
+            .property-image-container { height: 220px; }
+            .hunt-stat-number { font-size: 2rem; }
+            .price-highlight { font-size: 2.5rem; }
         }
         
-        /* Utility Classes */
+        /* Utility */
         .hidden { display: none !important; }
         .flex { display: flex; }
         .grid { display: grid; }
-        .container { max-width: 1280px; margin: 0 auto; padding: 0 1.5rem; }
+        .container { max-width: 1280px; margin: 0 auto; padding: 0 1rem; }
         .text-center { text-align: center; }
         .items-center { align-items: center; }
         .justify-between { justify-content: space-between; }
         .gap-2 { gap: 0.5rem; }
         .gap-4 { gap: 1rem; }
         .gap-6 { gap: 1.5rem; }
+        .p-4 { padding: 1rem; }
+        .p-6 { padding: 1.5rem; }
+        .py-4 { padding-top: 1rem; padding-bottom: 1rem; }
+        .px-4 { padding-left: 1rem; padding-right: 1rem; }
         .mt-4 { margin-top: 1rem; }
         .mb-4 { margin-bottom: 1rem; }
         .mb-6 { margin-bottom: 1.5rem; }
         .mb-8 { margin-bottom: 2rem; }
-        .p-4 { padding: 1rem; }
-        .p-6 { padding: 1.5rem; }
-        .px-4 { padding-left: 1rem; padding-right: 1rem; }
-        .py-2 { padding-top: 0.5rem; padding-bottom: 0.5rem; }
-        .py-4 { padding-top: 1rem; padding-bottom: 1rem; }
         .w-full { width: 100%; }
-        .h-full { height: 100%; }
         .rounded-xl { border-radius: 16px; }
         .rounded-2xl { border-radius: 20px; }
         .font-bold { font-weight: 700; }
         .font-black { font-weight: 900; }
         .text-sm { font-size: 0.875rem; }
         .text-xs { font-size: 0.75rem; }
+        .text-xl { font-size: 1.25rem; }
         .text-2xl { font-size: 1.5rem; }
         .text-3xl { font-size: 1.875rem; }
         .text-4xl { font-size: 2.25rem; }
@@ -610,9 +650,10 @@
             .md\:flex { display: flex; }
             .md\:grid-cols-2 { grid-template-columns: repeat(2, 1fr); }
             .md\:grid-cols-3 { grid-template-columns: repeat(3, 1fr); }
+            .md\:grid-cols-4 { grid-template-columns: repeat(4, 1fr); }
             .md\:text-4xl { font-size: 2.25rem; }
             .md\:text-6xl { font-size: 3.75rem; }
-            .md\:text-7xl { font-size: 4.5rem; }
+            .container { padding: 0 1.5rem; }
         }
         
         @media (min-width: 1024px) {
@@ -624,136 +665,74 @@
         .fade-in { animation: fadeIn 0.5s ease; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         
-        .bounce-in { animation: bounceIn 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55); }
-        @keyframes bounceIn { 
-            0% { opacity: 0; transform: scale(0.3); } 
-            50% { transform: scale(1.05); } 
-            100% { opacity: 1; transform: scale(1); } 
-        }
-        
-        /* Confetti */
-        .confetti {
-            position: fixed;
-            width: 10px;
-            height: 10px;
-            top: -10px;
-            animation: confetti-fall 3s linear forwards;
-            z-index: 9999;
-        }
-        
-        @keyframes confetti-fall {
-            to {
-                transform: translateY(100vh) rotate(720deg);
-                opacity: 0;
-            }
-        }
-        
-        /* Affiliate Badge */
-        .affiliate-badge {
-            background: linear-gradient(135deg, #fbbf24, #f59e0b);
-            color: #000;
-            padding: 0.5rem 1rem;
-            border-radius: 20px;
-            font-weight: 800;
-            font-size: 0.875rem;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            animation: shine 2s infinite;
-            cursor: pointer;
-        }
-        
-        @keyframes shine {
-            0%, 100% { box-shadow: 0 0 5px rgba(251, 191, 36, 0.5); }
-            50% { box-shadow: 0 0 20px rgba(251, 191, 36, 0.8), 0 0 40px rgba(251, 191, 36, 0.4); }
-        }
-        
-        /* Gamification Bar */
-        .xp-bar {
-            background: rgba(15, 23, 42, 0.8);
-            border-radius: 20px;
-            height: 8px;
-            overflow: hidden;
-            margin-top: 0.5rem;
-        }
-        
-        .xp-fill {
-            height: 100%;
-            background: linear-gradient(90deg, #3b82f6, #8b5cf6, #ec4899);
-            border-radius: 20px;
-            transition: width 0.5s ease;
-            width: 0%;
-        }
+        .slide-up { animation: slideUp 0.5s ease; }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body>
-    <!-- Particles Background -->
-    <div class="particles" id="particles"></div>
+    <div class="hunt-bg"></div>
+    <div class="grid-overlay"></div>
     
-    <!-- Scan Line -->
-    <div class="scan-line"></div>
-    
-    <!-- Ticker -->
-    <div class="ticker">
+    <!-- Hunt Ticker -->
+    <div class="hunt-ticker">
         <div class="ticker-content">
-            🔴 MAX EL RASTREADOR ACTIVO || 111 BOTS PUBLICANDO || CEO MARÍA VERIFICANDO PAGOS €2.4M HOY || CEO ANTONIO COORDINANDO || FACEBOOK ✓ INSTAGRAM ✓ TIKTOK ✓ LINKEDIN ✓ TWITTER ✓ YOUTUBE ✓ || MEROFISE.ES DOMINANDO EL MERCADO INMOBILIARIO MUNDIAL || ÚLTIMA VENTA: ÁTICO MADRID €1.2M - 3 MINUTOS AGO || NUEVA PROPIEDAD EXCLUSIVA DETECTADA POR MAX ||
+            🔴 MAX CAZANDO EN: BOE | CATASTRO | REGISTRO PROPIEDAD | NOTARÍAS | IDEALISTA | FOTOCASA | MIL ANUNCIOS || 847 PROPIEDADES LOCALIZADAS HOY || 234 PROPIETARIOS CONTACTADOS || 89 EXCLUSIVAS FIRMADAS || IA REDACTANDO CONTRATOS 24/7 || MEROFISE.ES DOMINANDO EL MERCADO GLOBAL
         </div>
     </div>
     
     <!-- Navigation -->
-    <nav class="glass-nav" style="top: 36px;">
-        <div class="container flex justify-between items-center py-4">
+    <nav class="glass-nav">
+        <div class="container flex justify-between items-center py-3">
             <div class="flex items-center gap-4 cursor-pointer" onclick="showSection('home')">
-                <!-- MAX LOGO SVG -->
-                <div class="max-logo" title="Max - Rastreador #1">
-                    <svg class="max-svg" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <!-- Orejas -->
-                        <path class="max-ear" d="M20 35 L15 10 L35 25 Z" fill="#1e293b" stroke="#3b82f6" stroke-width="2"/>
-                        <path class="max-ear" d="M80 35 L85 10 L65 25 Z" fill="#1e293b" stroke="#3b82f6" stroke-width="2"/>
-                        <!-- Cabeza -->
-                        <ellipse cx="50" cy="50" rx="30" ry="28" fill="#0f172a" stroke="#3b82f6" stroke-width="2"/>
-                        <!-- Hocico -->
-                        <ellipse cx="50" cy="62" rx="12" ry="10" fill="#1e293b" stroke="#8b5cf6" stroke-width="1.5"/>
-                        <!-- Nariz -->
-                        <ellipse cx="50" cy="58" rx="5" ry="4" fill="#000"/>
-                        <!-- Ojos -->
-                        <ellipse class="max-eye" cx="38" cy="45" rx="6" ry="5" fill="#fbbf24" stroke="#f59e0b" stroke-width="1"/>
-                        <ellipse class="max-eye" cx="62" cy="45" rx="6" ry="5" fill="#fbbf24" stroke="#f59e0b" stroke-width="1"/>
-                        <circle cx="38" cy="45" r="2" fill="#000"/>
-                        <circle cx="62" cy="45" r="2" fill="#000"/>
-                        <!-- Brillo ojos -->
-                        <circle cx="40" cy="43" r="1.5" fill="#fff"/>
-                        <circle cx="64" cy="43" r="1.5" fill="#fff"/>
-                        <!-- Collar -->
-                        <path d="M30 72 Q50 80 70 72" stroke="#ef4444" stroke-width="4" fill="none"/>
-                        <circle cx="50" cy="78" r="4" fill="#fbbf24"/>
-                    </svg>
+                <!-- MAX LOGO -->
+                <div class="max-logo-container">
+                    <div class="max-realistic">
+                        <img src="https://images.unsplash.com/photo-1589941013453-ec89f33b5e95?w=200&h=200&fit=crop" alt="Max el Pastor Alemán">
+                    </div>
+                    <div class="max-hunting-badge">Cazando</div>
                 </div>
                 <div>
                     <h1 class="text-2xl md:text-3xl font-black font-orbitron gradient-text tracking-wider">MEROFISE</h1>
                     <p class="text-xs text-slate-400 font-bold uppercase tracking-tight flex items-center gap-2">
-                        <span class="live-indicator"><span class="live-dot"></span>merofise.es</span>
+                        <span style="color: #22c55e;">●</span> merofise.es
                         <span style="color: #8b5cf6;">|</span>
-                        <span style="color: #22c55e;">111 Bots</span>
+                        <span style="color: #fbbf24;">Max IA Global</span>
                     </p>
                 </div>
             </div>
             
             <div class="hidden md:flex items-center gap-3">
-                <span class="platform-badge badge-facebook"><i class="fab fa-facebook-f"></i> LIVE</span>
-                <span class="platform-badge badge-instagram"><i class="fab fa-instagram"></i> LIVE</span>
-                <span class="platform-badge badge-tiktok"><i class="fab fa-tiktok"></i> LIVE</span>
+                <!-- Language Selector -->
+                <div class="lang-selector">
+                    <button class="lang-btn" onclick="toggleLang()">
+                        <span id="currentLang">🇪🇸 ES</span>
+                        <i class="fas fa-chevron-down text-xs"></i>
+                    </button>
+                    <div class="lang-dropdown" id="langDropdown">
+                        <div class="lang-option" onclick="setLang('es')"><span>🇪🇸</span> Español</div>
+                        <div class="lang-option" onclick="setLang('en')"><span>🇬🇧</span> English</div>
+                        <div class="lang-option" onclick="setLang('fr')"><span>🇫🇷</span> Français</div>
+                        <div class="lang-option" onclick="setLang('de')"><span>🇩🇪</span> Deutsch</div>
+                        <div class="lang-option" onclick="setLang('it')"><span>🇮🇹</span> Italiano</div>
+                        <div class="lang-option" onclick="setLang('pt')"><span>🇵🇹</span> Português</div>
+                        <div class="lang-option" onclick="setLang('zh')"><span>🇨🇳</span> 中文</div>
+                        <div class="lang-option" onclick="setLang('ar')"><span>🇸🇦</span> العربية</div>
+                    </div>
+                </div>
                 
-                <button id="authBtn" onclick="toggleAuth()" class="btn-primary" style="padding: 0.5rem 1rem; font-size: 0.875rem;">
+                <button onclick="showSection('dashboard')" class="btn-secondary text-sm">
+                    <i class="fas fa-chart-line"></i> Panel
+                </button>
+                
+                <button id="authBtn" onclick="toggleAuth()" class="btn-primary text-sm">
                     <i class="fas fa-user"></i> <span id="authBtnText">Entrar</span>
                 </button>
                 
-                <a href="https://wa.me/34664037407" target="_blank" class="btn-primary" style="background: linear-gradient(135deg, #22c55e, #16a34a); padding: 0.5rem 1rem; font-size: 0.875rem;">
-                    <i class="fab fa-whatsapp"></i> <span class="hidden md:inline">+34 664 037 407</span>
+                <a href="https://wa.me/34664037407" target="_blank" class="btn-primary text-sm" style="background: linear-gradient(135deg, #22c55e, #16a34a);">
+                    <i class="fab fa-whatsapp"></i> +34 664 037 407
                 </a>
             </div>
             
-            <!-- Mobile Menu Button -->
             <button class="md:hidden btn-secondary" onclick="toggleMobileMenu()" style="padding: 0.5rem;">
                 <i class="fas fa-bars text-xl"></i>
             </button>
@@ -763,211 +742,325 @@
         <div id="mobileMenu" class="hidden md:hidden border-t border-slate-700/50">
             <div class="container py-4 flex flex-col gap-3">
                 <div class="flex gap-2 flex-wrap">
-                    <span class="platform-badge badge-facebook"><i class="fab fa-facebook-f"></i></span>
-                    <span class="platform-badge badge-instagram"><i class="fab fa-instagram"></i></span>
-                    <span class="platform-badge badge-tiktok"><i class="fab fa-tiktok"></i></span>
-                    <span class="platform-badge badge-linkedin"><i class="fab fa-linkedin-in"></i></span>
+                    <button class="lang-btn text-sm" onclick="setLang('es')">🇪🇸 ES</button>
+                    <button class="lang-btn text-sm" onclick="setLang('en')">🇬🇧 EN</button>
+                    <button class="lang-btn text-sm" onclick="setLang('fr')">🇫🇷 FR</button>
                 </div>
+                <button onclick="showSection('dashboard')" class="btn-secondary w-full justify-center">
+                    <i class="fas fa-chart-line"></i> Panel de Control
+                </button>
                 <button onclick="toggleAuth()" class="btn-primary w-full justify-center">
                     <i class="fas fa-user"></i> <span id="mobileAuthText">Entrar</span>
                 </button>
-                <a href="https://wa.me/34664037407" target="_blank" class="btn-primary w-full justify-center" style="background: linear-gradient(135deg, #22c55e, #16a34a);">
-                    <i class="fab fa-whatsapp"></i> WhatsApp
-                </a>
             </div>
         </div>
     </nav>
 
-    <!-- Main Content -->
-    <main id="mainContent" style="padding-top: 100px;">
+    <!-- MAIN CONTENT -->
+    <main id="mainContent" style="padding-top: 20px;">
         
         <!-- HOME SECTION -->
         <section id="home" class="visible-section">
             <!-- Hero -->
-            <header class="relative min-h-[90vh] flex items-center justify-center pt-8 pb-16 px-4">
-                <div class="container mx-auto text-center relative z-10">
+            <header class="relative min-h-[85vh] flex items-center justify-center py-16 px-4">
+                <div class="container mx-auto text-center">
                     
-                    <!-- Viral Badge -->
-                    <div onclick="showSection('properties')" class="inline-flex items-center gap-2 glass-panel px-4 py-2 mb-6 cursor-pointer hover:border-blue-500/50 transition" style="border-radius: 50px;">
-                        <span class="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span>
-                        <span class="text-blue-300 text-sm font-mono">Max detectó <span id="newProperties">3</span> propiedades nuevas hoy</span>
-                        <i class="fas fa-arrow-right text-blue-400 text-xs"></i>
+                    <!-- Hunt Status -->
+                    <div class="inline-flex items-center gap-2 glass-panel px-4 py-2 mb-6 cursor-pointer" style="border-radius: 50px; border-color: rgba(239, 68, 68, 0.4);">
+                        <span class="w-2 h-2 bg-red-500 rounded-full animate-pulse"></span>
+                        <span class="text-red-300 text-sm font-mono font-bold">Max está cazando ahora mismo</span>
                     </div>
                     
-                    <h2 class="text-4xl md:text-6xl lg:text-7xl font-black font-orbitron mb-6 leading-tight">
-                        Max el Rastreador<br>
-                        <span class="gradient-text">Encuentra tu Propiedad</span><br>
-                        <span class="text-white">Exclusiva Mundial</span>
+                    <h2 class="text-4xl md:text-6xl font-black font-orbitron mb-6 leading-tight">
+                        Max el Pastor Alemán<br>
+                        <span class="gradient-text">Caza Propiedades</span><br>
+                        <span class="text-white text-2xl md:text-4xl">En Todo el Mundo</span>
                     </h2>
                     
-                    <p class="text-slate-400 text-lg md:text-xl mb-8 max-w-2xl mx-auto">
-                        El primer Pastor Alemán línea checa especializado en bienes raíces de lujo. 
-                        111 bots IA publicando en 6 plataformas. CEOs María y Antonio supervisando cada operación.
+                    <p class="text-slate-400 text-lg md:text-xl mb-8 max-w-3xl mx-auto">
+                        Nuestras IAs rastrean <strong style="color: #fbbf24;">BOE, Catastro, Registro, Notarías</strong> y todos los portales. 
+                        Contactamos propietarios, negociamos exclusivas y encontramos compradores/inquilinos automáticamente.
                     </p>
                     
-                    <!-- Social Proof -->
-                    <div class="social-proof-bar max-w-xl mx-auto mb-8 text-left">
-                        <i class="fas fa-check-circle text-green-400 mr-2"></i>
-                        <strong>María IA</strong> acaba de verificar un pago de <strong style="color: #fbbf24;">€450,000</strong> hace 2 minutos
+                    <!-- Hunt Sources -->
+                    <div class="flex flex-wrap justify-center gap-2 mb-8">
+                        <span class="source-badge"><i class="fas fa-landmark"></i> BOE</span>
+                        <span class="source-badge"><i class="fas fa-map"></i> Catastro</span>
+                        <span class="source-badge"><i class="fas fa-file-contract"></i> Registro</span>
+                        <span class="source-badge"><i class="fas fa-stamp"></i> Notarías</span>
+                        <span class="source-badge"><i class="fas fa-home"></i> Idealista</span>
+                        <span class="source-badge"><i class="fas fa-search"></i> Fotocasa</span>
                     </div>
                     
-                    <!-- MAX Hero Card -->
-                    <div class="glass-panel rounded-3xl p-6 md:p-8 max-w-4xl mx-auto mb-12 relative overflow-hidden">
-                        <div class="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-blue-500/20 to-purple-500/20 rounded-full blur-3xl"></div>
-                        
-                        <div class="flex flex-col md:flex-row items-center gap-6 mb-6">
-                            <div class="relative">
-                                <div class="w-24 h-24 md:w-32 md:h-32 bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500 rounded-2xl flex items-center justify-center animate-pulse">
-                                    <svg class="w-16 h-16 md:w-20 md:h-20" viewBox="0 0 100 100" fill="none">
-                                        <path d="M20 35 L15 10 L35 25 Z" fill="#1e293b" stroke="white" stroke-width="2"/>
-                                        <path d="M80 35 L85 10 L65 25 Z" fill="#1e293b" stroke="white" stroke-width="2"/>
-                                        <ellipse cx="50" cy="50" rx="30" ry="28" fill="#0f172a" stroke="white" stroke-width="2"/>
-                                        <ellipse cx="50" cy="62" rx="12" ry="10" fill="#1e293b" stroke="white" stroke-width="1.5"/>
-                                        <ellipse cx="50" cy="58" rx="5" ry="4" fill="#000"/>
-                                        <ellipse cx="38" cy="45" rx="6" ry="5" fill="#fbbf24" stroke="white" stroke-width="1"/>
-                                        <ellipse cx="62" cy="45" rx="6" ry="5" fill="#fbbf24" stroke="white" stroke-width="1"/>
-                                        <circle cx="38" cy="45" r="2" fill="#000"/>
-                                        <circle cx="62" cy="45" r="2" fill="#000"/>
-                                        <circle cx="40" cy="43" r="1.5" fill="#fff"/>
-                                        <circle cx="64" cy="43" r="1.5" fill="#fff"/>
-                                        <path d="M30 72 Q50 80 70 72" stroke="#ef4444" stroke-width="4" fill="none"/>
-                                        <circle cx="50" cy="78" r="4" fill="#fbbf24"/>
-                                    </svg>
-                                </div>
-                                <div class="absolute -bottom-2 -right-2 bg-green-500 text-white text-xs font-bold px-2 py-1 rounded-full">
-                                    MAX #1
-                                </div>
-                            </div>
-                            <div class="text-left">
-                                <h3 class="text-2xl md:text-3xl font-bold text-purple-300 mb-2">SOCIALBOT-111 + Max</h3>
-                                <p class="text-slate-400 mb-4">Rastreo mundial 24/7 de propiedades premium</p>
-                                <div class="flex flex-wrap gap-2">
-                                    <span class="platform-badge badge-facebook"><i class="fab fa-facebook-f"></i> ACTIVE</span>
-                                    <span class="platform-badge badge-instagram"><i class="fab fa-instagram"></i> ACTIVE</span>
-                                    <span class="platform-badge badge-tiktok"><i class="fab fa-tiktok"></i> ACTIVE</span>
-                                    <span class="platform-badge badge-linkedin"><i class="fab fa-linkedin-in"></i> ACTIVE</span>
-                                    <span class="platform-badge badge-twitter"><i class="fab fa-x-twitter"></i> ACTIVE</span>
-                                    <span class="platform-badge badge-youtube"><i class="fab fa-youtube"></i> ACTIVE</span>
-                                </div>
-                            </div>
+                    <!-- Stats -->
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto mb-12">
+                        <div class="hunt-stat">
+                            <div class="hunt-stat-number" id="statsFound">12,847</div>
+                            <div class="text-xs text-slate-500 uppercase mt-1">Propiedades Cazadas</div>
                         </div>
-                        
-                        <!-- Stats Grid -->
-                        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-                            <div class="stat-card">
-                                <div class="stat-number" id="postsHoy">847</div>
-                                <div class="text-xs text-slate-500 uppercase mt-1">Posts Hoy</div>
-                            </div>
-                            <div class="stat-card">
-                                <div class="stat-number" style="background: linear-gradient(135deg, #8b5cf6, #ec4899); -webkit-background-clip: text;">6</div>
-                                <div class="text-xs text-slate-500 uppercase mt-1">Plataformas</div>
-                            </div>
-                            <div class="stat-card">
-                                <div class="stat-number" style="background: linear-gradient(135deg, #22c55e, #16a34a); -webkit-background-clip: text;">15</div>
-                                <div class="text-xs text-slate-500 uppercase mt-1">Idiomas</div>
-                            </div>
-                            <div class="stat-card">
-                                <div class="stat-number" style="background: linear-gradient(135deg, #f59e0b, #fbbf24); -webkit-background-clip: text;">€<span id="facturacionHoy">2.4</span>M</div>
-                                <div class="text-xs text-slate-500 uppercase mt-1">Facturado Hoy</div>
-                            </div>
+                        <div class="hunt-stat">
+                            <div class="hunt-stat-number" style="color: #8b5cf6;" id="statsContacted">3,421</div>
+                            <div class="text-xs text-slate-500 uppercase mt-1">Propietarios Contactados</div>
                         </div>
-                    </div>
-                    
-                    <!-- CEOs -->
-                    <div class="grid md:grid-cols-2 gap-6 max-w-3xl mx-auto mb-12">
-                        <div class="ceo-card text-left">
-                            <div class="flex items-center gap-4 mb-4 relative z-10">
-                                <div class="w-16 h-16 bg-gradient-to-br from-purple-500 to-pink-500 rounded-full flex items-center justify-center text-2xl">
-                                    <i class="fas fa-female text-white"></i>
-                                </div>
-                                <div>
-                                    <h3 class="font-bold text-xl text-purple-300">María IA</h3>
-                                    <p class="text-xs text-slate-400 uppercase">CEO Financiera</p>
-                                    <div class="xp-bar" style="width: 100px;"><div class="xp-fill" style="width: 94%;"></div></div>
-                                </div>
-                            </div>
-                            <p class="text-sm text-slate-300 relative z-10">
-                                <i class="fas fa-shield-alt text-green-400 mr-2"></i>Verificando pagos Stripe 24/7<br>
-                                <i class="fas fa-gavel text-red-400 mr-2"></i>Activando abogados si falta 1€<br>
-                                <i class="fas fa-chart-line text-blue-400 mr-2"></i>ROI promedio: <strong>23.4%</strong>
-                            </p>
+                        <div class="hunt-stat">
+                            <div class="hunt-stat-number" style="color: #22c55e;" id="statsExclusive">892</div>
+                            <div class="text-xs text-slate-500 uppercase mt-1">Exclusivas Firmadas</div>
                         </div>
-                        
-                        <div class="ceo-card text-left" style="border-color: rgba(59, 130, 246, 0.4);">
-                            <div class="flex items-center gap-4 mb-4 relative z-10">
-                                <div class="w-16 h-16 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-full flex items-center justify-center text-2xl">
-                                    <i class="fas fa-male text-white"></i>
-                                </div>
-                                <div>
-                                    <h3 class="font-bold text-xl text-blue-300">Antonio IA</h3>
-                                    <p class="text-xs text-slate-400 uppercase">CEO Operaciones</p>
-                                    <div class="xp-bar" style="width: 100px;"><div class="xp-fill" style="width: 87%;"></div></div>
-                                </div>
-                            </div>
-                            <p class="text-sm text-slate-300 relative z-10">
-                                <i class="fas fa-robot text-blue-400 mr-2"></i>Coordinando 111 bots activos<br>
-                                <i class="fas fa-globe text-green-400 mr-2"></i>Publicación mundial en 2.3s<br>
-                                <i class="fas fa-bolt text-yellow-400 mr-2"></i>Latencia: <strong>12ms</strong>
-                            </p>
+                        <div class="hunt-stat">
+                            <div class="hunt-stat-number" style="color: #fbbf24;" id="statsSold">234</div>
+                            <div class="text-xs text-slate-500 uppercase mt-1">Vendidas Este Mes</div>
                         </div>
                     </div>
                     
                     <!-- CTA Buttons -->
-                    <div class="flex flex-col sm:flex-wrap justify-center gap-4">
-                        <button onclick="showSection('properties')" class="btn-primary text-lg px-8 py-4">
-                            <i class="fas fa-search mr-2"></i>Explorar Propiedades
+                    <div class="flex flex-col sm:flex-row justify-center gap-4">
+                        <button onclick="showSection('properties')" class="btn-hunt text-lg px-8 py-4">
+                            <i class="fas fa-search mr-2"></i>Ver Propiedades Cazadas
                         </button>
-                        <button onclick="openPublishModal()" class="btn-secondary text-lg px-8 py-4">
-                            <i class="fas fa-plus mr-2"></i>Publicar Propiedad
+                        <button onclick="openPublishModal()" class="btn-primary text-lg px-8 py-4">
+                            <i class="fas fa-handshake mr-2"></i>Quiero Vender/Alquilar
                         </button>
-                        <button onclick="openIaAssistant()" class="btn-primary text-lg px-8 py-4" style="background: linear-gradient(135deg, #ec4899, #8b5cf6);">
-                            <i class="fas fa-brain mr-2"></i>Hablar con Max IA
+                        <button onclick="openContractModal()" class="btn-gold text-lg px-8 py-4">
+                            <i class="fas fa-file-signature mr-2"></i>Contrato Exclusiva
                         </button>
-                    </div>
-                    
-                    <!-- Affiliate CTA -->
-                    <div class="mt-8">
-                        <div class="affiliate-badge" onclick="openAffiliateModal()">
-                            <i class="fas fa-crown"></i>
-                            Gana €500 por cada venta - Programa VIP
-                        </div>
                     </div>
                 </div>
             </header>
+            
+            <!-- AI Agents Section -->
+            <section class="py-16 px-4 bg-gradient-to-b from-transparent to-slate-900/50">
+                <div class="container mx-auto">
+                    <div class="text-center mb-12">
+                        <h3 class="text-3xl md:text-4xl font-black font-orbitron mb-4 gradient-text">Nuestro Ejército de IAs</h3>
+                        <p class="text-slate-400">Cada IA especializada en una misión: cazar, convencer, vender y redactar</p>
+                    </div>
+                    
+                    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <!-- Hunter AI -->
+                        <div class="agent-card">
+                            <div class="flex items-center gap-4 mb-4">
+                                <div class="w-14 h-14 bg-gradient-to-br from-blue-500 to-blue-700 rounded-xl flex items-center justify-center text-2xl">
+                                    🐕
+                                </div>
+                                <div>
+                                    <h4 class="font-bold text-xl text-blue-300">Max Hunter</h4>
+                                    <p class="text-xs text-slate-400">Pastor Alemán Cazador</p>
+                                </div>
+                            </div>
+                            <p class="text-sm text-slate-300 mb-4">
+                                Rastrea 24/7: BOE, Catastro, Registro de la Propiedad, Notarías y todos los portales inmobiliarios. Detecta oportunidades antes que nadie.
+                            </p>
+                            <div class="flex flex-wrap gap-2 mb-3">
+                                <span class="text-xs bg-blue-500/20 text-blue-300 px-2 py-1 rounded">BOE</span>
+                                <span class="text-xs bg-blue-500/20 text-blue-300 px-2 py-1 rounded">Catastro</span>
+                                <span class="text-xs bg-blue-500/20 text-blue-300 px-2 py-1 rounded">Registro</span>
+                            </div>
+                            <div class="agent-status">Cazando ahora • 847 hoy</div>
+                        </div>
+                        
+                        <!-- Convencer AI -->
+                        <div class="agent-card">
+                            <div class="flex items-center gap-4 mb-4">
+                                <div class="w-14 h-14 bg-gradient-to-br from-purple-500 to-pink-500 rounded-xl flex items-center justify-center text-2xl">
+                                    💬
+                                </div>
+                                <div>
+                                    <h4 class="font-bold text-xl text-purple-300">Lucía Convencer</h4>
+                                    <p class="text-xs text-slate-400">IA de Negociación</p>
+                                </div>
+                            </div>
+                            <p class="text-sm text-slate-300 mb-4">
+                                Contacta propietarios por teléfono, email y WhatsApp. Les explica las ventajas de nuestra exclusiva y cierra el trato.
+                            </p>
+                            <div class="flex flex-wrap gap-2 mb-3">
+                                <span class="text-xs bg-purple-500/20 text-purple-300 px-2 py-1 rounded">Calls</span>
+                                <span class="text-xs bg-purple-500/20 text-purple-300 px-2 py-1 rounded">Email</span>
+                                <span class="text-xs bg-purple-500/20 text-purple-300 px-2 py-1 rounded">WhatsApp</span>
+                            </div>
+                            <div class="agent-status">Llamando • 23 activas</div>
+                        </div>
+                        
+                        <!-- Buyer Hunter AI -->
+                        <div class="agent-card">
+                            <div class="flex items-center gap-4 mb-4">
+                                <div class="w-14 h-14 bg-gradient-to-br from-green-500 to-emerald-600 rounded-xl flex items-center justify-center text-2xl">
+                                    🎯
+                                </div>
+                                <div>
+                                    <h4 class="font-bold text-xl text-green-300">Carlos Buyer</h4>
+                                    <p class="text-xs text-slate-400">Cazador de Compradores</p>
+                                </div>
+                            </div>
+                            <p class="text-sm text-slate-300 mb-4">
+                                Busca compradores potenciales en redes sociales, foros y portales. Les envía propiedades a medida y los guía hasta la compra.
+                            </p>
+                            <div class="flex flex-wrap gap-2 mb-3">
+                                <span class="text-xs bg-green-500/20 text-green-300 px-2 py-1 rounded">Facebook</span>
+                                <span class="text-xs bg-green-500/20 text-green-300 px-2 py-1 rounded">LinkedIn</span>
+                                <span class="text-xs bg-green-500/20 text-green-300 px-2 py-1 rounded">TikTok</span>
+                            </div>
+                            <div class="agent-status">Buscando • 156 leads hoy</div>
+                        </div>
+                        
+                        <!-- Renter Hunter AI -->
+                        <div class="agent-card">
+                            <div class="flex items-center gap-4 mb-4">
+                                <div class="w-14 h-14 bg-gradient-to-br from-orange-500 to-red-500 rounded-xl flex items-center justify-center text-2xl">
+                                    🏠
+                                </div>
+                                <div>
+                                    <h4 class="font-bold text-xl text-orange-300">Sofía Renter</h4>
+                                    <p class="text-xs text-slate-400">Cazadora de Inquilinos</p>
+                                </div>
+                            </div>
+                            <p class="text-sm text-slate-300 mb-4">
+                                Encuentra personas buscando alquiler. Filtra por capacidad de pago, historial y urgencia. Solo presenta inquilinos de calidad.
+                            </p>
+                            <div class="flex flex-wrap gap-2 mb-3">
+                                <span class="text-xs bg-orange-500/20 text-orange-300 px-2 py-1 rounded">Verificación</span>
+                                <span class="text-xs bg-orange-500/20 text-orange-300 px-2 py-1 rounded">Historial</span>
+                            </div>
+                            <div class="agent-status">Filtrando • 89 candidatos</div>
+                        </div>
+                        
+                        <!-- Contract AI -->
+                        <div class="agent-card">
+                            <div class="flex items-center gap-4 mb-4">
+                                <div class="w-14 h-14 bg-gradient-to-br from-yellow-500 to-amber-600 rounded-xl flex items-center justify-center text-2xl">
+                                    ⚖️
+                                </div>
+                                <div>
+                                    <h4 class="font-bold text-xl text-yellow-300">Juez Contract</h4>
+                                    <p class="text-xs text-slate-400">Redactor Legal IA</p>
+                                </div>
+                            </div>
+                            <p class="text-sm text-slate-300 mb-4">
+                                Redacta contratos de exclusiva para venta y alquiler. Cumple con la legislación de cada país. Revisa cláusulas y protege al propietario.
+                            </p>
+                            <div class="flex flex-wrap gap-2 mb-3">
+                                <span class="text-xs bg-yellow-500/20 text-yellow-300 px-2 py-1 rounded">Legal</span>
+                                <span class="text-xs bg-yellow-500/20 text-yellow-300 px-2 py-1 rounded">Exclusiva</span>
+                                <span class="text-xs bg-yellow-500/20 text-yellow-300 px-2 py-1 rounded">Multi-país</span>
+                            </div>
+                            <div class="agent-status">Redactando • 12 contratos hoy</div>
+                        </div>
+                        
+                        <!-- Coordinator AI -->
+                        <div class="agent-card">
+                            <div class="flex items-center gap-4 mb-4">
+                                <div class="w-14 h-14 bg-gradient-to-br from-cyan-500 to-blue-600 rounded-xl flex items-center justify-center text-2xl">
+                                    🧠
+                                </div>
+                                <div>
+                                    <h4 class="font-bold text-xl text-cyan-300">Antonio CEO</h4>
+                                    <p class="text-xs text-slate-400">Coordinador General</p>
+                                </div>
+                            </div>
+                            <p class="text-sm text-slate-300 mb-4">
+                                Supervisa a todas las IAs, optimiza procesos, toma decisiones estratégicas y coordina las 111 unidades de procesamiento.
+                            </p>
+                            <div class="flex flex-wrap gap-2 mb-3">
+                                <span class="text-xs bg-cyan-500/20 text-cyan-300 px-2 py-1 rounded">Supervisión</span>
+                                <span class="text-xs bg-cyan-500/20 text-cyan-300 px-2 py-1 rounded">Optimización</span>
+                            </div>
+                            <div class="agent-status">Coordinando • 111 bots activos</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Pricing Section -->
+            <section class="py-16 px-4">
+                <div class="container mx-auto max-w-4xl">
+                    <div class="text-center mb-12">
+                        <h3 class="text-3xl md:text-4xl font-black font-orbitron mb-4 gold-text">Modelo de Negocio Transparente</h3>
+                        <p class="text-slate-400">Sin sorpresas. Solo pagas si vendemos o alquilamos tu propiedad.</p>
+                    </div>
+                    
+                    <div class="grid md:grid-cols-2 gap-8">
+                        <!-- Venta -->
+                        <div class="contract-panel">
+                            <div class="flex items-center gap-3 mb-6">
+                                <div class="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-500 rounded-xl flex items-center justify-center text-2xl">🏡</div>
+                                <div>
+                                    <h4 class="text-2xl font-bold text-white">Exclusiva de Venta</h4>
+                                    <p class="text-sm text-slate-400">Para propietarios vendedores</p>
+                                </div>
+                            </div>
+                            
+                            <div class="mb-6">
+                                <div class="text-sm text-slate-400 mb-2">Comisión por venta exitosa:</div>
+                                <div class="price-highlight">3%</div>
+                                <div class="text-sm text-slate-400">Sobre el precio de venta final</div>
+                            </div>
+                            
+                            <ul class="space-y-3 text-sm text-slate-300 mb-6">
+                                <li class="flex items-start gap-2"><i class="fas fa-check text-green-400 mt-1"></i> Publicación en 15+ portales</li>
+                                <li class="flex items-start gap-2"><i class="fas fa-check text-green-400 mt-1"></i> Fotografía profesional IA</li>
+                                <li class="flex items-start gap-2"><i class="fas fa-check text-green-400 mt-1"></i> Visitas virtuales 3D</li>
+                                <li class="flex items-start gap-2"><i class="fas fa-check text-green-400 mt-1"></i> Negociación por expertos IA</li>
+                                <li class="flex items-start gap-2"><i class="fas fa-check text-green-400 mt-1"></i> Gestión legal completa</li>
+                            </ul>
+                            
+                            <button onclick="openContractModal('venta')" class="btn-primary w-full justify-center text-lg">
+                                <i class="fas fa-file-signature mr-2"></i>Firmar Exclusiva Venta
+                            </button>
+                        </div>
+                        
+                        <!-- Alquiler -->
+                        <div class="contract-panel" style="border-color: rgba(34, 197, 94, 0.3);">
+                            <div class="flex items-center gap-3 mb-6">
+                                <div class="w-12 h-12 bg-gradient-to-br from-green-500 to-emerald-600 rounded-xl flex items-center justify-center text-2xl">🔑</div>
+                                <div>
+                                    <h4 class="text-2xl font-bold text-white">Exclusiva de Alquiler</h4>
+                                    <p class="text-sm text-slate-400">Solo paga el propietario</p>
+                                </div>
+                            </div>
+                            
+                            <div class="mb-6">
+                                <div class="text-sm text-slate-400 mb-2">Cuota mensual fija:</div>
+                                <div class="price-highlight">30€</div>
+                                <div class="text-sm text-slate-400">+ IVA (21%) = 36,30€/mes</div>
+                            </div>
+                            
+                            <div class="bg-green-500/10 border border-green-500/30 rounded-lg p-3 mb-6">
+                                <p class="text-sm text-green-300 font-bold text-center">
+                                    <i class="fas fa-info-circle mr-2"></i>
+                                    El inquilino NO PAGA NADA
+                                </p>
+                            </div>
+                            
+                            <ul class="space-y-3 text-sm text-slate-300 mb-6">
+                                <li class="flex items-start gap-2"><i class="fas fa-check text-green-400 mt-1"></i> Publicación en 10+ portales</li>
+                                <li class="flex items-start gap-2"><i class="fas fa-check text-green-400 mt-1"></i> Filtrado de inquilinos (nómina, aval)</li>
+                                <li class="flex items-start gap-2"><i class="fas fa-check text-green-400 mt-1"></i> Contrato legal adaptado</li>
+                                <li class="flex items-start gap-2"><i class="fas fa-check text-green-400 mt-1"></i> Cobro de rentas garantizado</li>
+                                <li class="flex items-start gap-2"><i class="fas fa-check text-green-400 mt-1"></i> Gestión de incidencias 24/7</li>
+                            </ul>
+                            
+                            <button onclick="openContractModal('alquiler')" class="btn-primary w-full justify-center text-lg" style="background: linear-gradient(135deg, #22c55e, #16a34a);">
+                                <i class="fas fa-file-signature mr-2"></i>Firmar Exclusiva Alquiler
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
         </section>
 
-        <!-- PROPERTIES SECTION -->
+        <!-- PROPERTIES SECTION - FOTOS PROTAGONISTAS -->
         <section id="properties" class="hidden-section py-16 px-4">
             <div class="container mx-auto">
                 <div class="text-center mb-12">
-                    <h3 class="text-3xl md:text-4xl font-black font-orbitron mb-4 gradient-text">Propiedades Exclusivas</h3>
-                    <p class="text-slate-400">Max ha rastreado estas joyas en las últimas 24h</p>
+                    <h3 class="text-3xl md:text-4xl font-black font-orbitron mb-4 gradient-text">Propiedades Cazadas por Max</h3>
+                    <p class="text-slate-400">De lujo, clase media y low cost. Todas con fotos reales verificadas.</p>
                     
-                    <!-- Urgency Message -->
-                    <div class="urgency-badge mt-4">
-                        <i class="fas fa-fire"></i>
-                        Solo quedan <span id="urgencyCount">7</span> propiedades premium esta semana
-                    </div>
-                </div>
-                
-                <!-- Filters -->
-                <div class="glass-panel rounded-2xl p-4 md:p-6 mb-8">
-                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-                        <select id="filterType" class="input-field" onchange="loadProperties()">
-                            <option value="">Todos los tipos</option>
-                            <option value="venta">🔥 Venta</option>
-                            <option value="alquiler">Alquiler</option>
-                        </select>
-                        <select id="filterCategory" class="input-field" onchange="loadProperties()">
-                            <option value="">Todas</option>
-                            <option value="casa">Casa</option>
-                            <option value="piso">Piso</option>
-                            <option value="atico">Ático Premium</option>
-                            <option value="local">Local</option>
-                            <option value="villa">Villa Exclusiva</option>
-                        </select>
-                        <input type="number" id="filterMinPrice" placeholder="Precio mín €" class="input-field" onchange="loadProperties()">
-                        <input type="number" id="filterMaxPrice" placeholder="Precio máx €" class="input-field" onchange="loadProperties()">
+                    <!-- Category Filter -->
+                    <div class="flex flex-wrap justify-center gap-2 mt-6">
+                        <button onclick="filterCategory('all')" class="btn-primary text-sm">Todas</button>
+                        <button onclick="filterCategory('lujo')" class="btn-secondary text-sm">🏰 Lujo</button>
+                        <button onclick="filterCategory('media')" class="btn-secondary text-sm">🏠 Clase Media</button>
+                        <button onclick="filterCategory('lowcost')" class="btn-secondary text-sm">💰 Low Cost</button>
+                        <button onclick="filterCategory('alquiler')" class="btn-secondary text-sm">🔑 Alquiler</button>
                     </div>
                 </div>
                 
@@ -975,12 +1068,18 @@
                 <div id="propertiesGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     <!-- Loaded dynamically -->
                 </div>
+            </div>
+        </section>
+
+        <!-- PROPERTY DETAIL SECTION -->
+        <section id="propertyDetail" class="hidden-section py-16 px-4">
+            <div class="container mx-auto max-w-5xl">
+                <button onclick="showSection('properties')" class="btn-secondary mb-6">
+                    <i class="fas fa-arrow-left mr-2"></i>Volver
+                </button>
                 
-                <!-- Empty State -->
-                <div id="emptyState" class="hidden text-center py-12">
-                    <div class="text-6xl mb-4">🐕</div>
-                    <p class="text-slate-500 text-lg">Max está rastreando nuevas propiedades...</p>
-                    <button onclick="openPublishModal()" class="btn-primary mt-4">Sé el primero en publicar</button>
+                <div id="propertyDetailContent">
+                    <!-- Loaded dynamically -->
                 </div>
             </div>
         </section>
@@ -989,122 +1088,51 @@
         <section id="dashboard" class="hidden-section py-16 px-4">
             <div class="container mx-auto">
                 <div class="text-center mb-12">
-                    <h3 class="text-3xl md:text-4xl font-black font-orbitron mb-4 gradient-text">Mi Centro de Control</h3>
-                    <p class="text-slate-400">Gestiona tu imperio inmobiliario</p>
+                    <h3 class="text-3xl md:text-4xl font-black font-orbitron mb-4 gradient-text">Panel de Control</h3>
+                    <p class="text-slate-400">Gestiona tus propiedades, contratos y ganancias</p>
                 </div>
                 
-                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+                <!-- Stats Cards -->
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+                    <div class="glass-panel p-6 text-center">
+                        <div class="text-3xl font-black text-blue-400" id="dashProperties">0</div>
+                        <div class="text-xs text-slate-500 uppercase mt-1">Mis Propiedades</div>
+                    </div>
+                    <div class="glass-panel p-6 text-center">
+                        <div class="text-3xl font-black text-purple-400" id="dashExclusives">0</div>
+                        <div class="text-xs text-slate-500 uppercase mt-1">Exclusivas Activas</div>
+                    </div>
+                    <div class="glass-panel p-6 text-center">
+                        <div class="text-3xl font-black text-green-400" id="dashEarnings">0€</div>
+                        <div class="text-xs text-slate-500 uppercase mt-1">Ganancias</div>
+                    </div>
+                    <div class="glass-panel p-6 text-center">
+                        <div class="text-3xl font-black text-yellow-400" id="dashViews">0</div>
+                        <div class="text-xs text-slate-500 uppercase mt-1">Visitas</div>
+                    </div>
+                </div>
+                
+                <div class="grid lg:grid-cols-2 gap-8">
                     <!-- My Properties -->
                     <div class="glass-panel rounded-2xl p-6">
-                        <div class="flex justify-between items-center mb-6">
-                            <h4 class="text-2xl font-bold text-purple-300"><i class="fas fa-home mr-2"></i>Mis Propiedades</h4>
-                            <span class="text-xs bg-purple-500/20 text-purple-400 px-3 py-1 rounded-full" id="myPropertiesCount">0 activas</span>
+                        <h4 class="text-xl font-bold text-white mb-4"><i class="fas fa-home mr-2 text-blue-400"></i>Mis Propiedades</h4>
+                        <div id="myPropertiesList" class="space-y-4">
+                            <p class="text-slate-500 text-center py-8">No tienes propiedades registradas</p>
                         </div>
-                        <div id="myPropertiesList" class="space-y-4 max-h-96 overflow-y-auto">
-                            <p class="text-slate-500 text-center py-8">No tienes propiedades publicadas</p>
-                        </div>
-                        <button onclick="openPublishModal()" class="btn-primary w-full mt-6">
-                            <i class="fas fa-plus mr-2"></i>Nueva Propiedad
+                        <button onclick="openPublishModal()" class="btn-primary w-full mt-6 justify-center">
+                            <i class="fas fa-plus mr-2"></i>Añadir Propiedad
                         </button>
                     </div>
                     
-                    <!-- My Offers -->
+                    <!-- Contracts -->
                     <div class="glass-panel rounded-2xl p-6">
-                        <div class="flex justify-between items-center mb-6">
-                            <h4 class="text-2xl font-bold text-blue-300"><i class="fas fa-handshake mr-2"></i>Mis Ofertas</h4>
-                            <span class="text-xs bg-blue-500/20 text-blue-400 px-3 py-1 rounded-full" id="myOffersCount">0 pendientes</span>
+                        <h4 class="text-xl font-bold text-white mb-4"><i class="fas fa-file-contract mr-2 text-yellow-400"></i>Mis Contratos</h4>
+                        <div id="myContractsList" class="space-y-4">
+                            <p class="text-slate-500 text-center py-8">No tienes contratos activos</p>
                         </div>
-                        <div id="myOffersList" class="space-y-4 max-h-96 overflow-y-auto">
-                            <p class="text-slate-500 text-center py-8">No tienes ofertas activas</p>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Bot Panel -->
-                <div class="glass-panel rounded-2xl p-6">
-                    <h4 class="text-2xl font-bold text-green-300 mb-6"><i class="fas fa-robot mr-2"></i>Panel de Bots - Supervisado por Antonio</h4>
-                    <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4" id="botPanel">
-                        <!-- Bots loaded dynamically -->
-                    </div>
-                </div>
-                
-                <!-- Affiliate Stats -->
-                <div class="glass-panel rounded-2xl p-6 mt-8">
-                    <h4 class="text-2xl font-bold text-yellow-400 mb-4"><i class="fas fa-crown mr-2"></i>Mis Ganancias VIP</h4>
-                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-                        <div class="stat-card">
-                            <div class="stat-number" style="background: linear-gradient(135deg, #fbbf24, #f59e0b); -webkit-background-clip: text;">€<span id="affiliateEarnings">0</span></div>
-                            <div class="text-xs text-slate-500 uppercase mt-1">Ganancias</div>
-                        </div>
-                        <div class="stat-card">
-                            <div class="stat-number" style="background: linear-gradient(135deg, #22c55e, #16a34a); -webkit-background-clip: text;" id="affiliateReferrals">0</div>
-                            <div class="text-xs text-slate-500 uppercase mt-1">Referidos</div>
-                        </div>
-                        <div class="stat-card">
-                            <div class="stat-number" style="background: linear-gradient(135deg, #3b82f6, #8b5cf6); -webkit-background-clip: text;" id="affiliateConversions">0</div>
-                            <div class="text-xs text-slate-500 uppercase mt-1">Conversiones</div>
-                        </div>
-                        <div class="stat-card cursor-pointer" onclick="copyAffiliateLink()">
-                            <div class="text-2xl mb-1"><i class="fas fa-copy text-purple-400"></i></div>
-                            <div class="text-xs text-slate-500 uppercase">Copiar Link</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- SHOPPER SECTION -->
-        <section id="shopper" class="hidden-section py-16 px-4">
-            <div class="container mx-auto max-w-4xl">
-                <div class="text-center mb-12">
-                    <h3 class="text-3xl md:text-4xl font-black font-orbitron mb-4 gradient-text">Personal Shopper IA</h3>
-                    <p class="text-slate-400">Max y nuestros CEOs encontrarán tu propiedad ideal</p>
-                </div>
-                
-                <div class="glass-panel rounded-3xl p-6 md:p-10">
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-                        <div>
-                            <label class="block text-sm font-bold mb-2 text-slate-300">Presupuesto máximo</label>
-                            <input type="number" id="shopperBudget" class="input-field" placeholder="€500000">
-                        </div>
-                        <div>
-                            <label class="block text-sm font-bold mb-2 text-slate-300">Ubicación preferida</label>
-                            <input type="text" id="shopperLocation" class="input-field" placeholder="Madrid, Barcelona, Miami...">
-                        </div>
-                        <div>
-                            <label class="block text-sm font-bold mb-2 text-slate-300">Tipo de propiedad</label>
-                            <select id="shopperType" class="input-field">
-                                <option value="casa">Casa</option>
-                                <option value="piso">Piso</option>
-                                <option value="atico">Ático Premium</option>
-                                <option value="villa">Villa Exclusiva</option>
-                                <option value="local">Local comercial</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label class="block text-sm font-bold mb-2 text-slate-300">Habitaciones mínimas</label>
-                            <input type="number" id="shopperRooms" class="input-field" min="1" value="2">
-                        </div>
-                    </div>
-                    
-                    <div class="mb-8">
-                        <label class="block text-sm font-bold mb-2 text-slate-300">Requisitos adicionales</label>
-                        <textarea id="shopperNotes" class="input-field h-32" placeholder="Piscina, vistas al mar, garaje para 3 coches, seguridad 24h..."></textarea>
-                    </div>
-                    
-                    <div class="flex flex-col md:flex-row gap-4">
-                        <button onclick="submitShopperRequest()" class="btn-primary flex-1 text-lg py-4">
-                            <i class="fas fa-search mr-2"></i>Max, busca mi propiedad
+                        <button onclick="openContractModal()" class="btn-gold w-full mt-6 justify-center text-black">
+                            <i class="fas fa-file-signature mr-2"></i>Nuevo Contrato
                         </button>
-                        <button onclick="openStripeCheckout('shopper')" class="btn-gold px-8 py-4 font-bold">
-                            <i class="fas fa-crown mr-2"></i>Upgrade Premium €968
-                        </button>
-                    </div>
-                    
-                    <!-- Results -->
-                    <div id="shopperResults" class="mt-8 hidden">
-                        <h4 class="text-xl font-bold mb-4 text-purple-300">Análisis de Max + CEOs</h4>
-                        <div id="shopperResultsContent" class="space-y-4"></div>
                     </div>
                 </div>
             </div>
@@ -1117,62 +1145,60 @@
             <div class="grid md:grid-cols-4 gap-8 mb-8">
                 <div>
                     <div class="flex items-center gap-3 mb-4">
-                        <div class="w-10 h-10">
-                            <svg viewBox="0 0 100 100" fill="none">
-                                <path d="M20 35 L15 10 L35 25 Z" fill="#1e293b" stroke="#3b82f6" stroke-width="2"/>
-                                <path d="M80 35 L85 10 L65 25 Z" fill="#1e293b" stroke="#3b82f6" stroke-width="2"/>
-                                <ellipse cx="50" cy="50" rx="30" ry="28" fill="#0f172a" stroke="#3b82f6" stroke-width="2"/>
-                                <ellipse cx="50" cy="62" rx="12" ry="10" fill="#1e293b" stroke="#8b5cf6" stroke-width="1.5"/>
-                                <ellipse cx="50" cy="58" rx="5" ry="4" fill="#000"/>
-                                <ellipse cx="38" cy="45" rx="6" ry="5" fill="#fbbf24"/>
-                                <ellipse cx="62" cy="45" rx="6" ry="5" fill="#fbbf24"/>
-                            </svg>
+                        <div class="w-10 h-10 rounded-full overflow-hidden border-2 border-blue-500">
+                            <img src="https://images.unsplash.com/photo-1589941013453-ec89f33b5e95?w=100&h=100&fit=crop" alt="Max" class="w-full h-full object-cover">
                         </div>
                         <h4 class="text-2xl font-black font-orbitron gradient-text">MEROFISE</h4>
                     </div>
                     <p class="text-slate-500 text-sm">
-                        Max el Rastreador y 111 bots IA dominando el mercado inmobiliario mundial. 
-                        La revolución comenzó en merofise.es
+                        Max el Pastor Alemán y nuestro ejército de IAs cazan propiedades en todo el mundo. 
+                        Exclusivas reales, contratos legales y resultados garantizados.
                     </p>
                 </div>
                 
                 <div>
-                    <h5 class="font-bold text-slate-300 mb-4">Contacto Directo</h5>
+                    <h5 class="font-bold text-slate-300 mb-4">Servicios</h5>
                     <ul class="space-y-2 text-sm text-slate-400">
-                        <li><i class="fas fa-envelope mr-2 text-blue-400"></i>info@merofise.es</li>
-                        <li><i class="fas fa-phone mr-2 text-green-400"></i>+34 664 037 407</li>
-                        <li><i class="fas fa-dog mr-2 text-purple-400"></i>Max el Rastreador #1</li>
+                        <li><i class="fas fa-search mr-2 text-blue-400"></i>Caza de propiedades</li>
+                        <li><i class="fas fa-handshake mr-2 text-purple-400"></i>Exclusivas de venta</li>
+                        <li><i class="fas fa-key mr-2 text-green-400"></i>Gestión de alquiler</li>
+                        <li><i class="fas fa-file-contract mr-2 text-yellow-400"></i>Contratos legales IA</li>
                     </ul>
                 </div>
                 
                 <div>
-                    <h5 class="font-bold text-slate-300 mb-4">Redes Automatizadas</h5>
-                    <div class="flex gap-3 text-2xl">
-                        <a href="#" class="text-blue-500 hover:scale-110 transition"><i class="fab fa-facebook"></i></a>
-                        <a href="#" class="text-pink-500 hover:scale-110 transition"><i class="fab fa-instagram"></i></a>
-                        <a href="#" class="text-white hover:scale-110 transition"><i class="fab fa-tiktok"></i></a>
-                        <a href="#" class="text-blue-600 hover:scale-110 transition"><i class="fab fa-linkedin"></i></a>
-                        <a href="#" class="text-sky-500 hover:scale-110 transition"><i class="fab fa-x-twitter"></i></a>
-                    </div>
-                    <p class="text-xs text-slate-600 mt-2">Publicación automática 24/7</p>
+                    <h5 class="font-bold text-slate-300 mb-4">Contacto</h5>
+                    <ul class="space-y-2 text-sm text-slate-400">
+                        <li><i class="fas fa-envelope mr-2 text-blue-400"></i>info@merofise.es</li>
+                        <li><i class="fas fa-phone mr-2 text-green-400"></i>+34 664 037 407</li>
+                        <li><i class="fab fa-whatsapp mr-2 text-green-500"></i>WhatsApp 24/7</li>
+                    </ul>
                 </div>
                 
                 <div>
-                    <h5 class="font-bold text-slate-300 mb-4">Estado del Sistema</h5>
-                    <div class="flex items-center gap-2 text-green-400 text-sm mb-2">
-                        <span class="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span>
-                        111 Bots Operativos
+                    <h5 class="font-bold text-slate-300 mb-4">Estado IAs</h5>
+                    <div class="space-y-2 text-sm">
+                        <div class="flex items-center gap-2 text-green-400">
+                            <span class="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span>
+                            Max Hunter Activo
+                        </div>
+                        <div class="flex items-center gap-2 text-blue-400">
+                            <span class="w-2 h-2 bg-blue-400 rounded-full animate-pulse"></span>
+                            Lucía Contactando
+                        </div>
+                        <div class="flex items-center gap-2 text-purple-400">
+                            <span class="w-2 h-2 bg-purple-400 rounded-full animate-pulse"></span>
+                            Carlos Buscando Buyers
+                        </div>
+                        <div class="flex items-center gap-2 text-yellow-400">
+                            <span class="w-2 h-2 bg-yellow-400 rounded-full animate-pulse"></span>
+                            Juez Redactando
+                        </div>
                     </div>
-                    <div class="flex items-center gap-2 text-blue-400 text-sm mb-2">
-                        <span class="w-2 h-2 bg-blue-400 rounded-full animate-pulse"></span>
-                        Max Rastreando
-                    </div>
-                    <div class="flex items-center gap-2 text-purple-400 text-sm">
-                        <span class="w-2 h-2 bg-purple-400 rounded-full animate-pulse"></span>
-                        CEOs Supervisando
-                    </div>
-                    <p class="text-slate-600 text-xs mt-4">© 2026 MEROFISE - Todos los derechos reservados</p>
                 </div>
+            </div>
+            <div class="border-t border-slate-800 pt-8 text-center">
+                <p class="text-slate-600 text-sm">© 2026 MEROFISE - Max el Pastor Alemán. Todos los derechos reservados.</p>
             </div>
         </div>
     </footer>
@@ -1183,17 +1209,8 @@
     <div id="authModal" class="modal-overlay">
         <div class="modal-content">
             <div class="flex justify-between items-center mb-6">
-                <div class="flex items-center gap-3">
-                    <div class="w-12 h-12">
-                        <svg viewBox="0 0 100 100" fill="none">
-                            <ellipse cx="50" cy="50" rx="30" ry="28" fill="#0f172a" stroke="#3b82f6" stroke-width="2"/>
-                            <ellipse cx="38" cy="45" rx="6" ry="5" fill="#fbbf24"/>
-                            <ellipse cx="62" cy="45" rx="6" ry="5" fill="#fbbf24"/>
-                        </svg>
-                    </div>
-                    <h3 class="text-2xl font-bold gradient-text">Acceder a MEROFISE</h3>
-                </div>
-                <button onclick="closeAuthModal()" class="text-slate-400 hover:text-white text-xl"><i class="fas fa-times"></i></button>
+                <h3 class="text-2xl font-bold gradient-text">Acceder a MEROFISE</h3>
+                <button onclick="closeAuthModal()" class="text-slate-400 hover:text-white"><i class="fas fa-times text-xl"></i></button>
             </div>
             
             <div id="authError" class="hidden bg-red-500/20 border border-red-500/50 rounded-lg p-3 text-red-300 text-sm mb-4"></div>
@@ -1210,17 +1227,9 @@
                 </div>
                 
                 <div class="flex gap-4 pt-4">
-                    <button onclick="login()" class="btn-primary flex-1 justify-center">
-                        <i class="fas fa-sign-in-alt mr-2"></i>Entrar
-                    </button>
-                    <button onclick="register()" class="btn-secondary flex-1 justify-center">
-                        <i class="fas fa-user-plus mr-2"></i>Crear cuenta
-                    </button>
+                    <button onclick="login()" class="btn-primary flex-1 justify-center">Entrar</button>
+                    <button onclick="register()" class="btn-secondary flex-1 justify-center">Crear Cuenta</button>
                 </div>
-                
-                <p class="text-center text-xs text-slate-500 mt-4">
-                    Al registrarte, aceptas que Max el Rastreador encuentre tu propiedad ideal
-                </p>
             </div>
         </div>
     </div>
@@ -1230,18 +1239,18 @@
         <div class="modal-content max-w-2xl">
             <div class="flex justify-between items-center mb-6">
                 <h3 class="text-2xl font-bold gradient-text">Publicar Propiedad</h3>
-                <button onclick="closePublishModal()" class="text-slate-400 hover:text-white text-xl"><i class="fas fa-times"></i></button>
+                <button onclick="closePublishModal()" class="text-slate-400 hover:text-white"><i class="fas fa-times text-xl"></i></button>
             </div>
             
             <form id="publishForm" onsubmit="publishProperty(event)" class="space-y-4">
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                         <label class="block text-sm font-bold mb-2 text-slate-300">Título *</label>
-                        <input type="text" name="title" required class="input-field" placeholder="Ej: Ático de lujo con vistas">
+                        <input type="text" name="title" required class="input-field" placeholder="Piso céntrico reformado">
                     </div>
                     <div>
                         <label class="block text-sm font-bold mb-2 text-slate-300">Precio (€) *</label>
-                        <input type="number" name="price" required class="input-field" placeholder="450000">
+                        <input type="number" name="price" required class="input-field" placeholder="150000">
                     </div>
                 </div>
                 
@@ -1256,33 +1265,30 @@
                     <div>
                         <label class="block text-sm font-bold mb-2 text-slate-300">Categoría</label>
                         <select name="category" class="input-field">
-                            <option value="casa">Casa</option>
-                            <option value="piso">Piso</option>
-                            <option value="atico">Ático Premium</option>
-                            <option value="villa">Villa Exclusiva</option>
-                            <option value="local">Local</option>
+                            <option value="lujo">Lujo</option>
+                            <option value="media">Clase Media</option>
+                            <option value="lowcost">Low Cost</option>
                         </select>
                     </div>
                     <div>
                         <label class="block text-sm font-bold mb-2 text-slate-300">Habitaciones</label>
-                        <input type="number" name="rooms" class="input-field" min="0" value="3">
+                        <input type="number" name="rooms" class="input-field" min="0" value="2">
                     </div>
                 </div>
                 
                 <div>
                     <label class="block text-sm font-bold mb-2 text-slate-300">Ubicación *</label>
-                    <input type="text" name="location" required class="input-field" placeholder="Dirección completa">
+                    <input type="text" name="location" required class="input-field" placeholder="Calle Ejemplo, 123, Madrid">
                 </div>
                 
                 <div>
                     <label class="block text-sm font-bold mb-2 text-slate-300">Descripción *</label>
-                    <textarea name="description" required class="input-field h-32" placeholder="Describe la propiedad... Max analizará el texto para optimizar ventas"></textarea>
+                    <textarea name="description" required class="input-field h-32" placeholder="Describe la propiedad..."></textarea>
                 </div>
                 
                 <div>
-                    <label class="block text-sm font-bold mb-2 text-slate-300">Imagen URL</label>
-                    <input type="url" name="image_url" class="input-field" placeholder="https://...">
-                    <p class="text-xs text-slate-500 mt-1">Deja vacío para imagen generada por IA</p>
+                    <label class="block text-sm font-bold mb-2 text-slate-300">Fotos (URLs separadas por coma)</label>
+                    <textarea name="photos" class="input-field h-24" placeholder="https://... , https://..."></textarea>
                 </div>
                 
                 <div id="publishError" class="hidden bg-red-500/20 border border-red-500/50 rounded-lg p-3 text-red-300 text-sm"></div>
@@ -1290,7 +1296,7 @@
                 
                 <div class="flex gap-4 pt-4">
                     <button type="submit" class="btn-primary flex-1 justify-center text-lg">
-                        <i class="fas fa-rocket mr-2"></i>Publicar Ahora
+                        <i class="fas fa-rocket mr-2"></i>Publicar y Cazar
                     </button>
                     <button type="button" onclick="closePublishModal()" class="btn-secondary">Cancelar</button>
                 </div>
@@ -1298,128 +1304,95 @@
         </div>
     </div>
 
-    <!-- Offer Modal -->
-    <div id="offerModal" class="modal-overlay">
-        <div class="modal-content">
+    <!-- Contract Modal -->
+    <div id="contractModal" class="modal-overlay">
+        <div class="modal-content max-w-3xl">
             <div class="flex justify-between items-center mb-6">
-                <h3 class="text-2xl font-bold gradient-text">Hacer Oferta</h3>
-                <button onclick="closeOfferModal()" class="text-slate-400 hover:text-white text-xl"><i class="fas fa-times"></i></button>
+                <h3 class="text-2xl font-bold gold-text">Contrato de Exclusiva</h3>
+                <button onclick="closeContractModal()" class="text-slate-400 hover:text-white"><i class="fas fa-times text-xl"></i></button>
             </div>
             
-            <div id="offerPropertyInfo" class="mb-6 p-4 bg-slate-800/50 rounded-xl"></div>
+            <div id="contractTypeSelector" class="grid md:grid-cols-2 gap-4 mb-6">
+                <div class="glass-panel p-6 cursor-pointer hover:border-blue-500 transition" onclick="selectContractType('venta')">
+                    <div class="text-4xl mb-3">🏡</div>
+                    <h4 class="text-xl font-bold text-white mb-2">Exclusiva de Venta</h4>
+                    <p class="text-sm text-slate-400">Comisión del 3% sobre precio final. Sin cuotas mensuales.</p>
+                </div>
+                <div class="glass-panel p-6 cursor-pointer hover:border-green-500 transition" onclick="selectContractType('alquiler')">
+                    <div class="text-4xl mb-3">🔑</div>
+                    <h4 class="text-xl font-bold text-white mb-2">Exclusiva de Alquiler</h4>
+                    <p class="text-sm text-slate-400">30€ + IVA/mes. El inquilino no paga nada.</p>
+                </div>
+            </div>
             
-            <form id="offerForm" onsubmit="submitOffer(event)" class="space-y-4">
-                <input type="hidden" id="offerPropertyId">
+            <form id="contractForm" onsubmit="generateContract(event)" class="hidden space-y-4">
+                <input type="hidden" id="contractType" name="type">
                 
-                <div>
-                    <label class="block text-sm font-bold mb-2 text-slate-300">Monto de la oferta (€) *</label>
-                    <input type="number" id="offerAmount" required class="input-field" placeholder="400000">
+                <div class="grid md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-bold mb-2 text-slate-300">Nombre completo *</label>
+                        <input type="text" name="fullName" required class="input-field">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-bold mb-2 text-slate-300">DNI/NIE *</label>
+                        <input type="text" name="dni" required class="input-field">
+                    </div>
                 </div>
                 
                 <div>
-                    <label class="block text-sm font-bold mb-2 text-slate-300">Mensaje para el vendedor</label>
-                    <textarea id="offerMessage" class="input-field h-32" placeholder="Soy comprador serio, tengo financiación aprobada..."></textarea>
+                    <label class="block text-sm font-bold mb-2 text-slate-300">Dirección de la propiedad *</label>
+                    <input type="text" name="propertyAddress" required class="input-field">
                 </div>
                 
-                <div class="bg-blue-500/10 border border-blue-500/30 rounded-lg p-3 text-sm text-blue-300">
-                    <i class="fas fa-info-circle mr-2"></i>
-                    María IA verificará tus fondos antes de enviar la oferta. Si falta 1€, activamos abogados.
+                <div class="grid md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-bold mb-2 text-slate-300">Precio (€) *</label>
+                        <input type="number" name="contractPrice" required class="input-field">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-bold mb-2 text-slate-300">Superficie (m²)</label>
+                        <input type="number" name="surface" class="input-field">
+                    </div>
                 </div>
                 
-                <div id="offerError" class="hidden bg-red-500/20 border border-red-500/50 rounded-lg p-3 text-red-300 text-sm"></div>
+                <div>
+                    <label class="block text-sm font-bold mb-2 text-slate-300">Condiciones especiales</label>
+                    <textarea name="conditions" class="input-field h-24" placeholder="Muebles incluidos, plazo de venta, etc."></textarea>
+                </div>
+                
+                <div class="bg-yellow-500/10 border border-yellow-500/30 rounded-lg p-4">
+                    <h5 class="font-bold text-yellow-400 mb-2"><i class="fas fa-robot mr-2"></i>Juez Contract redactará:</h5>
+                    <ul class="text-sm text-slate-300 space-y-1">
+                        <li>• Contrato de exclusiva adaptado a la legislación vigente</li>
+                        <li>• Protección al propietario (cláusulas de rescisión)</li>
+                        <li>• Compromiso de publicación en 15+ portales</li>
+                        <li>• Plazo máximo de exclusividad</li>
+                    </ul>
+                </div>
+                
+                <div class="flex items-center gap-2">
+                    <input type="checkbox" id="acceptTerms" required class="w-5 h-5 rounded border-slate-600">
+                    <label for="acceptTerms" class="text-sm text-slate-300">Acepto los términos y autorizo a MEROFISE a gestionar mi propiedad</label>
+                </div>
                 
                 <div class="flex gap-4 pt-4">
-                    <button type="submit" class="btn-primary flex-1 justify-center">
-                        <i class="fas fa-paper-plane mr-2"></i>Enviar Oferta
+                    <button type="submit" class="btn-gold flex-1 justify-center text-lg text-black">
+                        <i class="fas fa-file-signature mr-2"></i>Generar Contrato con IA
                     </button>
-                    <button type="button" onclick="closeOfferModal()" class="btn-secondary">Cancelar</button>
+                    <button type="button" onclick="closeContractModal()" class="btn-secondary">Cancelar</button>
                 </div>
             </form>
         </div>
     </div>
 
-    <!-- IA Assistant Modal -->
-    <div id="iaModal" class="modal-overlay">
-        <div class="modal-content max-w-2xl h-[80vh] flex flex-col">
-            <div class="flex justify-between items-center mb-4">
-                <div class="flex items-center gap-3">
-                    <div class="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-500 rounded-xl flex items-center justify-center">
-                        <svg class="w-8 h-8" viewBox="0 0 100 100" fill="none">
-                            <ellipse cx="50" cy="50" rx="30" ry="28" fill="#0f172a" stroke="white" stroke-width="2"/>
-                            <ellipse cx="38" cy="45" rx="6" ry="5" fill="#fbbf24"/>
-                            <ellipse cx="62" cy="45" rx="6" ry="5" fill="#fbbf24"/>
-                        </svg>
-                    </div>
-                    <div>
-                        <h3 class="text-xl font-bold gradient-text">Max IA Assistant</h3>
-                        <p class="text-xs text-slate-400">Coordinado por CEOs María & Antonio</p>
-                    </div>
-                </div>
-                <button onclick="closeIaModal()" class="text-slate-400 hover:text-white text-xl"><i class="fas fa-times"></i></button>
-            </div>
-            
-            <div id="iaChat" class="flex-1 overflow-y-auto space-y-4 mb-4 p-4 bg-slate-900/50 rounded-xl">
-                <div class="chat-message">
-                    <p class="text-sm font-bold mb-2 text-purple-400"><i class="fas fa-dog mr-2"></i>Max el Rastreador</p>
-                    <p class="text-sm">¡Guau! Soy Max, el Pastor Alemán línea checa especializado en encontrar propiedades exclusivas. ¿Qué tipo de inmueble buscas hoy?</p>
-                    <div class="mt-3 flex flex-wrap gap-2">
-                        <button onclick="quickQuestion('¿Qué áticos hay en Madrid por menos de 500k?')" class="text-xs bg-blue-500/20 text-blue-300 px-3 py-1 rounded-full hover:bg-blue-500/30 transition">Áticos Madrid &lt;500k</button>
-                        <button onclick="quickQuestion('Quiero una villa en Marbella')" class="text-xs bg-purple-500/20 text-purple-300 px-3 py-1 rounded-full hover:bg-purple-500/30 transition">Villa Marbella</button>
-                        <button onclick="quickQuestion('¿Cómo publico mi piso?')" class="text-xs bg-green-500/20 text-green-300 px-3 py-1 rounded-full hover:bg-green-500/30 transition">Publicar mi piso</button>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="flex gap-2">
-                <input type="text" id="iaInput" class="input-field flex-1" placeholder="Pregúntale a Max..." onkeypress="if(event.key==='Enter')sendIaMessage()">
-                <button onclick="sendIaMessage()" class="btn-primary px-6">
-                    <i class="fas fa-paper-plane"></i>
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Affiliate Modal -->
-    <div id="affiliateModal" class="modal-overlay">
-        <div class="modal-content">
+    <!-- Property Detail Modal -->
+    <div id="propertyDetailModal" class="modal-overlay">
+        <div class="modal-content max-w-4xl">
             <div class="flex justify-between items-center mb-6">
-                <h3 class="text-2xl font-bold gradient-text">Programa VIP Max</h3>
-                <button onclick="closeAffiliateModal()" class="text-slate-400 hover:text-white text-xl"><i class="fas fa-times"></i></button>
+                <h3 id="detailTitle" class="text-2xl font-bold gradient-text"></h3>
+                <button onclick="closePropertyDetail()" class="text-slate-400 hover:text-white"><i class="fas fa-times text-xl"></i></button>
             </div>
-            
-            <div class="text-center mb-6">
-                <div class="text-6xl mb-4">👑</div>
-                <h4 class="text-xl font-bold text-yellow-400 mb-2">Gana €500 por cada venta</h4>
-                <p class="text-slate-400 text-sm">Únete al ejército de afiliados de Max el Rastreador</p>
-            </div>
-            
-            <div class="space-y-4 mb-6">
-                <div class="glass-panel p-4 rounded-xl flex items-center gap-4">
-                    <div class="w-12 h-12 bg-green-500/20 rounded-full flex items-center justify-center text-green-400 text-xl"><i class="fas fa-share-alt"></i></div>
-                    <div>
-                        <p class="font-bold text-white">Comparte tu link único</p>
-                        <p class="text-xs text-slate-400">En redes sociales, WhatsApp, email...</p>
-                    </div>
-                </div>
-                <div class="glass-panel p-4 rounded-xl flex items-center gap-4">
-                    <div class="w-12 h-12 bg-blue-500/20 rounded-full flex items-center justify-center text-blue-400 text-xl"><i class="fas fa-user-plus"></i></div>
-                    <div>
-                        <p class="font-bold text-white">Tus referidos compran o alquilan</p>
-                        <p class="text-xs text-slate-400">Max rastrea automáticamente las conversiones</p>
-                    </div>
-                </div>
-                <div class="glass-panel p-4 rounded-xl flex items-center gap-4">
-                    <div class="w-12 h-12 bg-yellow-500/20 rounded-full flex items-center justify-center text-yellow-400 text-xl"><i class="fas fa-euro-sign"></i></div>
-                    <div>
-                        <p class="font-bold text-white">Recibe €500 en tu cuenta</p>
-                        <p class="text-xs text-slate-400">Pagos semanales vía Stripe o transferencia</p>
-                    </div>
-                </div>
-            </div>
-            
-            <button onclick="joinAffiliate()" class="btn-gold w-full text-lg py-4 justify-center">
-                <i class="fas fa-crown mr-2"></i>Quiero ser VIP
-            </button>
+            <div id="propertyDetailContent"></div>
         </div>
     </div>
 
@@ -1428,127 +1401,65 @@
 
     <script>
         // ==========================================
-        // CONFIGURACIÓN SUPABASE - REEMPLAZAR CON TUS DATOS REALES
+        // CONFIGURACIÓN
         // ==========================================
-        const SUPABASE_URL = 'https://xfdwygufboazyshcrxwn.supabase.co'; // Tu URL real
+        const SUPABASE_URL = 'https://xfdwygufboazyshcrxwn.supabase.co';
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhmZHd5Z3VmYm9henlzaGNyeHduIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzYyNDQwNDcsImV4cCI6MjA5MTgyMDA0N30.jphnwycmmv2auhWFGI8NPO2ov8BraNdmyr4Om1zTkwQ';
         
         let supabase = null;
         let currentUser = null;
-        let currentSession = null;
-        let affiliateCode = null;
+        let currentLang = 'es';
+        
+        // Traducciones
+        const translations = {
+            es: {
+                hunt: 'Cazando', properties: 'Propiedades', sell: 'Vender', rent: 'Alquilar',
+                contract: 'Contrato', dashboard: 'Panel', login: 'Entrar', logout: 'Salir'
+            },
+            en: {
+                hunt: 'Hunting', properties: 'Properties', sell: 'Sell', rent: 'Rent',
+                contract: 'Contract', dashboard: 'Dashboard', login: 'Login', logout: 'Logout'
+            },
+            fr: {
+                hunt: 'Chasse', properties: 'Propriétés', sell: 'Vendre', rent: 'Louer',
+                contract: 'Contrat', dashboard: 'Tableau', login: 'Entrer', logout: 'Sortir'
+            }
+        };
         
         // ==========================================
         // INICIALIZACIÓN
         // ==========================================
         document.addEventListener('DOMContentLoaded', async function() {
-            // Crear partículas
-            createParticles();
-            
-            // Inicializar Supabase
             try {
                 if (typeof window.supabase !== 'undefined') {
                     supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
-                        auth: {
-                            autoRefreshToken: true,
-                            persistSession: true,
-                            detectSessionInUrl: true
-                        }
+                        auth: { autoRefreshToken: true, persistSession: true, detectSessionInUrl: true }
                     });
-                    console.log('✅ Supabase conectado');
                 }
                 
                 await checkSession();
-                await loadProperties();
-                initBotPanel();
-                startViralCounters();
-                
-                // EmailJS init
-                if (typeof emailjs !== 'undefined') {
-                    emailjs.init("YOUR_EMAILJS_USER_ID"); // Reemplazar
-                }
+                loadProperties();
+                startHuntCounters();
                 
             } catch (error) {
                 console.error('Error init:', error);
-                showToast('Sistema operativo en modo demo', 'success');
+                loadDemoProperties();
             }
         });
         
         // ==========================================
-        // PARTÍCULAS
+        // IDIOMA
         // ==========================================
-        function createParticles() {
-            const container = document.getElementById('particles');
-            for (let i = 0; i < 50; i++) {
-                const p = document.createElement('div');
-                p.className = 'particle';
-                p.style.left = Math.random() * 100 + '%';
-                p.style.animationDelay = Math.random() * 20 + 's';
-                p.style.animationDuration = (15 + Math.random() * 10) + 's';
-                container.appendChild(p);
-            }
+        function toggleLang() {
+            document.getElementById('langDropdown').classList.toggle('active');
         }
         
-        // ==========================================
-        // CONTADORES VIRALES
-        // ==========================================
-        function startViralCounters() {
-            // Posts hoy
-            setInterval(() => {
-                const el = document.getElementById('postsHoy');
-                if (el) {
-                    let val = parseInt(el.textContent);
-                    el.textContent = val + Math.floor(Math.random() * 3);
-                }
-            }, 5000);
-            
-            // Facturación
-            setInterval(() => {
-                const el = document.getElementById('facturacionHoy');
-                if (el) {
-                    let val = parseFloat(el.textContent);
-                    el.textContent = (val + 0.1).toFixed(1);
-                }
-            }, 30000);
-            
-            // Urgencia
-            setInterval(() => {
-                const el = document.getElementById('urgencyCount');
-                if (el && parseInt(el.textContent) > 1) {
-                    el.textContent = parseInt(el.textContent) - 1;
-                }
-            }, 60000);
-            
-            // Social proof aleatorio
-            const proofs = [
-                { name: 'Carlos M.', action: 'acaba de ofertar', amount: '€385,000', time: 'ahora mismo' },
-                { name: 'Ana L.', action: 'publicó un ático en', amount: '€720,000', time: 'hace 2 min' },
-                { name: 'Roberto K.', action: 'recibió pago de', amount: '€1,150,000', time: 'hace 5 min' },
-                { name: 'María IA', action: 'verificó fondos por', amount: '€890,000', time: 'ahora mismo' }
-            ];
-            
-            setInterval(() => {
-                const proof = proofs[Math.floor(Math.random() * proofs.length)];
-                showSocialProof(proof);
-            }, 25000);
-        }
-        
-        function showSocialProof(proof) {
-            const toast = document.createElement('div');
-            toast.className = 'fixed bottom-4 left-4 bg-slate-900/95 border border-green-500/30 text-white px-4 py-3 rounded-xl shadow-2xl z-[10001] flex items-center gap-3 max-w-sm';
-            toast.style.animation = 'slideIn 0.5s ease';
-            toast.innerHTML = `
-                <div class="w-10 h-10 bg-green-500/20 rounded-full flex items-center justify-center text-green-400">
-                    <i class="fas fa-check"></i>
-                </div>
-                <div>
-                    <p class="text-sm font-bold">${proof.name} ${proof.action}</p>
-                    <p class="text-lg font-bold text-green-400">${proof.amount}</p>
-                    <p class="text-xs text-slate-400">${proof.time}</p>
-                </div>
-            `;
-            document.body.appendChild(toast);
-            setTimeout(() => toast.remove(), 5000);
+        function setLang(lang) {
+            currentLang = lang;
+            const flags = { es: '🇪🇸', en: '🇬🇧', fr: '🇫🇷', de: '🇩🇪', it: '🇮🇹', pt: '🇵🇹', zh: '🇨🇳', ar: '🇸🇦' };
+            document.getElementById('currentLang').textContent = `${flags[lang]} ${lang.toUpperCase()}`;
+            document.getElementById('langDropdown').classList.remove('active');
+            showToast(`Idioma cambiado a ${lang.toUpperCase()}`, 'success');
         }
         
         // ==========================================
@@ -1557,52 +1468,26 @@
         async function checkSession() {
             if (!supabase) return;
             try {
-                const { data: { session }, error } = await supabase.auth.getSession();
+                const { data: { session } } = await supabase.auth.getSession();
                 if (session) {
-                    currentSession = session;
                     currentUser = session.user;
                     updateAuthUI();
                 }
                 
                 supabase.auth.onAuthStateChange((event, session) => {
                     if (event === 'SIGNED_IN') {
-                        currentSession = session;
                         currentUser = session.user;
                         updateAuthUI();
                         closeAuthModal();
                         showToast('¡Bienvenido a MEROFISE!', 'success');
-                        createConfetti();
                     } else if (event === 'SIGNED_OUT') {
                         currentUser = null;
-                        currentSession = null;
                         updateAuthUI();
                         showSection('home');
                     }
                 });
             } catch (error) {
-                console.error('Session error:', error);
-            }
-        }
-        
-        async function register() {
-            const email = document.getElementById('authEmail').value;
-            const password = document.getElementById('authPassword').value;
-            
-            if (!email || !password) {
-                showAuthError('Completa todos los campos');
-                return;
-            }
-            if (password.length < 6) {
-                showAuthError('Mínimo 6 caracteres');
-                return;
-            }
-            
-            try {
-                const { data, error } = await supabase.auth.signUp({ email, password });
-                if (error) throw error;
-                showAuthSuccess('¡Registro exitoso! Revisa tu email');
-            } catch (error) {
-                showAuthError(error.message);
+                console.error(error);
             }
         }
         
@@ -1616,136 +1501,210 @@
             }
             
             try {
-                const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+                const { error } = await supabase.auth.signInWithPassword({ email, password });
                 if (error) throw error;
             } catch (error) {
                 showAuthError(error.message);
             }
         }
         
-        async function logout() {
-            if (!supabase) return;
+        async function register() {
+            const email = document.getElementById('authEmail').value;
+            const password = document.getElementById('authPassword').value;
+            
+            if (!email || !password || password.length < 6) {
+                showAuthError('Email válido y contraseña de 6+ caracteres');
+                return;
+            }
+            
             try {
-                await supabase.auth.signOut();
-                showToast('Sesión cerrada', 'success');
+                const { error } = await supabase.auth.signUp({ email, password });
+                if (error) throw error;
+                showAuthSuccess('¡Registro exitoso! Revisa tu email');
             } catch (error) {
-                console.error(error);
+                showAuthError(error.message);
             }
         }
         
+        async function logout() {
+            if (supabase) await supabase.auth.signOut();
+            showToast('Sesión cerrada', 'success');
+        }
+        
         function updateAuthUI() {
-            const btn = document.getElementById('authBtn');
             const btnText = document.getElementById('authBtnText');
             const mobileText = document.getElementById('mobileAuthText');
             
             if (currentUser) {
                 btnText.textContent = currentUser.email.split('@')[0];
                 mobileText.textContent = 'Salir';
-                btn.onclick = logout;
-                btn.classList.remove('from-blue-600', 'to-purple-600');
-                btn.classList.add('from-green-600', 'to-green-500');
+                document.getElementById('authBtn').onclick = logout;
             } else {
                 btnText.textContent = 'Entrar';
                 mobileText.textContent = 'Entrar';
-                btn.onclick = toggleAuth;
-                btn.classList.remove('from-green-600', 'to-green-500');
-                btn.classList.add('from-blue-600', 'to-purple-600');
+                document.getElementById('authBtn').onclick = toggleAuth;
             }
         }
         
         function toggleAuth() {
-            if (currentUser) {
-                logout();
-            } else {
-                openAuthModal();
-            }
+            if (currentUser) logout();
+            else openAuthModal();
         }
         
         // ==========================================
-        // PROPIEDADES - CRUD
+        // PROPIEDADES - FOTOS PROTAGONISTAS
         // ==========================================
-        async function loadProperties() {
+        function loadProperties(category = 'all') {
             const grid = document.getElementById('propertiesGrid');
-            const emptyState = document.getElementById('emptyState');
             
-            const type = document.getElementById('filterType')?.value;
-            const category = document.getElementById('filterCategory')?.value;
-            const minPrice = document.getElementById('filterMinPrice')?.value;
-            const maxPrice = document.getElementById('filterMaxPrice')?.value;
-            
-            try {
-                let query = supabase ? supabase.from('properties').select('*').eq('status', 'active').order('created_at', { ascending: false }) : null;
-                
-                if (query) {
-                    if (type) query = query.eq('transaction_type', type);
-                    if (category) query = query.eq('category', category);
-                    if (minPrice) query = query.gte('price', minPrice);
-                    if (maxPrice) query = query.lte('price', maxPrice);
-                    
-                    const { data, error } = await query;
-                    
-                    if (error) throw error;
-                    
-                    if (!data || data.length === 0) {
-                        grid.innerHTML = '';
-                        emptyState.classList.remove('hidden');
-                        return;
-                    }
-                    
-                    emptyState.classList.add('hidden');
-                    renderProperties(data);
-                } else {
-                    // Demo data
-                    const demoData = [
-                        { id: 1, title: 'Ático Exclusivo Madrid Centro', price: 850000, transaction_type: 'venta', category: 'atico', location: 'Gran Vía, Madrid', rooms: 3, image_url: 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=800', created_at: new Date().toISOString() },
-                        { id: 2, title: 'Villa Premium Marbella', price: 2400000, transaction_type: 'venta', category: 'villa', location: 'Puerto Banús, Marbella', rooms: 5, image_url: 'https://images.unsplash.com/photo-1613490493576-7fde63acd811?w=800', created_at: new Date().toISOString() },
-                        { id: 3, title: 'Piso de Lujo Barcelona', price: 650000, transaction_type: 'venta', category: 'piso', location: 'Eixample, Barcelona', rooms: 2, image_url: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=800', created_at: new Date().toISOString() }
-                    ];
-                    renderProperties(demoData);
+            // Demo properties with high-quality photos
+            const demoProperties = [
+                {
+                    id: 1,
+                    title: 'Ático de Lujo Gran Vía',
+                    price: 850000,
+                    transaction_type: 'venta',
+                    category: 'lujo',
+                    location: 'Gran Vía, Madrid',
+                    rooms: 3,
+                    bathrooms: 2,
+                    surface: 180,
+                    photos: [
+                        'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=800',
+                        'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=400',
+                        'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=400'
+                    ],
+                    exclusive: true,
+                    description: 'Espectacular ático con terraza de 40m², vistas panorámicas a la ciudad, acabados de lujo, cocina equipada con electrodomésticos Bosch.'
+                },
+                {
+                    id: 2,
+                    title: 'Piso Reformado Chamberí',
+                    price: 320000,
+                    transaction_type: 'venta',
+                    category: 'media',
+                    location: 'Chamberí, Madrid',
+                    rooms: 2,
+                    bathrooms: 1,
+                    surface: 85,
+                    photos: [
+                        'https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=800',
+                        'https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=400',
+                        'https://images.unsplash.com/photo-1484154218962-a1c002085d2f?w=400'
+                    ],
+                    exclusive: true,
+                    description: 'Piso recién reformado, parquet, ventanas climalit, cocina abierta, excelente ubicación cerca del metro.'
+                },
+                {
+                    id: 3,
+                    title: 'Estudio Céntrico Low Cost',
+                    price: 95000,
+                    transaction_type: 'venta',
+                    category: 'lowcost',
+                    location: 'Lavapiés, Madrid',
+                    rooms: 1,
+                    bathrooms: 1,
+                    surface: 35,
+                    photos: [
+                        'https://images.unsplash.com/photo-1536376072261-38c75010e6c9?w=800',
+                        'https://images.unsplash.com/photo-1493809842364-78817add7ffb?w=400'
+                    ],
+                    exclusive: false,
+                    description: 'Estudio ideal inversores, buena rentabilidad por alquiler turístico, zona en plena gentrificación.'
+                },
+                {
+                    id: 4,
+                    title: 'Villa Exclusiva Marbella',
+                    price: 2400000,
+                    transaction_type: 'venta',
+                    category: 'lujo',
+                    location: 'Puerto Banús, Marbella',
+                    rooms: 5,
+                    bathrooms: 4,
+                    surface: 450,
+                    photos: [
+                        'https://images.unsplash.com/photo-1613490493576-7fde63acd811?w=800',
+                        'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=400',
+                        'https://images.unsplash.com/photo-1600585154526-990dced4db0d?w=400'
+                    ],
+                    exclusive: true,
+                    description: 'Villa de diseño con piscina infinita, jardín privado, vistas al mar, seguridad 24h, garaje 3 coches.'
+                },
+                {
+                    id: 5,
+                    title: 'Piso Alquiler Centro',
+                    price: 1200,
+                    transaction_type: 'alquiler',
+                    category: 'media',
+                    location: 'Sol, Madrid',
+                    rooms: 2,
+                    bathrooms: 1,
+                    surface: 70,
+                    photos: [
+                        'https://images.unsplash.com/photo-1502005229762-cf1b2da7c5d6?w=800',
+                        'https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=400'
+                    ],
+                    exclusive: true,
+                    description: 'Piso luminoso en pleno centro, exterior, ascensor, calefacción central, disponible inmediatamente.'
+                },
+                {
+                    id: 6,
+                    title: 'Dúplex Alquiler Low Cost',
+                    price: 650,
+                    transaction_type: 'alquiler',
+                    category: 'lowcost',
+                    location: 'Vallecas, Madrid',
+                    rooms: 2,
+                    bathrooms: 1,
+                    surface: 55,
+                    photos: [
+                        'https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=800',
+                        'https://images.unsplash.com/photo-1484154218962-a1c002085d2f?w=400'
+                    ],
+                    exclusive: false,
+                    description: 'Dúplex económico, ideal parejas, zona tranquila, bien comunicado con metro.'
                 }
-            } catch (error) {
-                console.error('Error:', error);
-                grid.innerHTML = '<div class="col-span-full text-center text-red-400 py-12">Error al cargar. Max está rastreando...</div>';
+            ];
+            
+            let filtered = demoProperties;
+            if (category !== 'all') {
+                filtered = demoProperties.filter(p => p.category === category || (category === 'alquiler' && p.transaction_type === 'alquiler'));
             }
-        }
-        
-        function renderProperties(properties) {
-            const grid = document.getElementById('propertiesGrid');
-            grid.innerHTML = properties.map(p => `
-                <div class="property-card">
-                    <div class="relative h-56 overflow-hidden">
-                        <img src="${p.image_url || 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=800'}" 
-                             alt="${p.title}" 
-                             class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                             onerror="this.src='https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=800'">
-                        <div class="absolute top-3 right-3">
-                            <span class="bg-${p.transaction_type === 'venta' ? 'blue' : 'green'}-500/90 text-white px-3 py-1 rounded-full text-xs font-bold uppercase backdrop-blur-sm">
-                                ${p.transaction_type}
-                            </span>
+            
+            grid.innerHTML = filtered.map(p => `
+                <div class="property-hero-card cursor-pointer" onclick="showPropertyDetail(${p.id})">
+                    <div class="property-image-container">
+                        <img src="${p.photos[0]}" alt="${p.title}" loading="lazy">
+                        <div class="property-image-overlay">
+                            <h4 class="text-xl font-bold text-white mb-1">${p.title}</h4>
+                            <p class="text-slate-300 text-sm"><i class="fas fa-map-marker-alt mr-1"></i>${p.location}</p>
                         </div>
-                        <div class="absolute top-3 left-3">
-                            <span class="bg-purple-500/90 text-white px-3 py-1 rounded-full text-xs font-bold uppercase backdrop-blur-sm">
+                        <div class="property-price-tag">
+                            ${p.price.toLocaleString()}€${p.transaction_type === 'alquiler' ? '/mes' : ''}
+                        </div>
+                        ${p.exclusive ? `
+                            <div class="property-badge-exclusive">
+                                <i class="fas fa-crown"></i> Exclusiva Max
+                            </div>
+                        ` : ''}
+                    </div>
+                    <div class="p-5">
+                        <div class="flex items-center justify-between mb-3">
+                            <div class="flex gap-4 text-sm text-slate-400">
+                                <span><i class="fas fa-bed mr-1"></i>${p.rooms} hab</span>
+                                <span><i class="fas fa-bath mr-1"></i>${p.bathrooms} baños</span>
+                                <span><i class="fas fa-ruler-combined mr-1"></i>${p.surface}m²</span>
+                            </div>
+                            <span class="text-xs px-2 py-1 rounded-full ${p.category === 'lujo' ? 'bg-yellow-500/20 text-yellow-400' : p.category === 'media' ? 'bg-blue-500/20 text-blue-400' : 'bg-green-500/20 text-green-400'} uppercase font-bold">
                                 ${p.category}
                             </span>
                         </div>
-                        <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-slate-900 via-slate-900/80 to-transparent p-4">
-                            <p class="text-2xl font-black text-white">${Number(p.price).toLocaleString()}€</p>
-                        </div>
-                    </div>
-                    <div class="p-5">
-                        <h4 class="text-lg font-bold mb-2 text-white line-clamp-1">${p.title}</h4>
-                        <p class="text-slate-400 text-sm mb-4 flex items-center">
-                            <i class="fas fa-map-marker-alt mr-2 text-blue-400"></i>${p.location}
-                        </p>
-                        <div class="flex items-center gap-4 text-sm text-slate-500 mb-4">
-                            <span><i class="fas fa-bed mr-1"></i>${p.rooms} hab</span>
-                            <span><i class="fas fa-clock mr-1"></i>${timeAgo(p.created_at)}</span>
-                        </div>
-                        <div class="flex gap-2">
-                            <button onclick="openOfferModal('${p.id}', '${p.title.replace(/'/g, "\\'")}', ${p.price})" class="btn-primary flex-1 text-sm py-2 justify-center">
+                        <p class="text-slate-400 text-sm line-clamp-2">${p.description}</p>
+                        <div class="mt-4 flex gap-2">
+                            <button class="btn-primary flex-1 text-sm py-2 justify-center" onclick="event.stopPropagation(); openOfferModal(${p.id}, '${p.title}', ${p.price})">
                                 <i class="fas fa-hand-holding-usd mr-1"></i>Ofertar
                             </button>
-                            <a href="https://wa.me/34664037407?text=Hola, me interesa: ${encodeURIComponent(p.title)}" target="_blank" class="btn-secondary px-4 py-2">
+                            <a href="https://wa.me/34664037407?text=Hola, me interesa: ${encodeURIComponent(p.title)}" target="_blank" class="btn-secondary px-3 py-2" onclick="event.stopPropagation()">
                                 <i class="fab fa-whatsapp"></i>
                             </a>
                         </div>
@@ -1754,21 +1713,76 @@
             `).join('');
         }
         
-        function timeAgo(date) {
-            const seconds = Math.floor((new Date() - new Date(date)) / 1000);
-            if (seconds < 60) return 'ahora';
-            const minutes = Math.floor(seconds / 60);
-            if (minutes < 60) return `hace ${minutes}m`;
-            const hours = Math.floor(minutes / 60);
-            if (hours < 24) return `hace ${hours}h`;
-            return `hace ${Math.floor(hours / 24)}d`;
+        function filterCategory(cat) {
+            loadProperties(cat);
         }
         
+        function showPropertyDetail(id) {
+            // In real app, fetch from DB
+            showToast('Cargando detalle con fotos HD...', 'info');
+            // For demo, just show modal with gallery
+            const property = {
+                title: 'Ático de Lujo Gran Vía',
+                photos: [
+                    'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=1200',
+                    'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=600',
+                    'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=600',
+                    'https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?w=600'
+                ]
+            };
+            
+            document.getElementById('detailTitle').textContent = property.title;
+            document.getElementById('propertyDetailContent').innerHTML = `
+                <div class="photo-gallery mb-6">
+                    <div class="main-photo">
+                        <img src="${property.photos[0]}" alt="Main" onclick="window.open('${property.photos[0]}')">
+                        <div class="photo-count" onclick="showAllPhotos()">
+                            <i class="fas fa-images mr-1"></i> +${property.photos.length - 1} fotos
+                        </div>
+                    </div>
+                    ${property.photos.slice(1, 3).map(photo => `
+                        <div class="overflow-hidden rounded-xl">
+                            <img src="${photo}" alt="Detail" onclick="window.open('${photo}')">
+                        </div>
+                    `).join('')}
+                </div>
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div>
+                        <h4 class="text-xl font-bold text-white mb-4">Características</h4>
+                        <ul class="space-y-2 text-slate-300">
+                            <li><i class="fas fa-check text-green-400 mr-2"></i>Terraza 40m²</li>
+                            <li><i class="fas fa-check text-green-400 mr-2"></i>Vistas panorámicas</li>
+                            <li><i class="fas fa-check text-green-400 mr-2"></i>Ascensor privado</li>
+                            <li><i class="fas fa-check text-green-400 mr-2"></i>Plaza garaje incluida</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 class="text-xl font-bold text-white mb-4">Contacto Rápido</h4>
+                        <button class="btn-primary w-full mb-3 justify-center" onclick="openOfferModal(1, 'Ático Gran Vía', 850000)">
+                            <i class="fas fa-hand-holding-usd mr-2"></i>Hacer Oferta
+                        </button>
+                        <a href="https://wa.me/34664037407" target="_blank" class="btn-secondary w-full justify-center">
+                            <i class="fab fa-whatsapp mr-2"></i>WhatsApp con Max
+                        </a>
+                    </div>
+                </div>
+            `;
+            
+            document.getElementById('propertyDetailModal').classList.add('active');
+        }
+        
+        function closePropertyDetail() {
+            document.getElementById('propertyDetailModal').classList.remove('active');
+        }
+        
+        // ==========================================
+        // PUBLICAR
+        // ==========================================
         async function publishProperty(e) {
             e.preventDefault();
             
             if (!currentUser) {
-                showPublishError('Debes iniciar sesión');
+                showToast('Debes iniciar sesión para publicar', 'error');
                 openAuthModal();
                 return;
             }
@@ -1782,7 +1796,7 @@
                 category: formData.get('category'),
                 location: formData.get('location'),
                 rooms: parseInt(formData.get('rooms')) || 0,
-                image_url: formData.get('image_url') || 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=800',
+                photos: formData.get('photos').split(',').map(p => p.trim()).filter(p => p),
                 owner_id: currentUser.id,
                 status: 'active',
                 created_at: new Date().toISOString()
@@ -1790,315 +1804,85 @@
             
             try {
                 if (supabase) {
-                    const { data, error } = await supabase.from('properties').insert([property]).select();
+                    const { error } = await supabase.from('properties').insert([property]);
                     if (error) throw error;
                 }
                 
-                showPublishSuccess('¡Publicado! Max está distribuyendo a 111 bots...');
-                createConfetti();
-                
-                // Enviar email de confirmación
-                sendEmail('property_published', { property: property.title, email: currentUser.email });
-                
-                setTimeout(() => {
-                    closePublishModal();
-                    e.target.reset();
-                    showSection('properties');
-                    loadProperties();
-                }, 2000);
+                showToast('¡Propiedad publicada! Max la está distribuyendo...', 'success');
+                closePublishModal();
+                e.target.reset();
+                showSection('properties');
+                loadProperties();
                 
             } catch (error) {
-                showPublishError(error.message);
+                document.getElementById('publishError').textContent = error.message;
+                document.getElementById('publishError').classList.remove('hidden');
             }
+        }
+        
+        // ==========================================
+        // CONTRATOS
+        // ==========================================
+        function openContractModal(type) {
+            document.getElementById('contractModal').classList.add('active');
+            if (type) selectContractType(type);
+        }
+        
+        function closeContractModal() {
+            document.getElementById('contractModal').classList.remove('active');
+            document.getElementById('contractForm').classList.add('hidden');
+            document.getElementById('contractTypeSelector').classList.remove('hidden');
+        }
+        
+        function selectContractType(type) {
+            document.getElementById('contractType').value = type;
+            document.getElementById('contractTypeSelector').classList.add('hidden');
+            document.getElementById('contractForm').classList.remove('hidden');
+        }
+        
+        function generateContract(e) {
+            e.preventDefault();
+            
+            if (!currentUser) {
+                showToast('Inicia sesión para generar contratos', 'error');
+                openAuthModal();
+                return;
+            }
+            
+            const formData = new FormData(e.target);
+            const type = formData.get('type');
+            
+            showToast('Juez Contract está redactando tu contrato...', 'info');
+            
+            setTimeout(() => {
+                showToast(`¡Contrato de ${type} generado! Revisa tu email`, 'success');
+                closeContractModal();
+                
+                // Enviar email simulado
+                console.log('Contrato generado:', {
+                    type,
+                    name: formData.get('fullName'),
+                    property: formData.get('propertyAddress'),
+                    price: formData.get('contractPrice')
+                });
+            }, 2000);
         }
         
         // ==========================================
         // OFERTAS
         // ==========================================
-        async function submitOffer(e) {
-            e.preventDefault();
-            
-            const propertyId = document.getElementById('offerPropertyId').value;
-            const amount = document.getElementById('offerAmount').value;
-            const message = document.getElementById('offerMessage').value;
-            
-            try {
-                // Obtener propiedad para saber el owner
-                let seller_id = null;
-                if (supabase) {
-                    const { data: prop } = await supabase.from('properties').select('owner_id').eq('id', propertyId).single();
-                    if (prop) seller_id = prop.owner_id;
-                }
-                
-                const offer = {
-                    property_id: propertyId,
-                    buyer_id: currentUser?.id || 'anonymous',
-                    seller_id: seller_id || 'unknown',
-                    amount: parseInt(amount),
-                    message: message,
-                    status: 'pending',
-                    created_at: new Date().toISOString()
-                };
-                
-                if (supabase) {
-                    const { error } = await supabase.from('offers').insert([offer]);
-                    if (error) throw error;
-                }
-                
-                showToast('¡Oferta enviada! María IA verificando fondos...', 'success');
-                
-                // Notificar por WhatsApp
-                const text = `Nueva oferta de ${amount}€ para propiedad ${propertyId}. Mensaje: ${message}`;
-                window.open(`https://wa.me/34664037407?text=${encodeURIComponent(text)}`, '_blank');
-                
-                closeOfferModal();
-                
-            } catch (error) {
-                document.getElementById('offerError').textContent = error.message;
-                document.getElementById('offerError').classList.remove('hidden');
-            }
-        }
-        
-        // ==========================================
-        // MAX IA ASSISTANT
-        // ==========================================
-        function quickQuestion(text) {
-            document.getElementById('iaInput').value = text;
-            sendIaMessage();
-        }
-        
-        async function sendIaMessage() {
-            const input = document.getElementById('iaInput');
-            const chat = document.getElementById('iaChat');
-            const message = input.value.trim();
-            
-            if (!message) return;
-            
-            // Mensaje usuario
-            chat.innerHTML += `
-                <div class="chat-message user">
-                    <p class="text-sm font-bold mb-1 text-blue-400">Tú</p>
-                    <p class="text-sm">${message}</p>
-                </div>
-            `;
-            input.value = '';
-            chat.scrollTop = chat.scrollHeight;
-            
-            // Typing indicator
-            const typingId = 'typing-' + Date.now();
-            chat.innerHTML += `
-                <div id="${typingId}" class="chat-message">
-                    <div class="flex gap-1">
-                        <div class="w-2 h-2 bg-purple-500 rounded-full animate-bounce"></div>
-                        <div class="w-2 h-2 bg-purple-500 rounded-full animate-bounce" style="animation-delay: 0.1s"></div>
-                        <div class="w-2 h-2 bg-purple-500 rounded-full animate-bounce" style="animation-delay: 0.2s"></div>
-                    </div>
-                </div>
-            `;
-            chat.scrollTop = chat.scrollHeight;
-            
-            // Respuesta IA
-            setTimeout(() => {
-                document.getElementById(typingId)?.remove();
-                
-                let response = '';
-                const lower = message.toLowerCase();
-                
-                if (lower.includes('precio') || lower.includes('coste') || lower.includes('cuanto')) {
-                    response = 'Guau guau! 🐕 He rastreado el mercado. Las propiedades premium en esa zona están entre €2,400-€4,800/m². ¿Quieres que filtre por tu presupuesto exacto?';
-                } else if (lower.includes('alquiler') || lower.includes('renta')) {
-                    response = 'Max ha encontrado 47 propiedades en alquiler disponibles AHORA. Los bots actualizan cada 3 minutos. ¿Prefieres piso o casa? ¿Cuántas habitaciones?';
-                } else if (lower.includes('vender') || lower.includes('publicar')) {
-                    response = '¡Excelente decisión! Con nuestra red de 111 bots + Max el Rastreador, tu propiedad estará en 6 plataformas en 2.3 segundos. CEOs María y Antonio supervisarán cada oferta. ¿Empezamos?';
-                } else if (lower.includes('atico') || lower.includes('madrid')) {
-                    response = 'Max detectó 3 áticos exclusivos en Madrid esta mañana. El más destacado: Gran Vía, 180m², terraza 40m² por €850,000. ¿Te envío fotos por WhatsApp?';
-                } else if (lower.includes('villa') || lower.includes('marbella')) {
-                    response = '¡Guau! 🏖️ Tengo una villa exclusiva en Puerto Banús: 450m², piscina infinita, vistas al mar, por €2.4M. Solo queda 1 día para visitar. ¿Agendo?';
-                } else if (lower.includes('hola') || lower.includes('buenas')) {
-                    response = '¡Guau guau! 🐕 Soy Max, el Pastor Alemán línea checa especializado en propiedades exclusivas. ¿Buscas comprar, vender o alquilar?';
-                } else {
-                    response = 'Entiendo. Déjame consultar con mis CEOs... Antonio dice que tenemos opciones perfectas para ti. ¿Prefieres que te llame María IA para verificar financiación?';
-                }
-                
-                chat.innerHTML += `
-                    <div class="chat-message">
-                        <p class="text-sm font-bold mb-2 text-purple-400"><i class="fas fa-dog mr-2"></i>Max el Rastreador</p>
-                        <p class="text-sm">${response}</p>
-                    </div>
-                `;
-                chat.scrollTop = chat.scrollHeight;
-                
-            }, 1500);
-        }
-        
-        // ==========================================
-        // STRIPE PAYMENTS
-        // ==========================================
-        function openStripeCheckout(product) {
-            const prices = {
-                'comision': { amount: 2178, name: 'Comisión Venta Premium' },
-                'gestion': { amount: 36.30, name: 'Gestión Alquiler Mensual' },
-                'shopper': { amount: 968, name: 'Personal Shopper Max' }
-            };
-            
-            const selected = prices[product] || prices['shopper'];
-            
-            // Aquí iría la integración real con Stripe
-            showToast(`Redirigiendo a pago seguro: ${selected.name} - ${selected.amount}€`, 'gold');
-            
-            // Demo: Simular checkout
-            setTimeout(() => {
-                showToast('¡Pago completado! Max ha activado tu servicio premium', 'success');
-                createConfetti();
-            }, 2000);
-        }
-        
-        // ==========================================
-        // PERSONAL SHOPPER
-        // ==========================================
-        function submitShopperRequest() {
-            const budget = document.getElementById('shopperBudget').value;
-            const location = document.getElementById('shopperLocation').value;
-            const type = document.getElementById('shopperType').value;
-            const rooms = document.getElementById('shopperRooms').value;
-            
-            if (!budget || !location) {
-                showToast('Completa presupuesto y ubicación', 'error');
-                return;
-            }
-            
-            const resultsDiv = document.getElementById('shopperResults');
-            const contentDiv = document.getElementById('shopperResultsContent');
-            
-            resultsDiv.classList.remove('hidden');
-            contentDiv.innerHTML = `
-                <div class="text-center py-8">
-                    <div class="text-4xl mb-4">🐕</div>
-                    <p class="text-purple-400 font-bold">Max está rastreando...</p>
-                    <p class="text-slate-500 text-sm mt-2">CEOs María y Antonio analizando el mercado</p>
-                </div>
-            `;
-            
-            setTimeout(() => {
-                contentDiv.innerHTML = `
-                    <div class="glass-panel rounded-xl p-6 border-l-4 border-green-500">
-                        <div class="flex items-center gap-3 mb-4">
-                            <div class="w-12 h-12 bg-gradient-to-br from-purple-500 to-pink-500 rounded-full flex items-center justify-center">
-                                <i class="fas fa-female text-white text-xl"></i>
-                            </div>
-                            <div>
-                                <h5 class="font-bold text-white">María IA - Análisis Financiero</h5>
-                                <p class="text-xs text-slate-400">Verificado hace 2 minutos</p>
-                            </div>
-                        </div>
-                        <p class="text-sm text-slate-300">
-                            He analizado ${Math.floor(Math.random() * 50 + 100)} propiedades en ${location}. 
-                            Con tu presupuesto de ${budget}€, puedes acceder a un ${type} de ${rooms} habitaciones en zonas premium.
-                            Rentabilidad estimada: <strong style="color: #22c55e;">${(Math.random() * 3 + 5).toFixed(1)}%</strong> anual.
-                        </p>
-                    </div>
-                    
-                    <div class="glass-panel rounded-xl p-6 border-l-4 border-blue-500 mt-4">
-                        <div class="flex items-center gap-3 mb-4">
-                            <div class="w-12 h-12 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-full flex items-center justify-center">
-                                <i class="fas fa-male text-white text-xl"></i>
-                            </div>
-                            <div>
-                                <h5 class="font-bold text-white">Antonio IA - Coordinación Bots</h5>
-                                <p class="text-xs text-slate-400">15 bots activos en tu búsqueda</p>
-                            </div>
-                        </div>
-                        <p class="text-sm text-slate-300">
-                            He desplegado 15 bots especializados en ${location}. Escanean nuevas publicaciones cada 3 minutos en 6 plataformas. 
-                            Max ha detectado <strong style="color: #3b82f6;">${Math.floor(Math.random() * 5 + 3)} propiedades nuevas</strong> hoy.
-                        </p>
-                    </div>
-                    
-                    <div class="mt-6 text-center">
-                        <button onclick="openStripeCheckout('shopper')" class="btn-gold text-lg px-8 py-4">
-                            <i class="fas fa-crown mr-2"></i>Activar Búsqueda Premium €968
-                        </button>
-                    </div>
-                `;
-            }, 3000);
-        }
-        
-        // ==========================================
-        // BOT PANEL
-        // ==========================================
-        function initBotPanel() {
-            const bots = [
-                { name: 'Max', type: 'Rastreador', color: 'blue', icon: 'fa-dog', special: true },
-                { name: 'Alex', type: 'Venta', color: 'blue', icon: 'fa-robot' },
-                { name: 'Elena', type: 'Venta', color: 'blue', icon: 'fa-robot' },
-                { name: 'Marc', type: 'Alquiler', color: 'green', icon: 'fa-robot' },
-                { name: 'Sara', type: 'Alquiler', color: 'green', icon: 'fa-robot' },
-                { name: 'Hugo', type: 'Marketing', color: 'purple', icon: 'fa-bullhorn' },
-                { name: 'Lucia', type: 'Marketing', color: 'purple', icon: 'fa-bullhorn' },
-                { name: 'Ivan', type: 'Legal', color: 'yellow', icon: 'fa-gavel' },
-                { name: 'Noa', type: 'Legal', color: 'yellow', icon: 'fa-gavel' },
-                { name: 'Raul', type: 'Social', color: 'pink', icon: 'fa-hashtag' },
-                { name: 'Julia', type: 'Social', color: 'pink', icon: 'fa-hashtag' },
-                { name: 'Toni', type: 'Soporte', color: 'cyan', icon: 'fa-headset' }
-            ];
-            
-            const container = document.getElementById('botPanel');
-            if (!container) return;
-            
-            container.innerHTML = bots.map(bot => `
-                <div class="glass-panel rounded-lg p-3 text-center cursor-pointer hover:border-${bot.color}-500 transition group" onclick="showBotInfo('${bot.name}')">
-                    <div class="bot-avatar mx-auto mb-2 ${bot.special ? 'ring-2 ring-yellow-400' : ''}">
-                        <i class="fas ${bot.icon} text-${bot.color}-400"></i>
-                        ${bot.special ? '<div class="absolute -top-1 -right-1 text-xs">👑</div>' : ''}
-                    </div>
-                    <p class="text-xs font-bold text-white">${bot.name}</p>
-                    <p class="text-[10px] text-slate-500">${bot.type}</p>
-                    <span class="bot-pulse"></span>
-                </div>
-            `).join('');
-        }
-        
-        function showBotInfo(botName) {
-            const messages = {
-                'Max': 'Max el Rastreador #1\n\n🐕 Pastor Alemán línea checa\n📍 Rastreando propiedades exclusivas\n🏆 847 propiedades encontradas hoy\n\n"Guau guau, encontré tu casa ideal"',
-                'Alex': 'Bot Alex - Especialista Ventas\n\n• Publicando en Facebook Marketplace\n• Respondiendo consultas automáticas\n• Supervisado por CEO Antonio'
-            };
-            
-            showToast(messages[botName] || `${botName} está operativo\n\n• Publicando en 6 plataformas\n• Respondiendo consultas\n• Analizando mercado`, 'success');
-        }
-        
-        // ==========================================
-        // AFILIADOS
-        // ==========================================
-        function joinAffiliate() {
+        function openOfferModal(propertyId, title, price) {
             if (!currentUser) {
-                showToast('Regístrate primero para ser VIP', 'error');
+                showToast('Inicia sesión para ofertar', 'error');
                 openAuthModal();
                 return;
             }
-            
-            affiliateCode = btoa(currentUser.id).substring(0, 8).toUpperCase();
-            closeAffiliateModal();
-            showToast(`¡Bienvenido VIP! Tu código: ${affiliateCode}`, 'gold');
-            createConfetti();
-            
-            // Guardar en localStorage
-            localStorage.setItem('merofise_affiliate', affiliateCode);
-        }
-        
-        function copyAffiliateLink() {
-            if (!affiliateCode) {
-                showToast('Únete al programa VIP primero', 'error');
-                return;
-            }
-            
-            const link = `https://merofise.es?ref=${affiliateCode}`;
-            navigator.clipboard.writeText(link);
-            showToast('Link copiado. ¡Comparte y gana €500!', 'success');
+            // Implementar modal de oferta
+            showToast(`Preparando oferta para: ${title}`, 'info');
         }
         
         // ==========================================
-        // UTILIDADES UI
+        // UI HELPERS
         // ==========================================
         function showSection(sectionId) {
             document.querySelectorAll('main > section').forEach(s => {
@@ -2113,16 +1897,7 @@
                 target.classList.add('fade-in');
             }
             
-            // Cargar datos específicos
-            if (sectionId === 'dashboard' && currentUser) {
-                loadMyProperties();
-                loadMyOffers();
-            }
-            
-            // Cerrar menú móvil
-            document.getElementById('mobileMenu').classList.add('hidden');
-            
-            // Scroll top
+            document.getElementById('mobileMenu')?.classList.add('hidden');
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
         
@@ -2133,115 +1908,56 @@
         // Modales
         function openAuthModal() { document.getElementById('authModal').classList.add('active'); }
         function closeAuthModal() { document.getElementById('authModal').classList.remove('active'); }
-        
         function openPublishModal() {
-            if (!currentUser) {
-                openAuthModal();
-                showAuthError('Debes iniciar sesión para publicar');
-                return;
-            }
+            if (!currentUser) { openAuthModal(); return; }
             document.getElementById('publishModal').classList.add('active');
         }
         function closePublishModal() {
             document.getElementById('publishModal').classList.remove('active');
-            document.getElementById('publishError').classList.add('hidden');
-            document.getElementById('publishSuccess').classList.add('hidden');
+            document.getElementById('publishError')?.classList.add('hidden');
         }
         
-        function openOfferModal(propertyId, propertyTitle, propertyPrice) {
-            if (!currentUser) {
-                openAuthModal();
-                showAuthError('Inicia sesión para ofertar');
-                return;
-            }
-            document.getElementById('offerPropertyId').value = propertyId;
-            document.getElementById('offerPropertyInfo').innerHTML = `
-                <h4 class="font-bold text-lg text-white">${propertyTitle}</h4>
-                <p class="text-purple-400 font-bold text-xl">${Number(propertyPrice).toLocaleString()}€</p>
-            `;
-            document.getElementById('offerModal').classList.add('active');
-        }
-        function closeOfferModal() { document.getElementById('offerModal').classList.remove('active'); }
-        
-        function openIaAssistant() { document.getElementById('iaModal').classList.add('active'); }
-        function closeIaModal() { document.getElementById('iaModal').classList.remove('active'); }
-        
-        function openAffiliateModal() { document.getElementById('affiliateModal').classList.add('active'); }
-        function closeAffiliateModal() { document.getElementById('affiliateModal').classList.remove('active'); }
-        
-        // Helpers
         function showAuthError(msg) {
             const el = document.getElementById('authError');
             el.textContent = msg;
             el.classList.remove('hidden');
-            document.getElementById('authSuccess').classList.add('hidden');
         }
         function showAuthSuccess(msg) {
             const el = document.getElementById('authSuccess');
             el.textContent = msg;
             el.classList.remove('hidden');
-            document.getElementById('authError').classList.add('hidden');
-        }
-        function showPublishError(msg) {
-            const el = document.getElementById('publishError');
-            el.textContent = msg;
-            el.classList.remove('hidden');
-            document.getElementById('publishSuccess').classList.add('hidden');
-        }
-        function showPublishSuccess(msg) {
-            const el = document.getElementById('publishSuccess');
-            el.textContent = msg;
-            el.classList.remove('hidden');
-            document.getElementById('publishError').classList.add('hidden');
         }
         
         function showToast(message, type = 'success') {
             const container = document.getElementById('toastContainer');
             const toast = document.createElement('div');
             toast.className = `toast toast-${type}`;
-            toast.innerHTML = `
-                <div class="flex items-center gap-2">
-                    <i class="fas ${type === 'success' ? 'fa-check-circle' : type === 'error' ? 'fa-exclamation-circle' : 'fa-crown'}"></i>
-                    <span>${message}</span>
-                </div>
-            `;
+            toast.innerHTML = `<i class="fas ${type === 'success' ? 'fa-check' : type === 'error' ? 'fa-exclamation' : 'fa-info'} mr-2"></i>${message}`;
             container.appendChild(toast);
-            
             setTimeout(() => toast.classList.add('show'), 100);
-            setTimeout(() => {
-                toast.classList.remove('show');
-                setTimeout(() => toast.remove(), 300);
-            }, 4000);
+            setTimeout(() => { toast.classList.remove('show'); setTimeout(() => toast.remove(), 300); }, 4000);
         }
         
-        function createConfetti() {
-            const colors = ['#3b82f6', '#8b5cf6', '#ec4899', '#22c55e', '#fbbf24'];
-            for (let i = 0; i < 50; i++) {
-                const conf = document.createElement('div');
-                conf.className = 'confetti';
-                conf.style.left = Math.random() * 100 + '%';
-                conf.style.background = colors[Math.floor(Math.random() * colors.length)];
-                conf.style.animationDuration = (2 + Math.random() * 2) + 's';
-                conf.style.borderRadius = Math.random() > 0.5 ? '50%' : '0';
-                document.body.appendChild(conf);
-                setTimeout(() => conf.remove(), 4000);
-            }
+        // ==========================================
+        // CONTADORES
+        // ==========================================
+        function startHuntCounters() {
+            setInterval(() => {
+                const stats = ['statsFound', 'statsContacted', 'statsExclusive', 'statsSold'];
+                const stat = stats[Math.floor(Math.random() * stats.length)];
+                const el = document.getElementById(stat);
+                if (el) {
+                    let val = parseInt(el.textContent.replace(/,/g, ''));
+                    el.textContent = (val + Math.floor(Math.random() * 3)).toLocaleString();
+                }
+            }, 3000);
         }
         
-        function sendEmail(template, data) {
-            if (typeof emailjs !== 'undefined') {
-                emailjs.send('service_xxx', 'template_xxx', {
-                    to_email: 'merofise@gmail.com',
-                    ...data
-                });
-            }
-        }
-        
-        // Console branding
-        console.log('%c🐕 MEROFISE.ES - MAX EL RASTREADOR ACTIVADO', 'color:#3b82f6;font-size:24px;font-weight:bold;');
-        console.log('%c111 BOTS PUBLICANDO EN 6 PLATAFORMAS', 'color:#8b5cf6;');
-        console.log('%cCEOs María & Antonio supervisando operaciones', 'color:#ec4899;');
-        console.log('%c¿Listo para dominar el mercado inmobiliario?', 'color:#22c55e;');
+        // Console
+        console.log('%c🐕 MEROFISE - Max el Pastor Alemán ACTIVADO', 'color:#3b82f6;font-size:20px;font-weight:bold;');
+        console.log('%cCazando en: BOE | Catastro | Registro | Notarías', 'color:#8b5cf6;');
+        console.log('%cLucía contactando propietarios...', 'color:#ec4899;');
+        console.log('%cCarlos buscando buyers...', 'color:#22c55e;');
     </script>
 </body>
 </html>
