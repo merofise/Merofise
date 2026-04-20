@@ -3,2404 +3,1255 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MEROFISE - Max el Pastor Alemán | Caza Propiedades Mundial</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.0/dist/umd/supabase.min.js"></script>
-    <script src="https://js.stripe.com/v3/"></script>
+    <title>Merofise - Encuentra tu hogar con IA</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
-        :root {
-            --primary: #3b82f6;
-            --secondary: #8b5cf6;
-            --accent: #ec4899;
-            --success: #22c55e;
-            --warning: #f59e0b;
-            --danger: #ef4444;
-            --gold: #fbbf24;
-            --dark: #0a0a0f;
-            --darker: #050508;
-            --glass: rgba(15, 23, 42, 0.6);
-            --hot: #ff2d55;
-            --flash: #ff9500;
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+
         body {
-            background: var(--darker);
-            color: #e2e8f0;
-            font-family: 'Inter', sans-serif;
-            overflow-x: hidden;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #f5f5f7;
+            color: #1d1d1f;
+            line-height: 1.47059;
+            -webkit-font-smoothing: antialiased;
         }
-        
-        /* MAX LOGO ANIMADO AGRESIVO */
-        .max-logo-container {
-            position: relative;
-            width: 80px;
-            height: 80px;
-            cursor: pointer;
-        }
-        .max-animated {
+
+        /* Navbar */
+        .navbar {
+            position: fixed;
+            top: 0;
             width: 100%;
-            height: 100%;
-            border-radius: 50%;
-            border: 3px solid var(--primary);
-            overflow: hidden;
-            position: relative;
-            box-shadow: 0 0 30px rgba(59, 130, 246, 0.6);
-            animation: maxPulse 2s infinite, maxHunt 4s infinite;
-            background: linear-gradient(135deg, #1e3a8a 0%, #dc2626 50%, #1e3a8a 100%);
-        }
-        @keyframes maxPulse {
-            0%, 100% { transform: scale(1); box-shadow: 0 0 30px rgba(59, 130, 246, 0.6); }
-            50% { transform: scale(1.05); box-shadow: 0 0 50px rgba(220, 38, 38, 0.8); }
-        }
-        @keyframes maxHunt {
-            0%, 100% { transform: rotate(0deg); }
-            25% { transform: rotate(-5deg); }
-            75% { transform: rotate(5deg); }
-        }
-        .max-inner {
-            width: 100%;
-            height: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 2.5rem;
-            animation: maxSnarl 3s infinite;
-        }
-        @keyframes maxSnarl {
-            0%, 90%, 100% { transform: scale(1); }
-            95% { transform: scale(1.1) translateY(-2px); }
-        }
-        .max-badge {
-            position: absolute;
-            bottom: -5px;
-            right: -5px;
-            background: linear-gradient(135deg, #dc2626, #ef4444);
-            color: white;
-            font-size: 0.65rem;
-            font-weight: 900;
-            padding: 3px 10px;
-            border-radius: 10px;
-            border: 2px solid var(--darker);
-            animation: huntPulse 1.5s infinite;
-            text-transform: uppercase;
-        }
-        @keyframes huntPulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.1); box-shadow: 0 0 15px rgba(239, 68, 68, 0.8); }
-        }
-        .bot-counter {
-            position: absolute;
-            top: -10px;
-            left: -10px;
-            background: var(--gold);
-            color: #000;
-            font-size: 0.7rem;
-            font-weight: 900;
-            padding: 2px 6px;
-            border-radius: 8px;
-            animation: botPulse 1s infinite;
-        }
-        @keyframes botPulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.7; }
-        }
-
-        /* HERO PROPERTIES - LO MÁS IMPORTANTE */
-        .hero-properties {
-            position: relative;
-            padding: 4rem 0;
-            overflow: hidden;
-        }
-        .hero-properties-bg {
-            position: absolute;
-            inset: 0;
-            background: radial-gradient(ellipse at center, rgba(59, 130, 246, 0.15) 0%, transparent 70%);
-            z-index: 0;
-        }
-        .section-title {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 3rem;
-            font-weight: 900;
-            text-align: center;
-            margin-bottom: 1rem;
-            position: relative;
-            z-index: 1;
-        }
-        .section-subtitle {
-            text-align: center;
-            color: #94a3b8;
-            font-size: 1.25rem;
-            margin-bottom: 3rem;
-            position: relative;
-            z-index: 1;
-        }
-
-        /* PROPERTY CARD ULTRA */
-        .property-ultra {
-            background: linear-gradient(145deg, rgba(15, 23, 42, 0.98), rgba(30, 41, 59, 0.98));
-            border: 1px solid rgba(139, 92, 246, 0.3);
-            border-radius: 24px;
-            overflow: hidden;
-            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-            position: relative;
-            z-index: 1;
-        }
-        .property-ultra:hover {
-            transform: translateY(-12px) scale(1.02);
-            border-color: var(--primary);
-            box-shadow: 0 30px 60px rgba(59, 130, 246, 0.3);
-        }
-        .property-image-hero {
-            position: relative;
-            height: 320px;
-            overflow: hidden;
-        }
-        .property-image-hero img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transition: transform 0.8s ease;
-        }
-        .property-ultra:hover .property-image-hero img {
-            transform: scale(1.15);
-        }
-        
-        /* FLASH BADGES */
-        .flash-badge {
-            position: absolute;
-            top: 1rem;
-            left: 1rem;
-            background: linear-gradient(135deg, var(--hot), var(--flash));
-            color: white;
-            padding: 0.5rem 1rem;
-            border-radius: 50px;
-            font-weight: 900;
-            font-size: 0.8rem;
-            text-transform: uppercase;
-            animation: flashPulse 2s infinite;
-            z-index: 10;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-        @keyframes flashPulse {
-            0%, 100% { transform: scale(1); box-shadow: 0 0 20px rgba(255, 45, 85, 0.5); }
-            50% { transform: scale(1.05); box-shadow: 0 0 40px rgba(255, 45, 85, 0.8); }
-        }
-        .hot-badge {
-            background: linear-gradient(135deg, #ff2d55, #ff6b35);
-        }
-        .exclusive-badge {
-            background: linear-gradient(135deg, var(--gold), #f59e0b);
-            color: #000;
-        }
-        .new-badge {
-            background: linear-gradient(135deg, #22c55e, #16a34a);
-        }
-        
-        /* VIEWERS COUNTER */
-        .viewers-live {
-            position: absolute;
-            bottom: 1rem;
-            left: 1rem;
-            background: rgba(0, 0, 0, 0.8);
-            backdrop-filter: blur(10px);
-            padding: 0.5rem 1rem;
-            border-radius: 50px;
-            font-size: 0.875rem;
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            z-index: 10;
-        }
-        .viewer-dot {
-            width: 8px;
-            height: 8px;
-            background: #22c55e;
-            border-radius: 50%;
-            animation: livePulse 1s infinite;
-        }
-        @keyframes livePulse {
-            0%, 100% { opacity: 1; transform: scale(1); }
-            50% { opacity: 0.5; transform: scale(1.3); }
-        }
-
-        /* PRICE TAG HERO */
-        .price-hero {
-            position: absolute;
-            top: 1rem;
-            right: 1rem;
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            color: white;
-            padding: 0.75rem 1.5rem;
-            border-radius: 16px;
-            font-weight: 900;
-            font-size: 1.5rem;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
-            z-index: 10;
-        }
-        .price-hero .original {
-            font-size: 0.875rem;
-            text-decoration: line-through;
-            opacity: 0.7;
-            display: block;
-        }
-        .price-hero .discount {
-            font-size: 0.75rem;
-            background: rgba(255, 255, 255, 0.2);
-            padding: 0.25rem 0.5rem;
-            border-radius: 8px;
-            margin-top: 0.25rem;
-            display: inline-block;
-        }
-
-        /* COUNTDOWN TIMER */
-        .countdown-hero {
-            position: absolute;
-            bottom: 1rem;
-            right: 1rem;
-            background: linear-gradient(135deg, rgba(220, 38, 38, 0.9), rgba(239, 68, 68, 0.9));
-            color: white;
-            padding: 0.75rem 1.25rem;
-            border-radius: 12px;
-            font-family: 'Orbitron', monospace;
-            font-weight: 900;
-            font-size: 1.1rem;
-            z-index: 10;
-            text-align: center;
-        }
-        .countdown-label {
-            font-size: 0.65rem;
-            text-transform: uppercase;
-            opacity: 0.9;
-            display: block;
-            margin-bottom: 0.25rem;
-        }
-
-        /* MATCH IA SCORE */
-        .match-score {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: rgba(0, 0, 0, 0.85);
+            background: rgba(255, 255, 255, 0.8);
             backdrop-filter: blur(20px);
-            border: 2px solid var(--success);
-            border-radius: 20px;
-            padding: 1.5rem;
-            text-align: center;
-            opacity: 0;
-            transition: all 0.3s ease;
-            z-index: 20;
-            pointer-events: none;
-        }
-        .property-ultra:hover .match-score {
-            opacity: 1;
-            pointer-events: all;
-        }
-        .match-ring {
-            width: 80px;
-            height: 80px;
-            border-radius: 50%;
-            border: 4px solid var(--success);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 0.75rem;
-            position: relative;
-        }
-        .match-ring::before {
-            content: '';
-            position: absolute;
-            inset: -4px;
-            border-radius: 50%;
-            border: 4px solid transparent;
-            border-top-color: var(--gold);
-            animation: spin 2s linear infinite;
-        }
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-        .match-percent {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 1.5rem;
-            font-weight: 900;
-            color: var(--success);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+            z-index: 1000;
+            padding: 0 24px;
         }
 
-        /* PROPERTY INFO */
-        .property-info {
-            padding: 1.5rem;
-        }
-        .property-title {
-            font-size: 1.35rem;
-            font-weight: 800;
-            color: white;
-            margin-bottom: 0.5rem;
-            line-height: 1.3;
-        }
-        .property-location {
-            color: #94a3b8;
-            font-size: 0.95rem;
-            margin-bottom: 1rem;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-        .property-features {
-            display: flex;
-            gap: 1rem;
-            margin-bottom: 1rem;
-        }
-        .feature-item {
-            display: flex;
-            align-items: center;
-            gap: 0.4rem;
-            font-size: 0.875rem;
-            color: #cbd5e1;
-            background: rgba(30, 41, 59, 0.8);
-            padding: 0.4rem 0.8rem;
-            border-radius: 8px;
-        }
-        .feature-item i {
-            color: var(--primary);
-        }
-
-        /* ACTION BUTTONS */
-        .property-actions {
-            display: flex;
-            gap: 0.75rem;
-        }
-        .btn-action {
-            flex: 1;
-            padding: 0.875rem;
-            border-radius: 12px;
-            font-weight: 700;
-            font-size: 0.9rem;
-            border: none;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.5rem;
-        }
-        .btn-offer {
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            color: white;
-        }
-        .btn-offer:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 25px rgba(59, 130, 246, 0.4);
-        }
-        .btn-visit {
-            background: rgba(30, 41, 59, 0.8);
-            color: white;
-            border: 1px solid rgba(139, 92, 246, 0.3);
-        }
-        .btn-visit:hover {
-            border-color: var(--primary);
-            background: rgba(59, 130, 246, 0.1);
-        }
-        .btn-wa {
-            width: 48px;
-            height: 48px;
-            border-radius: 12px;
-            background: linear-gradient(135deg, #22c55e, #16a34a);
-            color: white;
-            border: none;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.25rem;
-            transition: all 0.3s ease;
-        }
-        .btn-wa:hover {
-            transform: scale(1.1);
-            box-shadow: 0 5px 20px rgba(34, 197, 94, 0.4);
-        }
-
-        /* GARANTÍA MAX */
-        .garantia-bar {
-            background: linear-gradient(90deg, rgba(34, 197, 94, 0.1), rgba(34, 197, 94, 0.2));
-            border: 1px solid rgba(34, 197, 94, 0.3);
-            border-radius: 12px;
-            padding: 0.75rem 1rem;
-            margin-top: 1rem;
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            font-size: 0.875rem;
-            color: #86efac;
-        }
-        .garantia-bar i {
-            color: var(--success);
-            font-size: 1.25rem;
-        }
-
-        /* AUCTION SECTION */
-        .auction-section {
-            background: linear-gradient(135deg, rgba(220, 38, 38, 0.1), rgba(239, 68, 68, 0.1));
-            border: 2px solid rgba(239, 68, 68, 0.3);
-            border-radius: 24px;
-            padding: 2rem;
-            margin: 3rem 0;
-        }
-        .auction-header {
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 2rem;
+            height: 52px;
         }
-        .auction-title {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 2rem;
-            color: var(--hot);
+
+        .logo {
+            font-size: 21px;
+            font-weight: 700;
+            color: #1d1d1f;
+            text-decoration: none;
+            letter-spacing: -0.5px;
+        }
+
+        .logo span {
+            color: #2563eb;
+        }
+
+        .nav-btn {
+            background: #1d1d1f;
+            color: white;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .nav-btn:hover {
+            background: #2563eb;
+            transform: scale(1.05);
+        }
+
+        /* Hero */
+        .hero {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #2563eb 0%, #7c3aed 50%, #2563eb 100%);
             display: flex;
             align-items: center;
-            gap: 1rem;
-        }
-        .auction-timer-main {
-            background: rgba(0, 0, 0, 0.5);
-            padding: 1rem 2rem;
-            border-radius: 16px;
-            font-family: 'Orbitron', monospace;
-            font-size: 2rem;
-            color: var(--hot);
-            border: 2px solid var(--hot);
-        }
-
-        /* MAPA TÉRMICO */
-        .heat-map-container {
-            background: linear-gradient(145deg, rgba(15, 23, 42, 0.95), rgba(30, 41, 59, 0.95));
-            border: 2px solid rgba(139, 92, 246, 0.3);
-            border-radius: 24px;
-            padding: 2rem;
-            margin: 3rem 0;
-        }
-        .heat-zones {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 1rem;
-            margin-top: 1.5rem;
-        }
-        .heat-zone {
-            padding: 1.5rem;
-            border-radius: 16px;
-            text-align: center;
-            transition: all 0.3s ease;
-            cursor: pointer;
-        }
-        .heat-zone:hover {
-            transform: translateY(-5px);
-        }
-        .heat-hot {
-            background: linear-gradient(135deg, rgba(239, 68, 68, 0.2), rgba(220, 38, 38, 0.3));
-            border: 2px solid rgba(239, 68, 68, 0.4);
-        }
-        .heat-warm {
-            background: linear-gradient(135deg, rgba(245, 158, 11, 0.2), rgba(251, 191, 36, 0.3));
-            border: 2px solid rgba(245, 158, 11, 0.4);
-        }
-        .heat-cool {
-            background: linear-gradient(135deg, rgba(59, 130, 246, 0.2), rgba(139, 92, 246, 0.3));
-            border: 2px solid rgba(59, 130, 246, 0.4);
-        }
-
-        /* PUBLISH CTA MASIVO */
-        .publish-cta {
-            background: linear-gradient(135deg, rgba(59, 130, 246, 0.15), rgba(139, 92, 246, 0.15));
-            border: 2px solid rgba(59, 130, 246, 0.4);
-            border-radius: 24px;
-            padding: 3rem;
-            text-align: center;
-            margin: 3rem 0;
+            justify-content: center;
             position: relative;
             overflow: hidden;
+            padding: 100px 24px 60px;
         }
-        .publish-cta::before {
+
+        .hero::before {
             content: '';
             position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle, rgba(59, 130, 246, 0.1) 0%, transparent 70%);
-            animation: rotate 20s linear infinite;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            top: -200px;
+            right: -200px;
+            border-radius: 50%;
         }
-        @keyframes rotate {
+
+        .hero-content {
+            max-width: 800px;
+            text-align: center;
+            color: white;
+            position: relative;
+            z-index: 2;
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            padding: 8px 20px;
+            border-radius: 50px;
+            font-size: 14px;
+            margin-bottom: 32px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .badge svg {
+            width: 16px;
+            height: 16px;
+        }
+
+        .hero h1 {
+            font-size: clamp(40px, 8vw, 72px);
+            font-weight: 800;
+            line-height: 1.05;
+            letter-spacing: -0.03em;
+            margin-bottom: 24px;
+        }
+
+        .hero h1 span {
+            display: block;
+            color: rgba(255, 255, 255, 0.85);
+        }
+
+        .hero p {
+            font-size: 21px;
+            line-height: 1.4;
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 40px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .cta-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            background: white;
+            color: #2563eb;
+            border: none;
+            padding: 18px 40px;
+            border-radius: 50px;
+            font-size: 17px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        .cta-btn:hover {
+            transform: translateY(-2px) scale(1.02);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        .cta-btn svg {
+            width: 20px;
+            height: 20px;
+            transition: transform 0.3s;
+        }
+
+        .cta-btn:hover svg {
+            transform: translateX(4px);
+        }
+
+        /* Search Section */
+        .search-section {
+            padding: 80px 24px;
+            max-width: 800px;
+            margin: -60px auto 0;
+            position: relative;
+            z-index: 10;
+        }
+
+        .search-card {
+            background: white;
+            border-radius: 24px;
+            padding: 48px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+        }
+
+        .search-step {
+            display: none;
+        }
+
+        .search-step.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .step-indicator {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            margin-bottom: 40px;
+        }
+
+        .step-dot {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: 600;
+            background: #f5f5f7;
+            color: #86868b;
+            transition: all 0.3s;
+        }
+
+        .step-dot.active {
+            background: #2563eb;
+            color: white;
+        }
+
+        .step-dot.completed {
+            background: #34c759;
+            color: white;
+        }
+
+        .search-card h2 {
+            font-size: 32px;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 32px;
+            letter-spacing: -0.02em;
+        }
+
+        .input-group {
+            margin-bottom: 24px;
+        }
+
+        .input-group label {
+            display: block;
+            font-size: 14px;
+            font-weight: 500;
+            color: #86868b;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 16px 20px;
+            border: 2px solid #f5f5f7;
+            border-radius: 16px;
+            font-size: 17px;
+            font-family: inherit;
+            transition: all 0.3s;
+            outline: none;
+        }
+
+        .input-group input:focus {
+            border-color: #2563eb;
+            box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1);
+        }
+
+        .city-suggestions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 12px;
+        }
+
+        .city-chip {
+            padding: 8px 16px;
+            background: #f5f5f7;
+            border-radius: 20px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: none;
+            font-family: inherit;
+        }
+
+        .city-chip:hover {
+            background: #2563eb;
+            color: white;
+            transform: scale(1.05);
+        }
+
+        .range-display {
+            text-align: center;
+            font-size: 48px;
+            font-weight: 800;
+            color: #2563eb;
+            margin: 24px 0;
+            letter-spacing: -0.03em;
+        }
+
+        .range-slider {
+            width: 100%;
+            height: 6px;
+            border-radius: 3px;
+            background: #f5f5f7;
+            outline: none;
+            -webkit-appearance: none;
+            margin: 20px 0;
+        }
+
+        .range-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: #2563eb;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.4);
+            transition: transform 0.2s;
+        }
+
+        .range-slider::-webkit-slider-thumb:hover {
+            transform: scale(1.2);
+        }
+
+        .range-labels {
+            display: flex;
+            justify-content: space-between;
+            color: #86868b;
+            font-size: 14px;
+        }
+
+        .room-options {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+            margin-top: 24px;
+        }
+
+        .room-btn {
+            padding: 24px;
+            border: 2px solid #f5f5f7;
+            border-radius: 16px;
+            background: white;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: inherit;
+            text-align: center;
+        }
+
+        .room-btn:hover, .room-btn.selected {
+            border-color: #2563eb;
+            background: #eff6ff;
+            color: #2563eb;
+            transform: scale(1.05);
+        }
+
+        .room-btn svg {
+            width: 24px;
+            height: 24px;
+            margin: 0 auto 8px;
+        }
+
+        .room-btn span {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .search-btn {
+            width: 100%;
+            padding: 18px;
+            background: #2563eb;
+            color: white;
+            border: none;
+            border-radius: 16px;
+            font-size: 17px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+        }
+
+        .search-btn:hover {
+            background: #1d4ed8;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(37, 99, 235, 0.3);
+        }
+
+        /* Loading */
+        .loading-section {
+            display: none;
+            text-align: center;
+            padding: 100px 24px;
+        }
+
+        .loading-section.active {
+            display: block;
+        }
+
+        .loading-animation {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 32px;
+            position: relative;
+        }
+
+        .loading-ring {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border: 4px solid #f5f5f7;
+            border-top-color: #2563eb;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        .loading-ring:nth-child(2) {
+            width: 60%;
+            height: 60%;
+            top: 20%;
+            left: 20%;
+            border-top-color: #7c3aed;
+            animation-direction: reverse;
+            animation-duration: 0.8s;
+        }
+
+        @keyframes spin {
             to { transform: rotate(360deg); }
         }
-        .publish-cta-content {
-            position: relative;
-            z-index: 1;
-        }
-        .publish-stats {
+
+        .loading-dots {
             display: flex;
             justify-content: center;
-            gap: 3rem;
-            margin: 2rem 0;
-        }
-        .publish-stat {
-            text-align: center;
-        }
-        .publish-stat-number {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 3rem;
-            font-weight: 900;
-            color: var(--gold);
-        }
-        .publish-stat-label {
-            color: #94a3b8;
-            font-size: 0.875rem;
+            gap: 8px;
+            margin-top: 16px;
         }
 
-        /* CHALLENGE DASHBOARD */
-        .challenge-dashboard {
-            background: linear-gradient(135deg, rgba(15, 23, 42, 0.95), rgba(30, 41, 59, 0.95));
-            border: 2px solid rgba(251, 191, 36, 0.4);
-            border-radius: 24px;
-            padding: 2rem;
-            margin: 2rem 0;
-        }
-        .challenge-header {
-            text-align: center;
-            margin-bottom: 2rem;
-        }
-        .challenge-title {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 2rem;
-            background: linear-gradient(135deg, #fbbf24, #f59e0b, #ef4444);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            margin-bottom: 0.5rem;
-        }
-        .leaderboard {
-            display: grid;
-            gap: 1rem;
-        }
-        .leader-item {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            padding: 1rem;
-            background: rgba(30, 41, 59, 0.8);
-            border-radius: 12px;
-            border: 1px solid rgba(139, 92, 246, 0.2);
-            transition: all 0.3s ease;
-        }
-        .leader-item:hover { transform: translateX(10px); border-color: var(--primary); }
-        .leader-rank {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 1.5rem;
-            font-weight: 900;
-            width: 40px;
-            text-align: center;
-        }
-        .rank-1 { color: #fbbf24; text-shadow: 0 0 20px rgba(251, 191, 36, 0.5); }
-        .rank-2 { color: #94a3b8; }
-        .rank-3 { color: #cd7f32; }
-        .leader-info { flex: 1; }
-        .leader-name { font-weight: 700; color: white; }
-        .leader-status { font-size: 0.875rem; color: #22c55e; display: flex; align-items: center; gap: 0.5rem; }
-        .leader-count {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 1.25rem;
-            font-weight: 900;
-            color: var(--primary);
-        }
-        .live-indicator {
+        .loading-dot {
             width: 8px;
             height: 8px;
-            background: #22c55e;
+            background: #2563eb;
             border-radius: 50%;
-            animation: livePulse 1s infinite;
+            animation: bounce 1.4s ease-in-out infinite;
         }
 
-        /* BOTS ARMY */
-        .bots-army {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-            gap: 1rem;
-            margin: 2rem 0;
+        .loading-dot:nth-child(2) { animation-delay: 0.2s; }
+        .loading-dot:nth-child(3) { animation-delay: 0.4s; }
+
+        @keyframes bounce {
+            0%, 80%, 100% { transform: scale(0); }
+            40% { transform: scale(1); }
         }
-        .bot-card {
-            background: linear-gradient(145deg, rgba(15, 23, 42, 0.9), rgba(30, 41, 59, 0.9));
-            border: 1px solid rgba(59, 130, 246, 0.3);
-            border-radius: 16px;
-            padding: 1rem;
+
+        /* Results */
+        .results-section {
+            display: none;
+            padding: 60px 24px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .results-section.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .results-header {
             text-align: center;
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
+            margin-bottom: 48px;
         }
-        .bot-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 2px;
-            background: linear-gradient(90deg, transparent, var(--primary), transparent);
-            animation: botScan 3s infinite;
-        }
-        @keyframes botScan {
-            0% { left: -100%; }
-            100% { left: 100%; }
-        }
-        .bot-card:hover { transform: translateY(-5px); border-color: var(--primary); box-shadow: 0 10px 30px rgba(59, 130, 246, 0.3); }
-        .bot-avatar {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            margin: 0 auto 0.5rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.5rem;
-        }
-        .bot-avatar.hunter { background: linear-gradient(135deg, #3b82f6, #1d4ed8); }
-        .bot-avatar.convencer { background: linear-gradient(135deg, #8b5cf6, #7c3aed); }
-        .bot-avatar.buyer { background: linear-gradient(135deg, #22c55e, #16a34a); }
-        .bot-avatar.renter { background: linear-gradient(135deg, #f59e0b, #d97706); }
-        .bot-avatar.contract { background: linear-gradient(135deg, #eab308, #ca8a04); }
-        .bot-id {
-            position: absolute;
-            top: 5px;
-            right: 5px;
-            font-size: 0.6rem;
-            background: rgba(0,0,0,0.5);
-            padding: 2px 5px;
-            border-radius: 4px;
-            color: #94a3b8;
-        }
-        .bot-name { font-size: 0.75rem; font-weight: 700; margin-bottom: 0.25rem; }
-        .bot-task { font-size: 0.65rem; color: #94a3b8; margin-bottom: 0.5rem; }
-        .bot-status {
-            font-size: 0.65rem;
-            padding: 2px 8px;
-            border-radius: 10px;
-            font-weight: 600;
-        }
-        .status-active { background: rgba(34, 197, 94, 0.2); color: #22c55e; }
-        .status-hunting { background: rgba(59, 130, 246, 0.2); color: #3b82f6; }
 
-        /* SOLVENCIA */
-        .solvency-panel {
-            background: linear-gradient(145deg, rgba(15, 23, 42, 0.95), rgba(30, 41, 59, 0.95));
-            border: 2px solid rgba(34, 197, 94, 0.3);
-            border-radius: 20px;
-            padding: 2rem;
-            margin: 2rem 0;
+        .results-header h2 {
+            font-size: 40px;
+            font-weight: 800;
+            letter-spacing: -0.03em;
+            margin-bottom: 12px;
         }
-        .document-uploader {
-            border: 2px dashed rgba(139, 92, 246, 0.4);
-            border-radius: 16px;
-            padding: 2rem;
-            text-align: center;
-            transition: all 0.3s ease;
-            cursor: pointer;
-        }
-        .document-uploader:hover { border-color: var(--primary); background: rgba(59, 130, 246, 0.05); }
 
-        /* STRIPE PRODUCTS */
-        .stripe-products {
+        .results-header p {
+            font-size: 18px;
+            color: #86868b;
+        }
+
+        .properties-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 1.5rem;
-            margin: 2rem 0;
-        }
-        .stripe-card {
-            background: linear-gradient(145deg, rgba(15, 23, 42, 0.95), rgba(30, 41, 59, 0.95));
-            border: 2px solid rgba(251, 191, 36, 0.2);
-            border-radius: 20px;
-            padding: 1.5rem;
-            transition: all 0.3s ease;
-        }
-        .stripe-card:hover { transform: translateY(-5px); border-color: var(--gold); box-shadow: 0 20px 40px rgba(251, 191, 36, 0.2); }
-        .stripe-card.featured { border-color: var(--gold); }
-        .product-badge {
-            display: inline-block;
-            background: linear-gradient(135deg, #fbbf24, #f59e0b);
-            color: #000;
-            font-size: 0.75rem;
-            font-weight: 800;
-            padding: 0.25rem 0.75rem;
-            border-radius: 20px;
-            margin-bottom: 1rem;
-        }
-        .product-price {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 2rem;
-            font-weight: 900;
-            color: var(--gold);
-            margin: 1rem 0;
-        }
-        .pay-btn {
-            width: 100%;
-            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
-            color: white;
-            border: none;
-            padding: 1rem;
-            border-radius: 12px;
-            font-weight: 700;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-        .pay-btn:hover { transform: translateY(-2px); box-shadow: 0 10px 30px rgba(59, 130, 246, 0.4); }
-
-        /* Background */
-        .hunt-bg {
-            position: fixed;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            background-image: 
-                radial-gradient(circle at 20% 50%, rgba(59, 130, 246, 0.05) 0%, transparent 50%),
-                radial-gradient(circle at 80% 80%, rgba(139, 92, 246, 0.05) 0%, transparent 50%);
-            z-index: -2;
-            pointer-events: none;
-        }
-        .grid-overlay {
-            position: fixed;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            background-image: 
-                linear-gradient(rgba(59, 130, 246, 0.03) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(59, 130, 246, 0.03) 1px, transparent 1px);
-            background-size: 60px 60px;
-            z-index: -1;
-            pointer-events: none;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 24px;
+            margin-bottom: 48px;
         }
 
-        /* Typography */
-        .gradient-text {
-            background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 50%, #ec4899 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-        .gold-text {
-            background: linear-gradient(135deg, #fbbf24, #f59e0b);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-        .font-orbitron { font-family: 'Orbitron', sans-serif; }
-
-        /* Glass */
-        .glass-panel {
-            background: var(--glass);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(139, 92, 246, 0.2);
-            border-radius: 20px;
-        }
-        .glass-nav {
-            background: rgba(10, 10, 15, 0.9);
-            backdrop-filter: blur(20px);
-            border-bottom: 1px solid rgba(139, 92, 246, 0.3);
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-        }
-
-        /* Buttons */
-        .btn-primary {
-            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
-            color: white;
-            padding: 0.875rem 1.5rem;
-            border-radius: 12px;
-            font-weight: 700;
-            border: none;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            font-size: 0.95rem;
-            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
-        }
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(59, 130, 246, 0.5);
-        }
-        .btn-gold {
-            background: linear-gradient(135deg, #f59e0b, #fbbf24);
-            color: #000;
-            font-weight: 800;
-        }
-        .btn-gold:hover { box-shadow: 0 8px 25px rgba(245, 158, 11, 0.5); }
-        .btn-hunt {
-            background: linear-gradient(135deg, #dc2626, #ef4444);
-            color: white;
-            font-weight: 800;
-            animation: huntGlow 2s infinite;
-        }
-        @keyframes huntGlow {
-            0%, 100% { box-shadow: 0 0 5px rgba(239, 68, 68, 0.5); }
-            50% { box-shadow: 0 0 20px rgba(239, 68, 68, 0.8); }
-        }
-        .btn-secondary {
-            background: rgba(30, 41, 59, 0.8);
-            color: #e2e8f0;
-            padding: 0.875rem 1.5rem;
-            border-radius: 12px;
-            font-weight: 600;
-            border: 1px solid rgba(139, 92, 246, 0.3);
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-        .btn-secondary:hover {
-            border-color: #8b5cf6;
-            background: rgba(139, 92, 246, 0.1);
-        }
-
-        /* Language Selector */
-        .lang-selector { position: relative; }
-        .lang-btn {
-            background: rgba(30, 41, 59, 0.8);
-            border: 1px solid rgba(139, 92, 246, 0.3);
-            color: white;
-            padding: 0.5rem 1rem;
-            border-radius: 8px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            font-weight: 600;
-            transition: all 0.3s ease;
-        }
-        .lang-btn:hover {
-            border-color: #8b5cf6;
-            background: rgba(139, 92, 246, 0.1);
-        }
-        .lang-dropdown {
-            position: absolute;
-            top: 100%;
-            right: 0;
-            margin-top: 0.5rem;
-            background: rgba(15, 23, 42, 0.98);
-            border: 1px solid rgba(139, 92, 246, 0.3);
-            border-radius: 12px;
-            padding: 0.5rem;
-            min-width: 150px;
-            opacity: 0;
-            visibility: hidden;
-            transform: translateY(-10px);
-            transition: all 0.3s ease;
-            z-index: 100;
-        }
-        .lang-dropdown.active {
-            opacity: 1;
-            visibility: visible;
-            transform: translateY(0);
-        }
-        .lang-option {
-            padding: 0.5rem 1rem;
-            border-radius: 8px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            transition: all 0.2s ease;
-        }
-        .lang-option:hover { background: rgba(139, 92, 246, 0.2); }
-
-        /* Ticker */
-        .hunt-ticker {
-            background: linear-gradient(90deg, rgba(220, 38, 38, 0.2), rgba(239, 68, 68, 0.2));
-            border-bottom: 1px solid rgba(239, 68, 68, 0.3);
-            padding: 0.5rem 0;
-            overflow: hidden;
-            white-space: nowrap;
-            font-family: 'Orbitron', monospace;
-            font-size: 0.8rem;
-            color: #fca5a5;
-        }
-        .ticker-content {
-            display: inline-block;
-            animation: marquee 25s linear infinite;
-        }
-        @keyframes marquee {
-            0% { transform: translateX(0); }
-            100% { transform: translateX(-50%); }
-        }
-
-        /* Modals */
-        .modal-overlay {
-            position: fixed;
-            inset: 0;
-            background: rgba(0, 0, 0, 0.92);
-            backdrop-filter: blur(10px);
-            z-index: 10000;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 1rem;
-            opacity: 0;
-            visibility: hidden;
-            transition: all 0.3s ease;
-        }
-        .modal-overlay.active {
-            opacity: 1;
-            visibility: visible;
-        }
-        .modal-content {
-            background: linear-gradient(145deg, rgba(15, 23, 42, 0.98), rgba(30, 41, 59, 0.98));
-            border: 2px solid rgba(139, 92, 246, 0.4);
+        .property-card {
+            background: white;
             border-radius: 24px;
-            padding: 2rem;
-            max-width: 700px;
-            width: 100%;
-            max-height: 90vh;
-            overflow-y: auto;
-            transform: scale(0.9) translateY(20px);
-            transition: all 0.3s ease;
-        }
-        .modal-overlay.active .modal-content {
-            transform: scale(1) translateY(0);
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            transition: all 0.4s;
+            position: relative;
         }
 
-        /* Forms */
-        .input-field {
-            width: 100%;
-            background: rgba(15, 23, 42, 0.8);
-            border: 1px solid rgba(139, 92, 246, 0.3);
-            border-radius: 12px;
-            padding: 1rem 1.25rem;
-            color: #e2e8f0;
-            font-size: 1rem;
-            transition: all 0.3s ease;
-            font-family: 'Inter', sans-serif;
-        }
-        .input-field:focus {
-            outline: none;
-            border-color: #8b5cf6;
-            box-shadow: 0 0 20px rgba(139, 92, 246, 0.2);
+        .property-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
         }
 
-        /* Toast */
-        .toast {
-            position: fixed;
-            top: 100px;
-            right: 20px;
-            padding: 1rem 1.5rem;
-            border-radius: 12px;
+        .property-badge {
+            position: absolute;
+            top: 16px;
+            left: 16px;
+            background: #2563eb;
             color: white;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 12px;
             font-weight: 600;
-            z-index: 10001;
-            transform: translateX(400px);
-            transition: transform 0.3s ease;
-            max-width: 350px;
+            z-index: 2;
+            display: flex;
+            align-items: center;
+            gap: 6px;
         }
-        .toast.show { transform: translateX(0); }
-        .toast-success { background: linear-gradient(135deg, #22c55e, #16a34a); }
-        .toast-error { background: linear-gradient(135deg, #ef4444, #dc2626); }
-        .toast-gold { background: linear-gradient(135deg, #f59e0b, #fbbf24); color: #000; }
-        .toast-info { background: linear-gradient(135deg, #3b82f6, #8b5cf6); }
+
+        .property-badge svg {
+            width: 12px;
+            height: 12px;
+        }
+
+        .property-image {
+            height: 240px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .property-image svg {
+            width: 48px;
+            height: 48px;
+            color: white;
+            opacity: 0.5;
+        }
+
+        .property-content {
+            padding: 24px;
+        }
+
+        .property-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 12px;
+        }
+
+        .property-header h3 {
+            font-size: 20px;
+            font-weight: 700;
+            line-height: 1.3;
+            flex: 1;
+        }
+
+        .property-price {
+            font-size: 24px;
+            font-weight: 800;
+            color: #2563eb;
+            letter-spacing: -0.02em;
+        }
+
+        .property-price span {
+            font-size: 14px;
+            color: #86868b;
+            font-weight: 500;
+        }
+
+        .property-location {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: #86868b;
+            font-size: 14px;
+            margin-bottom: 16px;
+        }
+
+        .property-location svg {
+            width: 16px;
+            height: 16px;
+        }
+
+        .ai-explanation {
+            background: #eff6ff;
+            border-left: 4px solid #2563eb;
+            padding: 12px 16px;
+            border-radius: 0 12px 12px 0;
+            margin-bottom: 16px;
+        }
+
+        .ai-explanation p {
+            font-size: 14px;
+            color: #1e40af;
+            font-style: italic;
+            line-height: 1.5;
+        }
+
+        .property-features {
+            display: flex;
+            gap: 16px;
+            font-size: 14px;
+            color: #86868b;
+        }
+
+        .property-features span {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .property-features svg {
+            width: 16px;
+            height: 16px;
+        }
+
+        .property-cta {
+            width: 100%;
+            padding: 14px;
+            background: #1d1d1f;
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 16px;
+            transition: all 0.3s;
+        }
+
+        .property-cta:hover {
+            background: #2563eb;
+        }
+
+        /* Locked cards */
+        .property-card.locked {
+            position: relative;
+        }
+
+        .property-card.locked .property-image,
+        .property-card.locked .property-content {
+            filter: blur(4px);
+            opacity: 0.6;
+        }
+
+        .lock-overlay {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 10;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(2px);
+        }
+
+        .lock-icon {
+            width: 48px;
+            height: 48px;
+            background: #1d1d1f;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 12px;
+        }
+
+        .lock-icon svg {
+            width: 20px;
+            height: 20px;
+            color: white;
+        }
+
+        .lock-overlay p {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1d1d1f;
+        }
+
+        .lock-overlay .price {
+            font-size: 24px;
+            font-weight: 800;
+            color: #2563eb;
+            margin-top: 4px;
+        }
+
+        /* Footer */
+        .footer {
+            background: #1d1d1f;
+            color: white;
+            padding: 60px 24px 40px;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
+            gap: 40px;
+        }
+
+        .footer-brand h3 {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 16px;
+        }
+
+        .footer-brand h3 span {
+            color: #2563eb;
+        }
+
+        .footer-brand p {
+            color: #86868b;
+            font-size: 14px;
+            line-height: 1.6;
+            margin-bottom: 24px;
+        }
+
+        .footer-contact {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .footer-contact a {
+            color: white;
+            text-decoration: none;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: color 0.3s;
+        }
+
+        .footer-contact a:hover {
+            color: #2563eb;
+        }
+
+        .footer-contact svg {
+            width: 16px;
+            height: 16px;
+        }
+
+        .footer-links h4 {
+            font-size: 14px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 20px;
+            color: #86868b;
+        }
+
+        .footer-links ul {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 12px;
+        }
+
+        .footer-links a {
+            color: #86868b;
+            text-decoration: none;
+            font-size: 14px;
+            transition: color 0.3s;
+        }
+
+        .footer-links a:hover {
+            color: white;
+        }
+
+        .footer-bottom {
+            max-width: 1200px;
+            margin: 40px auto 0;
+            padding-top: 24px;
+            border-top: 1px solid #333;
+            text-align: center;
+            color: #86868b;
+            font-size: 13px;
+        }
 
         /* Responsive */
         @media (max-width: 768px) {
-            .section-title { font-size: 2rem; }
-            .property-image-hero { height: 240px; }
-            .price-hero { font-size: 1.25rem; padding: 0.5rem 1rem; }
-            .bots-army { grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); }
-            .publish-stats { flex-direction: column; gap: 1.5rem; }
-            .max-logo-container { width: 60px; height: 60px; }
-            .auction-timer-main { font-size: 1.5rem; }
+            .hero h1 {
+                font-size: 36px;
+            }
+
+            .search-card {
+                padding: 24px;
+            }
+
+            .room-options {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .properties-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .footer-content {
+                grid-template-columns: 1fr;
+                gap: 32px;
+            }
+
+            .footer {
+                padding: 40px 24px;
+            }
         }
 
-        /* Utility */
-        .hidden { display: none !important; }
-        .flex { display: flex; }
-        .grid { display: grid; }
-        .container { max-width: 1280px; margin: 0 auto; padding: 0 1rem; }
-        .text-center { text-align: center; }
-        .items-center { align-items: center; }
-        .justify-between { justify-content: space-between; }
-        .gap-2 { gap: 0.5rem; }
-        .gap-4 { gap: 1rem; }
-        .gap-6 { gap: 1.5rem; }
-        .p-4 { padding: 1rem; }
-        .p-6 { padding: 1.5rem; }
-        .py-4 { padding-top: 1rem; padding-bottom: 1rem; }
-        .px-4 { padding-left: 1rem; padding-right: 1rem; }
-        .mt-4 { margin-top: 1rem; }
-        .mb-4 { margin-bottom: 1rem; }
-        .mb-6 { margin-bottom: 1.5rem; }
-        .mb-8 { margin-bottom: 2rem; }
-        .w-full { width: 100%; }
-        .rounded-xl { border-radius: 16px; }
-        .rounded-2xl { border-radius: 20px; }
-        .font-bold { font-weight: 700; }
-        .font-black { font-weight: 900; }
-        .text-sm { font-size: 0.875rem; }
-        .text-xs { font-size: 0.75rem; }
-        .text-xl { font-size: 1.25rem; }
-        .text-2xl { font-size: 1.5rem; }
-        .text-3xl { font-size: 1.875rem; }
-        .text-4xl { font-size: 2.25rem; }
-        .text-5xl { font-size: 3rem; }
-        .leading-tight { line-height: 1.2; }
-        .uppercase { text-transform: uppercase; }
-        .tracking-wider { letter-spacing: 0.1em; }
-        .relative { position: relative; }
-        .overflow-hidden { overflow: hidden; }
-        .object-cover { object-fit: cover; }
-        .cursor-pointer { cursor: pointer; }
-
-        @media (min-width: 768px) {
-            .md\:flex { display: flex; }
-            .md\:grid-cols-2 { grid-template-columns: repeat(2, 1fr); }
-            .md\:grid-cols-3 { grid-template-columns: repeat(3, 1fr); }
-            .md\:grid-cols-4 { grid-template-columns: repeat(4, 1fr); }
-            .md\:text-4xl { font-size: 2.25rem; }
-            .md\:text-6xl { font-size: 3.75rem; }
-            .container { padding: 0 1.5rem; }
-        }
-        @media (min-width: 1024px) {
-            .lg\:grid-cols-3 { grid-template-columns: repeat(3, 1fr); }
-            .lg\:grid-cols-4 { grid-template-columns: repeat(4, 1fr); }
+        /* Smooth scroll */
+        html {
+            scroll-behavior: smooth;
         }
 
-        /* Animations */
-        .fade-in { animation: fadeIn 0.5s ease; }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        .slide-up { animation: slideUp 0.5s ease; }
-        @keyframes slideUp {
-            from { opacity: 0; transform: translateY(30px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        /* NEGOTIATION PANEL */
-        .negotiation-panel {
-            position: fixed;
-            bottom: 100px;
-            right: 20px;
-            width: 400px;
-            max-height: 500px;
-            background: linear-gradient(145deg, rgba(15, 23, 42, 0.98), rgba(30, 41, 59, 0.98));
-            border: 2px solid rgba(59, 130, 246, 0.4);
-            border-radius: 24px;
-            padding: 1.5rem;
-            z-index: 9999;
-            transform: translateX(450px);
-            transition: transform 0.3s ease;
-            overflow-y: auto;
-        }
-        .negotiation-panel.active { transform: translateX(0); }
-        .chat-message {
-            margin-bottom: 1rem;
-            padding: 0.75rem;
-            border-radius: 12px;
-            font-size: 0.875rem;
-        }
-        .chat-message.ai {
-            background: rgba(59, 130, 246, 0.1);
-            border-left: 3px solid var(--primary);
-            margin-right: 2rem;
-        }
-        .chat-message.user {
-            background: rgba(139, 92, 246, 0.1);
-            border-right: 3px solid var(--secondary);
-            margin-left: 2rem;
-            text-align: right;
+        /* Selection color */
+        ::selection {
+            background: #2563eb;
+            color: white;
         }
     </style>
 </head>
 <body>
-    <!-- Hunt Ticker -->
-    <div class="hunt-ticker">
-        <div class="ticker-content">
-            🔴 MAX CAZANDO EN: BOE | CATASTRO | REGISTRO PROPIEDAD | NOTARÍAS | IDEALISTA | FOTOCASA | MIL ANUNCIOS | ZILLOW | RIGHTMOVE | LE BON COIN || 847 PROPIEDADES LOCALIZADAS HOY || 234 PROPIETARIOS CONTACTADOS || 89 EXCLUSIVAS FIRMADAS || IA REDACTANDO CONTRATOS 24/7 || MEROFISE.ES DOMINANDO EL MERCADO GLOBAL 🔴
-        </div>
-    </div>
 
-    <!-- Navigation -->
-    <nav class="glass-nav">
-        <div class="container flex justify-between items-center py-3">
-            <div class="flex items-center gap-4 cursor-pointer" onclick="showSection('home')">
-                <div class="max-logo-container">
-                    <div class="max-animated">
-                        <div class="max-inner">🐕‍🦺</div>
-                    </div>
-                    <div class="max-badge">Cazando</div>
-                    <div class="bot-counter">110</div>
-                </div>
-                <div>
-                    <h1 class="text-2xl md:text-3xl font-black font-orbitron gradient-text tracking-wider">MEROFISE</h1>
-                    <p class="text-xs text-slate-400 font-bold uppercase tracking-tight flex items-center gap-2">
-                        <span style="color: #22c55e;">●</span> merofise.es
-                        <span style="color: #8b5cf6;">|</span>
-                        <span style="color: #fbbf24;">Max IA Global</span>
-                    </p>
-                </div>
-            </div>
-            <div class="hidden md:flex items-center gap-3">
-                <div class="lang-selector">
-                    <button class="lang-btn" onclick="toggleLang()">
-                        <span id="currentLang">🇪🇸 ES</span>
-                        <i class="fas fa-chevron-down text-xs"></i>
-                    </button>
-                    <div class="lang-dropdown" id="langDropdown">
-                        <div class="lang-option" onclick="setLang('es')"><span>🇪🇸</span> Español</div>
-                        <div class="lang-option" onclick="setLang('en')"><span>🇬🇧</span> English</div>
-                        <div class="lang-option" onclick="setLang('fr')"><span>🇫🇷</span> Français</div>
-                        <div class="lang-option" onclick="setLang('de')"><span>🇩🇪</span> Deutsch</div>
-                        <div class="lang-option" onclick="setLang('it')"><span>🇮🇹</span> Italiano</div>
-                        <div class="lang-option" onclick="setLang('pt')"><span>🇵🇹</span> Português</div>
-                        <div class="lang-option" onclick="setLang('zh')"><span>🇨🇳</span> 中文</div>
-                        <div class="lang-option" onclick="setLang('ar')"><span>🇸🇦</span> العربية</div>
-                    </div>
-                </div>
-                <button onclick="showSection('challenge')" class="btn-secondary text-sm" style="border-color: #fbbf24; color: #fbbf24;">
-                    <i class="fas fa-trophy"></i> Max Challenge
-                </button>
-                <button onclick="showSection('dashboard')" class="btn-secondary text-sm">
-                    <i class="fas fa-chart-line"></i> Panel
-                </button>
-                <button id="authBtn" onclick="toggleAuth()" class="btn-primary text-sm">
-                    <i class="fas fa-user"></i> <span id="authBtnText">Entrar</span>
-                </button>
-                <a href="https://wa.me/34664037407" target="_blank" class="btn-primary text-sm" style="background: linear-gradient(135deg, #22c55e, #16a34a);">
-                    <i class="fab fa-whatsapp"></i> +34 664 037 407
-                </a>
-            </div>
-            <button class="md:hidden btn-secondary" onclick="toggleMobileMenu()" style="padding: 0.5rem;">
-                <i class="fas fa-bars text-xl"></i>
-            </button>
-        </div>
-        <div id="mobileMenu" class="hidden md:hidden border-t border-slate-700/50">
-            <div class="container py-4 flex flex-col gap-3">
-                <div class="flex gap-2 flex-wrap">
-                    <button class="lang-btn text-sm" onclick="setLang('es')">🇪🇸 ES</button>
-                    <button class="lang-btn text-sm" onclick="setLang('en')">🇬🇧 EN</button>
-                    <button class="lang-btn text-sm" onclick="setLang('fr')">🇫🇷 FR</button>
-                </div>
-                <button onclick="showSection('challenge')" class="btn-secondary w-full justify-center">
-                    <i class="fas fa-trophy"></i> Max Challenge
-                </button>
-                <button onclick="showSection('dashboard')" class="btn-secondary w-full justify-center">
-                    <i class="fas fa-chart-line"></i> Panel
-                </button>
-                <button onclick="toggleAuth()" class="btn-primary w-full justify-center">
-                    <i class="fas fa-user"></i> <span id="mobileAuthText">Entrar</span>
-                </button>
-            </div>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="#" class="logo">Mero<span>fise</span></a>
+            <button class="nav-btn" onclick="alert('Próximamente: Publicar propiedad')">Publicar propiedad</button>
         </div>
     </nav>
 
-    <!-- MAIN CONTENT -->
-    <main id="mainContent" style="padding-top: 20px;">
-        
-        <!-- HERO PROPERTIES SECTION - LO MÁS IMPORTANTE -->
-        <section id="home" class="visible-section">
-            
-            <!-- Hero Header -->
-            <header class="relative min-h-[70vh] flex items-center justify-center py-16 px-4">
-                <div class="container mx-auto text-center">
-                    <div class="inline-flex items-center gap-2 glass-panel px-4 py-2 mb-6 cursor-pointer" style="border-radius: 50px; border-color: rgba(239, 68, 68, 0.4);">
-                        <span class="w-2 h-2 bg-red-500 rounded-full animate-pulse"></span>
-                        <span class="text-red-300 text-sm font-mono font-bold">Max está cazando ahora mismo • 110 Bots activos</span>
-                    </div>
-                    
-                    <h2 class="text-4xl md:text-6xl font-black font-orbitron mb-6 leading-tight">
-                        Max el Pastor Alemán<br>
-                        <span class="gradient-text">Caza Propiedades</span><br>
-                        <span class="text-white text-2xl md:text-4xl">En Todo el Mundo</span>
-                    </h2>
-                    
-                    <p class="text-slate-400 text-lg md:text-xl mb-8 max-w-3xl mx-auto">
-                        Nuestras 110 IAs rastrean <strong style="color: #fbbf24;">BOE, Catastro, Registro, Notarías</strong> y 50+ portales globales. 
-                        <strong style="color: #22c55e;">Verificación de solvencia obligatoria</strong> para todos los inquilinos.
-                    </p>
-
-                    <div class="flex flex-wrap justify-center gap-2 mb-8">
-                        <span class="source-badge"><i class="fas fa-landmark"></i> BOE</span>
-                        <span class="source-badge"><i class="fas fa-map"></i> Catastro</span>
-                        <span class="source-badge"><i class="fas fa-file-contract"></i> Registro</span>
-                        <span class="source-badge"><i class="fas fa-stamp"></i> Notarías</span>
-                        <span class="source-badge"><i class="fas fa-home"></i> Idealista</span>
-                        <span class="source-badge"><i class="fas fa-globe"></i> Zillow</span>
-                        <span class="source-badge"><i class="fas fa-building"></i> Rightmove</span>
-                    </div>
-
-                    <div class="flex flex-col sm:flex-row justify-center gap-4">
-                        <button onclick="scrollToProperties()" class="btn-hunt text-lg px-8 py-4">
-                            <i class="fas fa-fire mr-2"></i> Ver Propiedades HOT
-                        </button>
-                        <button onclick="openPublishModal()" class="btn-primary text-lg px-8 py-4">
-                            <i class="fas fa-rocket mr-2"></i> Publicar mi Propiedad
-                        </button>
-                        <button onclick="openSolvencyModal()" class="btn-gold text-lg px-8 py-4">
-                            <i class="fas fa-shield-alt mr-2"></i> Verificar Solvencia
-                        </button>
-                    </div>
-                </div>
-            </header>
-
-            <!-- PROPIEDADES DESTACADAS - EL CORAZÓN DE LA WEB -->
-            <section class="hero-properties" id="propertiesSection">
-                <div class="hero-properties-bg"></div>
-                <div class="container mx-auto px-4 relative z-10">
-                    <h2 class="section-title gradient-text">🔥 Propiedades HOT del Momento</h2>
-                    <p class="section-subtitle">Las mejores oportunidades captadas por Max en las últimas 24h</p>
-                    
-                    <!-- Filtros rápidos -->
-                    <div class="flex flex-wrap justify-center gap-3 mb-8">
-                        <button onclick="filterProperties('all')" class="btn-primary text-sm active-filter" id="filter-all">Todas</button>
-                        <button onclick="filterProperties('hot')" class="btn-secondary text-sm" id="filter-hot">🔥 HOT</button>
-                        <button onclick="filterProperties('auction')" class="btn-secondary text-sm" id="filter-auction">⏰ Subasta</button>
-                        <button onclick="filterProperties('exclusive')" class="btn-secondary text-sm" id="filter-exclusive">👑 Exclusivas</button>
-                        <button onclick="filterProperties('venta')" class="btn-secondary text-sm" id="filter-venta">🏠 Venta</button>
-                        <button onclick="filterProperties('alquiler')" class="btn-secondary text-sm" id="filter-alquiler">🔑 Alquiler</button>
-                    </div>
-
-                    <!-- Grid de propiedades -->
-                    <div id="propertiesGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                        <!-- Se llena dinámicamente -->
-                    </div>
-
-                    <!-- Load More -->
-                    <div class="text-center mt-8">
-                        <button onclick="loadMoreProperties()" class="btn-secondary text-lg px-8">
-                            <i class="fas fa-sync-alt mr-2"></i> Cargar más oportunidades
-                        </button>
-                    </div>
-                </div>
-            </section>
-
-            <!-- SECCIÓN SUBASTAS EN VIVO -->
-            <section class="auction-section container mx-auto px-4">
-                <div class="auction-header">
-                    <div class="auction-title">
-                        <i class="fas fa-gavel"></i>
-                        <div>
-                            <div>Subastas Max</div>
-                            <div style="font-size: 1rem; color: #94a3b8; font-family: 'Inter'">Oportunidades únicas de 24h</div>
-                        </div>
-                    </div>
-                    <div class="auction-timer-main" id="auctionMainTimer">
-                        <div style="font-size: 0.7rem; text-transform: uppercase;">Próxima subasta en</div>
-                        08:42:15
-                    </div>
-                </div>
-                
-                <div class="grid md:grid-cols-2 gap-6" id="auctionGrid">
-                    <!-- Se llena dinámicamente -->
-                </div>
-            </section>
-
-            <!-- MAPA TÉRMICO DE OPORTUNIDADES -->
-            <section class="heat-map-container container mx-auto px-4">
-                <h3 class="text-2xl font-bold text-white mb-2"><i class="fas fa-fire-alt text-orange-500 mr-2"></i> Mapa Térmico de Oportunidades</h3>
-                <p class="text-slate-400 mb-4">Zonas donde Max está encontrando las mejores propiedades ahora mismo</p>
-                
-                <div class="heat-zones" id="heatZones">
-                    <!-- Se llena dinámicamente -->
-                </div>
-            </section>
-
-            <!-- PUBLICAR CTA MASIVO -->
-            <section class="publish-cta container mx-auto px-4">
-                <div class="publish-cta-content">
-                    <h2 class="text-4xl md:text-5xl font-black font-orbitron mb-4">
-                        <span class="gradient-text">¿Por qué publicar en MEROFISE?</span>
-                    </h2>
-                    <p class="text-xl text-slate-300 mb-8">Tu propiedad vista por miles de compradores verificados en minutos, no en meses</p>
-                    
-                    <div class="publish-stats">
-                        <div class="publish-stat">
-                            <div class="publish-stat-number" id="statViews">2.4M</div>
-                            <div class="publish-stat-label">Visitas mensuales</div>
-                        </div>
-                        <div class="publish-stat">
-                            <div class="publish-stat-number" id="statTime">48h</div>
-                            <div class="publish-stat-label">Tiempo medio venta</div>
-                        </div>
-                        <div class="publish-stat">
-                            <div class="publish-stat-number" id="statPrice">+12%</div>
-                            <div class="publish-stat-label">Más valor que mercado</div>
-                        </div>
-                        <div class="publish-stat">
-                            <div class="publish-stat-number" id="statSafe">100%</div>
-                            <div class="publish-stat-label">Inquilinos verificados</div>
-                        </div>
-                    </div>
-
-                    <div class="flex flex-col sm:flex-row justify-center gap-4 mt-8">
-                        <button onclick="openPublishModal()" class="btn-hunt text-xl px-10 py-5">
-                            <i class="fas fa-rocket mr-2"></i> Publicar mi Propiedad GRATIS
-                        </button>
-                        <button onclick="openContractModal()" class="btn-gold text-xl px-10 py-5">
-                            <i class="fas fa-file-signature mr-2"></i> Exclusiva con Max
-                        </button>
-                    </div>
-
-                    <div class="mt-6 flex justify-center gap-6 text-sm text-slate-400">
-                        <span><i class="fas fa-check text-green-400 mr-1"></i> Sin fotos, no hay venta → Fotos IA incluidas</span>
-                        <span><i class="fas fa-check text-green-400 mr-1"></i> Solo inquilinos con nómina y contrato fijo</span>
-                        <span><i class="fas fa-check text-green-400 mr-1"></i> Cobro de rentas garantizado</span>
-                    </div>
-                </div>
-            </section>
-
-            <!-- SERVICIOS STRIPE -->
-            <section class="py-16 px-4">
-                <div class="container mx-auto max-w-6xl">
-                    <div class="text-center mb-12">
-                        <h3 class="text-3xl md:text-4xl font-black font-orbitron mb-4 gold-text">Servicios MEROFISE</h3>
-                        <p class="text-slate-400">Precios transparentes, pagos seguros con Stripe</p>
-                    </div>
-
-                    <div class="stripe-products">
-                        <div class="stripe-card">
-                            <span class="product-badge">OBLIGATORIO</span>
-                            <h4 class="text-xl font-bold text-white mb-2">Gestión Documentación</h4>
-                            <p class="text-sm text-slate-400 mb-4">Verificación IA de nóminas y contratos</p>
-                            <div class="product-price">59,29€</div>
-                            <ul class="text-sm text-slate-300 space-y-2 mb-6">
-                                <li><i class="fas fa-check text-green-400 mr-2"></i>Verificación IA 24h</li>
-                                <li><i class="fas fa-check text-green-400 mr-2"></i>Reporte de solvencia</li>
-                                <li><i class="fas fa-check text-green-400 mr-2"></i>Certificado MEROFISE</li>
-                            </ul>
-                            <button onclick="payStripe('prod_UM0BS7HH8i548E')" class="pay-btn">
-                                <i class="fas fa-lock mr-2"></i>Pagar y Verificar
-                            </button>
-                        </div>
-
-                        <div class="stripe-card featured">
-                            <span class="product-badge">MÁS POPULAR</span>
-                            <h4 class="text-xl font-bold text-white mb-2">Gestión Alquiler Mensual</h4>
-                            <p class="text-sm text-slate-400 mb-4">Gestión completa de tu propiedad</p>
-                            <div class="product-price">36,30€<span class="text-sm text-slate-400">/mes</span></div>
-                            <ul class="text-sm text-slate-300 space-y-2 mb-6">
-                                <li><i class="fas fa-check text-green-400 mr-2"></i>Publicación 10+ portales</li>
-                                <li><i class="fas fa-check text-green-400 mr-2"></i>Filtrado inquilinos</li>
-                                <li><i class="fas fa-check text-green-400 mr-2"></i>Cobro rentas garantizado</li>
-                                <li><i class="fas fa-check text-green-400 mr-2"></i>Gestión incidencias 24/7</li>
-                            </ul>
-                            <button onclick="payStripe('prod_UIDCPujOw1Hrbn')" class="pay-btn" style="background: linear-gradient(135deg, #22c55e, #16a34a);">
-                                <i class="fas fa-home mr-2"></i>Contratar Gestión
-                            </button>
-                        </div>
-
-                        <div class="stripe-card">
-                            <span class="product-badge">ÉXITO</span>
-                            <h4 class="text-xl font-bold text-white mb-2">Comisión Venta</h4>
-                            <p class="text-sm text-slate-400 mb-4">Vende tu propiedad con los mejores</p>
-                            <div class="product-price" id="commissionPrice">2.178€</div>
-                            <div class="text-xs text-slate-500 mb-4">Adaptable según valor</div>
-                            <ul class="text-sm text-slate-300 space-y-2 mb-6">
-                                <li><i class="fas fa-check text-green-400 mr-2"></i>Publicación 15+ portales</li>
-                                <li><i class="fas fa-check text-green-400 mr-2"></i>Fotografía profesional IA</li>
-                                <li><i class="fas fa-check text-green-400 mr-2"></i>Negociación experta IA</li>
-                                <li><i class="fas fa-check text-green-400 mr-2"></i>Gestión legal completa</li>
-                            </ul>
-                            <button onclick="payStripe('prod_UID3xa1QEh46rg')" class="pay-btn">
-                                <i class="fas fa-file-signature mr-2"></i>Iniciar Venta
-                            </button>
-                        </div>
-
-                        <div class="stripe-card">
-                            <span class="product-badge">PREMIUM</span>
-                            <h4 class="text-xl font-bold text-white mb-2">Personal Shopper</h4>
-                            <p class="text-sm text-slate-400 mb-4">Búsqueda personalizada</p>
-                            <div class="product-price">968€</div>
-                            <ul class="text-sm text-slate-300 space-y-2 mb-6">
-                                <li><i class="fas fa-check text-green-400 mr-2"></i>Búsqueda personalizada</li>
-                                <li><i class="fas fa-check text-green-400 mr-2"></i>Visitas programadas</li>
-                                <li><i class="fas fa-check text-green-400 mr-2"></i>Negociación incluida</li>
-                            </ul>
-                            <button onclick="payStripe('prod_UKLENOERbIfYaY')" class="pay-btn" style="background: linear-gradient(135deg, #f59e0b, #fbbf24); color: #000;">
-                                <i class="fas fa-concierge-bell mr-2"></i>Contratar
-                            </button>
-                        </div>
-
-                        <div class="stripe-card featured">
-                            <span class="product-badge">EXCLUSIVO</span>
-                            <h4 class="text-xl font-bold text-white mb-2">Personal Shopper Premium</h4>
-                            <p class="text-sm text-slate-400 mb-4">Servicio VIP propiedades de lujo</p>
-                            <div class="product-price">7.260€</div>
-                            <ul class="text-sm text-slate-300 space-y-2 mb-6">
-                                <li><i class="fas fa-check text-green-400 mr-2"></i>Acceso off-market</li>
-                                <li><i class="fas fa-check text-green-400 mr-2"></i>Asesor fiscal internacional</li>
-                                <li><i class="fas fa-check text-green-400 mr-2"></i>Postventa 1 año</li>
-                            </ul>
-                            <button onclick="payStripe('prod_UKLB3CxryhXq3F')" class="pay-btn" style="background: linear-gradient(135deg, #fbbf24, #f59e0b); color: #000;">
-                                <i class="fas fa-crown mr-2"></i>Experiencia VIP
-                            </button>
-                        </div>
-
-                        <div class="stripe-card">
-                            <span class="product-badge">VISUAL</span>
-                            <h4 class="text-xl font-bold text-white mb-2">Reportaje Fotográfico IA</h4>
-                            <p class="text-sm text-slate-400 mb-4">Fotos profesionales + Tour 3D</p>
-                            <div class="product-price">242€</div>
-                            <ul class="text-sm text-slate-300 space-y-2 mb-6">
-                                <li><i class="fas fa-check text-green-400 mr-2"></i>50+ fotos HDR</li>
-                                <li><i class="fas fa-check text-green-400 mr-2"></i>Tour virtual 3D</li>
-                                <li><i class="fas fa-check text-green-400 mr-2"></i>Video dron</li>
-                            </ul>
-                            <button onclick="payStripe('prod_UKMQgh5rEkFEuw')" class="pay-btn">
-                                <i class="fas fa-camera mr-2"></i>Reservar
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- MAX CHALLENGE -->
-            <section id="challenge" class="hidden-section py-16 px-4">
-                <div class="container mx-auto">
-                    <div class="challenge-dashboard">
-                        <div class="challenge-header">
-                            <h2 class="challenge-title">🏆 MAX CHALLENGE - LA CAZA DEL MILLÓN</h2>
-                            <p class="text-slate-400">Competición mundial de captación inmobiliaria en tiempo real</p>
-                        </div>
-                        <div class="leaderboard" id="leaderboard"></div>
-                        <div class="mt-8 p-6 bg-gradient-to-r from-blue-600/20 to-purple-600/20 rounded-xl border border-blue-500/30">
-                            <h3 class="text-xl font-bold text-white mb-4"><i class="fas fa-bolt text-yellow-400 mr-2"></i>Reto Activo</h3>
-                            <p class="text-slate-300 mb-4">¿Puede Max vender tu propiedad en <strong class="text-yellow-400">45 días</strong>? Si lo consigue, strong class="text-green-400">50% descuento</strong> en comisión.</p>
-                            <div class="flex items-center justify-between bg-slate-900/50 p-4 rounded-lg">
-                                <div>
-                                    <div class="text-sm text-slate-400">Apuestas cerradas en:</div>
-                                    <div class="text-2xl font-orbitron text-yellow-400" id="challengeTimer">14:32:18</div>
-                                </div>
-                                <button onclick="joinChallenge()" class="btn-gold text-lg px-6">
-                                    <i class="fas fa-rocket mr-2"></i>Unirme al Reto
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="mt-12">
-                        <h3 class="text-3xl font-black font-orbitron mb-6 gradient-text text-center">Ejército de 110 Bots IA</h3>
-                        <div class="bots-army" id="botsArmy"></div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- DASHBOARD -->
-            <section id="dashboard" class="hidden-section py-16 px-4">
-                <div class="container mx-auto">
-                    <div class="text-center mb-12">
-                        <h3 class="text-3xl md:text-4xl font-black font-orbitron mb-4 gradient-text">Panel de Control</h3>
-                        <p class="text-slate-400">Gestiona tus propiedades, contratos y ganancias</p>
-                    </div>
-                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-                        <div class="glass-panel p-6 text-center">
-                            <div class="text-3xl font-black text-blue-400" id="dashProperties">0</div>
-                            <div class="text-xs text-slate-500 uppercase mt-1">Mis Propiedades</div>
-                        </div>
-                        <div class="glass-panel p-6 text-center">
-                            <div class="text-3xl font-black text-purple-400" id="dashExclusives">0</div>
-                            <div class="text-xs text-slate-500 uppercase mt-1">Exclusivas Activas</div>
-                        </div>
-                        <div class="glass-panel p-6 text-center">
-                            <div class="text-3xl font-black text-green-400" id="dashEarnings">0€</div>
-                            <div class="text-xs text-slate-500 uppercase mt-1">Ganancias</div>
-                        </div>
-                        <div class="glass-panel p-6 text-center">
-                            <div class="text-3xl font-black text-yellow-400" id="dashViews">0</div>
-                            <div class="text-xs text-slate-500 uppercase mt-1">Visitas</div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-        </section>
-    </main>
-
-    <!-- Footer -->
-    <footer class="bg-slate-950 border-t border-slate-800 py-12 mt-20">
-        <div class="container mx-auto px-6">
-            <div class="grid md:grid-cols-4 gap-8 mb-8">
-                <div>
-                    <div class="flex items-center gap-3 mb-4">
-                        <div class="w-10 h-10 rounded-full overflow-hidden border-2 border-blue-500">
-                            <div class="w-full h-full bg-gradient-to-br from-blue-600 to-red-600 flex items-center justify-center text-lg">🐕‍🦺</div>
-                        </div>
-                        <h4 class="text-2xl font-black font-orbitron gradient-text">MEROFISE</h4>
-                    </div>
-                    <p class="text-slate-500 text-sm">
-                        Max el Pastor Alemán y 110 IAs cazan propiedades en todo el mundo. Exclusivas reales, contratos legales y resultados garantizados.
-                    </p>
-                </div>
-                <div>
-                    <h5 class="font-bold text-slate-300 mb-4">Servicios</h5>
-                    <ul class="space-y-2 text-sm text-slate-400">
-                        <li><i class="fas fa-search mr-2 text-blue-400"></i> Caza de propiedades</li>
-                        <li><i class="fas fa-handshake mr-2 text-purple-400"></i> Exclusivas de venta</li>
-                        <li><i class="fas fa-key mr-2 text-green-400"></i> Gestión de alquiler</li>
-                        <li><i class="fas fa-shield-alt mr-2 text-green-400"></i> Verificación solvencia</li>
-                    </ul>
-                </div>
-                <div>
-                    <h5 class="font-bold text-slate-300 mb-4">Contacto</h5>
-                    <ul class="space-y-2 text-sm text-slate-400">
-                        <li><i class="fas fa-envelope mr-2 text-blue-400"></i> info@merofise.es</li>
-                        <li><i class="fas fa-phone mr-2 text-green-400"></i> +34 664 037 407</li>
-                        <li><i class="fab fa-whatsapp mr-2 text-green-500"></i> WhatsApp 24/7</li>
-                    </ul>
-                </div>
-                <div>
-                    <h5 class="font-bold text-slate-300 mb-4">Estado IAs</h5>
-                    <div class="space-y-2 text-sm">
-                        <div class="flex items-center gap-2 text-green-400"><span class="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span> Max Hunter Activo</div>
-                        <div class="flex items-center gap-2 text-blue-400"><span class="w-2 h-2 bg-blue-400 rounded-full animate-pulse"></span> Lucía Contactando</div>
-                        <div class="flex items-center gap-2 text-purple-400"><span class="w-2 h-2 bg-purple-400 rounded-full animate-pulse"></span> Carlos Buscando Buyers</div>
-                        <div class="flex items-center gap-2 text-yellow-400"><span class="w-2 h-2 bg-yellow-400 rounded-full animate-pulse"></span> Juez Redactando</div>
-                    </div>
-                </div>
+    <!-- Hero -->
+    <section class="hero" id="inicio">
+        <div class="hero-content">
+            <div class="badge">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"/>
+                </svg>
+                Impulsado por Inteligencia Artificial
             </div>
-            <div class="border-t border-slate-800 pt-8 text-center">
-                <p class="text-slate-600 text-sm">© 2026 MEROFISE - Max el Pastor Alemán. Todos los derechos reservados.</p>
-            </div>
+            <h1>
+                Encuentra tu hogar
+                <span>ideal en minutos</span>
+            </h1>
+            <p>Merofise analiza miles de propiedades y te recomienda las 3 mejores opciones personalizadas para ti usando IA avanzada.</p>
+            <button class="cta-btn" onclick="scrollToSearch()">
+                Empezar búsqueda
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
+                </svg>
+            </button>
         </div>
-    </footer>
+    </section>
 
-    <!-- MODALS -->
-    <div id="authModal" class="modal-overlay">
-        <div class="modal-content">
-            <div class="flex justify-between items-center mb-6">
-                <h3 class="text-2xl font-bold gradient-text">Acceder a MEROFISE</h3>
-                <button onclick="closeAuthModal()" class="text-slate-400 hover:text-white"><i class="fas fa-times text-xl"></i></button>
+    <!-- Search -->
+    <section class="search-section" id="buscador">
+        <div class="search-card">
+            <div class="step-indicator">
+                <div class="step-dot active" id="dot1">1</div>
+                <div class="step-dot" id="dot2">2</div>
+                <div class="step-dot" id="dot3">3</div>
             </div>
-            <div id="authError" class="hidden bg-red-500/20 border border-red-500/50 rounded-lg p-3 text-red-300 text-sm mb-4"></div>
-            <div class="space-y-4">
-                <div>
-                    <label class="block text-sm font-bold mb-2 text-slate-300">Email</label>
-                    <input type="email" id="authEmail" class="input-field" placeholder="tu@email.com">
-                </div>
-                <div>
-                    <label class="block text-sm font-bold mb-2 text-slate-300">Contraseña</label>
-                    <input type="password" id="authPassword" class="input-field" placeholder="••••••••">
-                </div>
-                <div class="flex gap-4 pt-4">
-                    <button onclick="login()" class="btn-primary flex-1 justify-center">Entrar</button>
-                    <button onclick="register()" class="btn-secondary flex-1 justify-center">Crear Cuenta</button>
-                </div>
-            </div>
-        </div>
-    </div>
 
-    <div id="publishModal" class="modal-overlay">
-        <div class="modal-content max-w-2xl">
-            <div class="flex justify-between items-center mb-6">
-                <h3 class="text-2xl font-bold gradient-text">Publicar Propiedad</h3>
-                <button onclick="closePublishModal()" class="text-slate-400 hover:text-white"><i class="fas fa-times text-xl"></i></button>
+            <!-- Step 1: City -->
+            <div class="search-step active" id="step1">
+                <h2>¿Dónde quieres vivir?</h2>
+                <div class="input-group">
+                    <label>Ciudad o zona</label>
+                    <input type="text" id="cityInput" placeholder="Ej: Madrid, Barcelona, Valencia..." onkeypress="if(event.key==='Enter') nextStep()">
+                </div>
+                <div class="city-suggestions">
+                    <button class="city-chip" onclick="selectCity('Madrid')">Madrid</button>
+                    <button class="city-chip" onclick="selectCity('Barcelona')">Barcelona</button>
+                    <button class="city-chip" onclick="selectCity('Valencia')">Valencia</button>
+                    <button class="city-chip" onclick="selectCity('Sevilla')">Sevilla</button>
+                    <button class="city-chip" onclick="selectCity('Málaga')">Málaga</button>
+                </div>
+                <button class="search-btn" onclick="nextStep()">
+                    Continuar
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" width="20" height="20">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                    </svg>
+                </button>
             </div>
-            <form id="publishForm" onsubmit="publishProperty(event)" class="space-y-4">
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                        <label class="block text-sm font-bold mb-2 text-slate-300">Título *</label>
-                        <input type="text" name="title" required class="input-field" placeholder="Piso céntrico reformado">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-bold mb-2 text-slate-300">Precio (€) *</label>
-                        <input type="number" name="price" required class="input-field" placeholder="150000">
-                    </div>
-                </div>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <div>
-                        <label class="block text-sm font-bold mb-2 text-slate-300">Tipo</label>
-                        <select name="transaction_type" class="input-field">
-                            <option value="venta">Venta</option>
-                            <option value="alquiler">Alquiler</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label class="block text-sm font-bold mb-2 text-slate-300">Categoría</label>
-                        <select name="category" class="input-field">
-                            <option value="lujo">Lujo</option>
-                            <option value="media">Clase Media</option>
-                            <option value="lowcost">Low Cost</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label class="block text-sm font-bold mb-2 text-slate-300">Habitaciones</label>
-                        <input type="number" name="rooms" class="input-field" min="1" value="3">
-                    </div>
-                </div>
-                <div>
-                    <label class="block text-sm font-bold mb-2 text-slate-300">Ubicación *</label>
-                    <input type="text" name="location" required class="input-field" placeholder="Calle Ejemplo, 123, Madrid">
-                </div>
-                <div>
-                    <label class="block text-sm font-bold mb-2 text-slate-300">Descripción *</label>
-                    <textarea name="description" required class="input-field h-32" placeholder="Describe la propiedad..."></textarea>
-                </div>
-                <div>
-                    <label class="block text-sm font-bold mb-2 text-slate-300">Fotos (URLs separadas por coma)</label>
-                    <textarea name="photos" class="input-field h-24" placeholder="https://..., https://..."></textarea>
-                </div>
-                <div class="bg-yellow-500/10 border border-yellow-500/30 rounded-lg p-4">
-                    <h5 class="font-bold text-yellow-400 mb-2"><i class="fas fa-lightbulb mr-2"></i> Consejo de Max:</h5>
-                    <p class="text-sm text-slate-300">Las propiedades con fotos profesionales se venden 3x más rápido. Contrata nuestro reportaje fotográfico por solo 242€.</p>
-                </div>
-                <div class="flex gap-4 pt-4">
-                    <button type="submit" class="btn-primary flex-1 justify-center text-lg"><i class="fas fa-rocket mr-2"></i> Publicar y Cazar</button>
-                    <button type="button" onclick="closePublishModal()" class="btn-secondary">Cancelar</button>
-                </div>
-            </form>
-        </div>
-    </div>
 
-    <div id="solvencyModal" class="modal-overlay">
-        <div class="modal-content max-w-2xl">
-            <div class="flex justify-between items-center mb-6">
-                <h3 class="text-2xl font-bold text-green-400">Verificación de Solvencia</h3>
-                <button onclick="closeSolvencyModal()" class="text-slate-400 hover:text-white"><i class="fas fa-times text-xl"></i></button>
-            </div>
-            <div class="bg-slate-800/50 p-4 rounded-lg mb-6">
-                <h4 class="font-bold text-white mb-3">Documentos obligatorios para alquilar:</h4>
-                <ul class="space-y-2 text-sm text-slate-300">
-                    <li class="flex items-center gap-2"><i class="fas fa-check-circle text-green-400"></i> 3 últimas nóminas</li>
-                    <li class="flex items-center gap-2"><i class="fas fa-check-circle text-green-400"></i> Contrato de trabajo fijo indefinido</li>
-                    <li class="flex items-center gap-2"><i class="fas fa-check-circle text-green-400"></i> Avalistas (opcional)</li>
-                </ul>
-            </div>
-            <div class="flex justify-between items-center bg-slate-900/50 p-4 rounded-lg">
-                <div>
-                    <div class="text-sm text-slate-400">Coste verificación:</div>
-                    <div class="text-2xl font-bold text-yellow-400">59,29€</div>
+            <!-- Step 2: Budget -->
+            <div class="search-step" id="step2">
+                <h2>¿Cuál es tu presupuesto?</h2>
+                <div class="range-display" id="budgetDisplay">1000€</div>
+                <input type="range" class="range-slider" id="budgetSlider" min="300" max="5000" step="50" value="1000" oninput="updateBudget(this.value)">
+                <div class="range-labels">
+                    <span>300€</span>
+                    <span>5000€+</span>
                 </div>
-                <button onclick="payStripe('prod_UM0BS7HH8i548E')" class="btn-gold text-lg px-6">
-                    <i class="fas fa-lock mr-2"></i>Pagar y Verificar
+                <button class="search-btn" onclick="nextStep()">
+                    Continuar
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" width="20" height="20">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                    </svg>
+                </button>
+            </div>
+
+            <!-- Step 3: Rooms -->
+            <div class="search-step" id="step3">
+                <h2>¿Cuántas habitaciones?</h2>
+                <div class="room-options">
+                    <button class="room-btn" onclick="selectRooms(1)" id="room1">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
+                        </svg>
+                        <span>1 hab.</span>
+                    </button>
+                    <button class="room-btn selected" onclick="selectRooms(2)" id="room2">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
+                        </svg>
+                        <span>2 habs.</span>
+                    </button>
+                    <button class="room-btn" onclick="selectRooms(3)" id="room3">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
+                        </svg>
+                        <span>3 habs.</span>
+                    </button>
+                    <button class="room-btn" onclick="selectRooms(4)" id="room4">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
+                        </svg>
+                        <span>4+ habs.</span>
+                    </button>
+                </div>
+                <button class="search-btn" onclick="startSearch()">
+                    Buscar con IA
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" width="20" height="20">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                    </svg>
                 </button>
             </div>
         </div>
-    </div>
+    </section>
 
-    <div id="negotiationPanel" class="negotiation-panel">
-        <div class="flex justify-between items-center mb-4 pb-4 border-b border-slate-700">
-            <h4 class="font-bold text-white"><i class="fas fa-comments text-primary mr-2"></i>Negociar con Max IA</h4>
-            <button onclick="toggleNegotiation()" class="text-slate-400 hover:text-white"><i class="fas fa-times"></i></button>
+    <!-- Loading -->
+    <section class="loading-section" id="loading">
+        <div class="loading-animation">
+            <div class="loading-ring"></div>
+            <div class="loading-ring"></div>
         </div>
-        <div class="chat-messages" id="chatMessages" style="max-height: 300px; overflow-y: auto; margin-bottom: 1rem;">
-            <div class="chat-message ai">
-                <strong>🤖 Max IA:</strong> ¡Hola! Soy Max. ¿Cuál es tu oferta? Te ayudaré a negociar el mejor precio.
+        <h2 style="font-size: 32px; font-weight: 700; margin-bottom: 16px;">Analizando con IA...</h2>
+        <p style="color: #86868b; font-size: 18px;">Buscando las mejores opciones para ti</p>
+        <div class="loading-dots">
+            <div class="loading-dot"></div>
+            <div class="loading-dot"></div>
+            <div class="loading-dot"></div>
+        </div>
+    </section>
+
+    <!-- Results -->
+    <section class="results-section" id="results">
+        <div class="results-header">
+            <h2>Tus 3 recomendaciones perfectas</h2>
+            <p>Generadas con inteligencia artificial para tu perfil</p>
+        </div>
+
+        <div class="properties-grid" id="freeProperties">
+            <!-- Free properties will be inserted here -->
+        </div>
+
+        <div style="text-align: center; margin: 48px 0;">
+            <h3 style="font-size: 24px; font-weight: 700; margin-bottom: 8px;">¿Quieres ver más opciones?</h3>
+            <p style="color: #86868b; margin-bottom: 24px;">Desbloquea acceso completo al catálogo</p>
+        </div>
+
+        <div class="properties-grid" id="lockedProperties">
+            <!-- Locked properties will be inserted here -->
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-brand">
+                <h3>Mero<span>fise</span></h3>
+                <p>La forma más inteligente de encontrar tu hogar. Usamos IA avanzada para analizar el mercado y recomendarte las mejores opciones personalizadas.</p>
+                <div class="footer-contact">
+                    <a href="mailto:info@merofise.es">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                        </svg>
+                        info@merofise.es
+                    </a>
+                    <a href="https://wa.me/34664037407">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/>
+                        </svg>
+                        +34 664 037 407
+                    </a>
+                </div>
+            </div>
+            <div class="footer-links">
+                <h4>Producto</h4>
+                <ul>
+                    <li><a href="#buscador">Buscador</a></li>
+                    <li><a href="#" onclick="alert('Próximamente')">Para propietarios</a></li>
+                    <li><a href="#" onclick="alert('Próximamente')">Para inmobiliarias</a></li>
+                </ul>
+            </div>
+            <div class="footer-links">
+                <h4>Empresa</h4>
+                <ul>
+                    <li><a href="#" onclick="alert('Próximamente')">Sobre nosotros</a></li>
+                    <li><a href="#" onclick="alert('Próximamente')">Blog</a></li>
+                    <li><a href="#" onclick="alert('Próximamente')">Contacto</a></li>
+                </ul>
+            </div>
+            <div class="footer-links">
+                <h4>Legal</h4>
+                <ul>
+                    <li><a href="#" onclick="alert('Próximamente')">Privacidad</a></li>
+                    <li><a href="#" onclick="alert('Próximamente')">Términos</a></li>
+                    <li><a href="#" onclick="alert('Próximamente')">Cookies</a></li>
+                </ul>
             </div>
         </div>
-        <div class="flex gap-2">
-            <input type="number" id="offerAmount" class="input-field" placeholder="Tu oferta en €...">
-            <button onclick="sendOffer()" class="btn-primary px-4"><i class="fas fa-paper-plane"></i></button>
+        <div class="footer-bottom">
+            <p> 2026 Merofise. Todos los derechos reservados.</p>
         </div>
-    </div>
-
-    <div id="toastContainer"></div>
+    </footer>
 
     <script>
-        // ==========================================
-        // CONFIGURACIÓN
-        // ==========================================
-        const SUPABASE_URL = 'https://xfdwygfubozayshcrxwn.supabase.co';
-        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhmZHd5Z3VmYm9henlzaGNyeHduIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzYyNDDwNDcsImV4cCI6MTkzNDAwMDQ0N30.zNP02ov8BraNgmvr40mzTkwQ';
-        
-        let supabase = null;
-        let currentUser = null;
-        let currentProperty = null;
-        let currentFilter = 'all';
+        // Search state
+        let searchData = {
+            city: '',
+            budget: 1000,
+            rooms: 2
+        };
 
-        // ==========================================
-        // INICIALIZACIÓN
-        // ==========================================
-        document.addEventListener('DOMContentLoaded', async function() {
-            try {
-                if (typeof window.supabase !== 'undefined') {
-                    supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
-                        auth: { autoRefreshToken: true, persistSession: true, detectSessionInUrl: true }
-                    });
+        let currentStep = 1;
+
+        function scrollToSearch() {
+            document.getElementById('buscador').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function selectCity(city) {
+            document.getElementById('cityInput').value = city;
+            searchData.city = city;
+        }
+
+        function updateBudget(value) {
+            searchData.budget = parseInt(value);
+            document.getElementById('budgetDisplay').textContent = value + '€';
+        }
+
+        function selectRooms(rooms) {
+            searchData.rooms = rooms;
+            document.querySelectorAll('.room-btn').forEach(btn => btn.classList.remove('selected'));
+            document.getElementById('room' + rooms).classList.add('selected');
+        }
+
+        function nextStep() {
+            if (currentStep === 1) {
+                const city = document.getElementById('cityInput').value;
+                if (!city) {
+                    alert('Por favor, introduce una ciudad');
+                    return;
                 }
-                await checkSession();
-                initProperties();
-                initAuctions();
-                initHeatMap();
-                initBotsArmy();
-                initLeaderboard();
-                startCounters();
-            } catch (error) {
-                console.error('Error init:', error);
-                initProperties();
-                initAuctions();
-                initHeatMap();
-                initBotsArmy();
-                initLeaderboard();
+                searchData.city = city;
             }
-        });
 
-        // ==========================================
-        // PROPIEDADES ULTRA - EL CORAZÓN
-        // ==========================================
-        const ultraProperties = [
-            {
-                id: 1,
-                title: 'Ático de Lujo Gran Vía',
-                price: 850000,
-                originalPrice: 920000,
-                transaction_type: 'venta',
-                category: 'lujo',
-                location: 'Gran Vía, Madrid',
-                rooms: 3,
-                bathrooms: 2,
-                surface: 180,
-                photos: ['https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=800'],
-                exclusive: true,
-                hot: true,
-                flash: true,
-                viewers: 24,
-                matchScore: 94,
-                description: 'Espectacular ático con terraza de 40m2, vistas panorámicas, acabados de lujo.',
-                timeLeft: '04:32:18',
-                badges: ['hot', 'exclusive']
-            },
-            {
-                id: 2,
-                title: 'Piso Reformado Chamberí',
-                price: 320000,
-                originalPrice: 350000,
-                transaction_type: 'venta',
-                category: 'media',
-                location: 'Chamberí, Madrid',
-                rooms: 3,
-                bathrooms: 1,
-                surface: 85,
-                photos: ['https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=800'],
-                exclusive: true,
-                hot: true,
-                viewers: 18,
-                matchScore: 87,
-                description: 'Piso recién reformado, parquet, ventanas climalit, cocina abierta.',
-                timeLeft: null,
-                badges: ['hot']
-            },
-            {
-                id: 3,
-                title: 'Estudio Inversión Lavapiés',
-                price: 95000,
-                originalPrice: 110000,
-                transaction_type: 'venta',
-                category: 'lowcost',
-                location: 'Lavapiés, Madrid',
-                rooms: 1,
-                bathrooms: 1,
-                surface: 35,
-                photos: ['https://images.unsplash.com/photo-1536376072261-38c75010e6c9?w=800'],
-                exclusive: false,
-                hot: true,
-                viewers: 31,
-                matchScore: 92,
-                description: 'Estudio ideal inversores, rentabilidad 8% anual, zona en gentrificación.',
-                timeLeft: '02:15:42',
-                badges: ['hot', 'auction']
-            },
-            {
-                id: 4,
-                title: 'Villa Exclusiva Marbella',
-                price: 2400000,
-                originalPrice: 2800000,
-                transaction_type: 'venta',
-                category: 'lujo',
-                location: 'Puerto Banús, Marbella',
-                rooms: 5,
-                bathrooms: 4,
-                surface: 450,
-                photos: ['https://images.unsplash.com/photo-1613490493576-7fde63acd811?w=800'],
-                exclusive: true,
-                hot: false,
-                viewers: 12,
-                matchScore: 96,
-                description: 'Villa diseño con piscina infinita, jardín privado, vistas al mar.',
-                timeLeft: null,
-                badges: ['exclusive']
-            },
-            {
-                id: 5,
-                title: 'Piso Alquiler Centro',
-                price: 1200,
-                transaction_type: 'alquiler',
-                category: 'media',
-                location: 'Sol, Madrid',
-                rooms: 3,
-                bathrooms: 1,
-                surface: 70,
-                photos: ['https://images.unsplash.com/photo-1502005229762-cf1b2da7c5d6?w=800'],
-                exclusive: true,
-                hot: true,
-                viewers: 45,
-                matchScore: 89,
-                description: 'Piso luminoso en pleno centro, exterior, ascensor, calefacción central.',
-                timeLeft: '06:48:33',
-                badges: ['hot', 'exclusive', 'auction']
-            },
-            {
-                id: 6,
-                title: 'Dúplex Económico Vallecas',
-                price: 650,
-                transaction_type: 'alquiler',
-                category: 'lowcost',
-                location: 'Vallecas, Madrid',
-                rooms: 2,
-                bathrooms: 1,
-                surface: 55,
-                photos: ['https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=800'],
-                exclusive: false,
-                hot: false,
-                viewers: 8,
-                matchScore: 76,
-                description: 'Dúplex económico, ideal parejas, bien comunicado con metro.',
-                timeLeft: null,
-                badges: ['new']
-            }
-        ];
-
-        function initProperties() {
-            renderProperties(ultraProperties);
+            document.getElementById('step' + currentStep).classList.remove('active');
+            document.getElementById('dot' + currentStep).classList.remove('active');
+            document.getElementById('dot' + currentStep).classList.add('completed');
+            
+            currentStep++;
+            
+            document.getElementById('step' + currentStep).classList.add('active');
+            document.getElementById('dot' + currentStep).classList.add('active');
         }
 
-        function renderProperties(properties) {
-            const grid = document.getElementById('propertiesGrid');
+        function startSearch() {
+            document.getElementById('buscador').style.display = 'none';
+            document.getElementById('loading').classList.add('active');
             
-            grid.innerHTML = properties.map(p => `
-                <div class="property-ultra" data-id="${p.id}">
-                    <div class="property-image-hero">
-                        <img src="${p.photos[0]}" alt="${p.title}" loading="lazy">
-                        
-                        ${p.badges.includes('hot') ? `
-                        <div class="flash-badge hot-badge">
-                            <i class="fas fa-fire"></i> HOT
-                        </div>
-                        ` : ''}
-                        
-                        ${p.badges.includes('exclusive') ? `
-                        <div class="flash-badge exclusive-badge" style="top: ${p.badges.includes('hot') ? '4rem' : '1rem'};">
-                            <i class="fas fa-crown"></i> EXCLUSIVA MAX
-                        </div>
-                        ` : ''}
-                        
-                        ${p.badges.includes('new') ? `
-                        <div class="flash-badge new-badge">
-                            <i class="fas fa-star"></i> NUEVO
-                        </div>
-                        ` : ''}
-                        
-                        <div class="price-hero">
-                            ${p.originalPrice ? `<span class="original">${p.originalPrice.toLocaleString()}€</span>` : ''}
-                            ${p.price.toLocaleString()}€${p.transaction_type === 'alquiler' ? '/mes' : ''}
-                            ${p.originalPrice ? `<span class="discount">-${Math.round((1 - p.price/p.originalPrice)*100)}%</span>` : ''}
-                        </div>
-                        
-                        <div class="viewers-live">
-                            <span class="viewer-dot"></span>
-                            ${p.viewers} personas viendo
-                        </div>
-                        
-                        ${p.timeLeft ? `
-                        <div class="countdown-hero">
-                            <span class="countdown-label">⏰ Termina en</span>
-                            ${p.timeLeft}
-                        </div>
-                        ` : ''}
-                        
-                        <div class="match-score">
-                            <div class="match-ring">
-                                <span class="match-percent">${p.matchScore}%</span>
-                            </div>
-                            <div class="text-white font-bold text-sm">Match IA</div>
-                            <div class="text-xs text-slate-400">Compatible contigo</div>
-                        </div>
-                    </div>
-                    
-                    <div class="property-info">
-                        <h3 class="property-title">${p.title}</h3>
-                        <div class="property-location">
-                            <i class="fas fa-map-marker-alt text-primary"></i>
-                            ${p.location}
-                        </div>
-                        
-                        <div class="property-features">
-                            <div class="feature-item">
-                                <i class="fas fa-bed"></i> ${p.rooms} hab
-                            </div>
-                            <div class="feature-item">
-                                <i class="fas fa-bath"></i> ${p.bathrooms} baños
-                            </div>
-                            <div class="feature-item">
-                                <i class="fas fa-ruler-combined"></i> ${p.surface}m²
-                            </div>
-                            <div class="feature-item">
-                                <i class="fas fa-home"></i> ${p.transaction_type === 'venta' ? 'Venta' : 'Alquiler'}
-                            </div>
-                        </div>
-                        
-                        <p class="text-slate-400 text-sm mb-4 line-clamp-2">${p.description}</p>
-                        
-                        <div class="property-actions">
-                            <button onclick="openNegotiation(${p.id}, '${p.title}', ${p.price})" class="btn-action btn-offer">
-                                <i class="fas fa-hand-holding-usd"></i> Ofertar
-                            </button>
-                            <button onclick="requestVisit(${p.id})" class="btn-action btn-visit">
-                                <i class="fas fa-calendar"></i> Visitar
-                            </button>
-                            <a href="https://wa.me/34664037407?text=Hola Max, me interesa: ${encodeURIComponent(p.title)}" target="_blank" class="btn-wa">
-                                <i class="fab fa-whatsapp"></i>
-                            </a>
-                        </div>
-                        
-                        <div class="garantia-bar">
-                            <i class="fas fa-shield-alt"></i>
-                            <span><strong>Garantía Max:</strong> ${p.transaction_type === 'alquiler' ? 'Inquilino verificado con nómina y contrato fijo' : 'Compra segura con protección jurídica'}</span>
-                        </div>
-                    </div>
-                </div>
-            `).join('');
-        }
-
-        function filterProperties(filter) {
-            currentFilter = filter;
-            
-            // Actualizar botones
-            document.querySelectorAll('[id^="filter-"]').forEach(btn => {
-                btn.classList.remove('btn-primary');
-                btn.classList.add('btn-secondary');
-            });
-            document.getElementById(`filter-${filter}`).classList.remove('btn-secondary');
-            document.getElementById(`filter-${filter}`).classList.add('btn-primary');
-            
-            let filtered = ultraProperties;
-            
-            if (filter === 'hot') filtered = ultraProperties.filter(p => p.hot);
-            else if (filter === 'auction') filtered = ultraProperties.filter(p => p.timeLeft);
-            else if (filter === 'exclusive') filtered = ultraProperties.filter(p => p.exclusive);
-            else if (filter === 'venta') filtered = ultraProperties.filter(p => p.transaction_type === 'venta');
-            else if (filter === 'alquiler') filtered = ultraProperties.filter(p => p.transaction_type === 'alquiler');
-            
-            renderProperties(filtered);
-            
-            // Scroll a propiedades
-            document.getElementById('propertiesSection').scrollIntoView({ behavior: 'smooth' });
-        }
-
-        function scrollToProperties() {
-            document.getElementById('propertiesSection').scrollIntoView({ behavior: 'smooth' });
-        }
-
-        function loadMoreProperties() {
-            showToast('Cargando más oportunidades...', 'info');
+            // Simulate AI processing
             setTimeout(() => {
-                showToast('¡Nuevas propiedades cargadas!', 'success');
-            }, 1500);
+                document.getElementById('loading').classList.remove('active');
+                showResults();
+            }, 3000);
         }
 
-        // ==========================================
-        // SUBASTAS
-        // ==========================================
-        function initAuctions() {
-            const auctionGrid = document.getElementById('auctionGrid');
-            const auctions = ultraProperties.filter(p => p.timeLeft);
+        function showResults() {
+            document.getElementById('results').classList.add('active');
             
-            auctionGrid.innerHTML = auctions.map(p => `
-                <div class="glass-panel p-6 rounded-2xl">
-                    <div class="flex gap-4">
-                        <img src="${p.photos[0]}" class="w-32 h-32 object-cover rounded-xl" alt="${p.title}">
-                        <div class="flex-1">
-                            <h4 class="font-bold text-white mb-1">${p.title}</h4>
-                            <p class="text-slate-400 text-sm mb-2">${p.location}</p>
-                            <div class="text-2xl font-bold text-yellow-400 mb-2">
-                                ${p.price.toLocaleString()}€
-                                ${p.originalPrice ? `<span class="text-sm text-slate-500 line-through">${p.originalPrice.toLocaleString()}€</span>` : ''}
-                            </div>
-                            <div class="flex items-center gap-4 text-sm">
-                                <span class="text-red-400 font-bold"><i class="fas fa-clock mr-1"></i> ${p.timeLeft}</span>
-                                <span class="text-slate-400"><i class="fas fa-eye mr-1"></i> ${p.viewers} viendo</span>
-                            </div>
-                        </div>
-                    </div>
-                    <button onclick="placeBid(${p.id})" class="btn-hunt w-full mt-4 justify-center">
-                        <i class="fas fa-gavel mr-2"></i> Pujar Ahora
-                    </button>
-                </div>
-            `).join('');
-        }
-
-        function placeBid(propertyId) {
-            if (!currentUser) {
-                showToast('Inicia sesión para pujar', 'error');
-                openAuthModal();
-                return;
-            }
-            showToast('Preparando sala de subastas...', 'info');
-        }
-
-        // ==========================================
-        // MAPA TÉRMICO
-        // ==========================================
-        function initHeatMap() {
-            const zones = [
-                { name: 'Madrid Centro', temp: 'hot', properties: 47, avgPrice: '3.200€/m²', trend: '+12%' },
-                { name: 'Barcelona Eixample', temp: 'hot', properties: 38, avgPrice: '3.800€/m²', trend: '+8%' },
-                { name: 'Marbella Puerto', temp: 'warm', properties: 23, avgPrice: '5.500€/m²', trend: '+15%' },
-                { name: 'Valencia Ciudad', temp: 'warm', properties: 31, avgPrice: '1.900€/m²', trend: '+18%' },
-                { name: 'Sevilla Centro', temp: 'cool', properties: 19, avgPrice: '1.600€/m²', trend: '+5%' },
-                { name: 'Bilbao Abando', temp: 'cool', properties: 15, avgPrice: '2.800€/m²', trend: '+7%' }
-            ];
+            // Generate mock properties based on search
+            const freeProps = generateProperties(3, false);
+            const lockedProps = generateProperties(3, true);
             
-            document.getElementById('heatZones').innerHTML = zones.map(z => `
-                <div class="heat-zone heat-${z.temp}">
-                    <div class="text-2xl mb-2">${z.temp === 'hot' ? '🔥' : z.temp === 'warm' ? '⚡' : '❄️'}</div>
-                    <h4 class="font-bold text-white mb-1">${z.name}</h4>
-                    <div class="text-2xl font-bold ${z.temp === 'hot' ? 'text-red-400' : z.temp === 'warm' ? 'text-yellow-400' : 'text-blue-400'} mb-1">
-                        ${z.properties} props
-                    </div>
-                    <div class="text-sm text-slate-400">Media: ${z.avgPrice}</div>
-                    <div class="text-sm ${z.trend.startsWith('+') ? 'text-green-400' : 'text-red-400'}">
-                        <i class="fas fa-arrow-${z.trend.startsWith('+') ? 'up' : 'down'}"></i> ${z.trend} este mes
-                    </div>
-                </div>
-            `).join('');
-        }
-
-        // ==========================================
-        // BOTS ARMY
-        // ==========================================
-        function initBotsArmy() {
-            const botsContainer = document.getElementById('botsArmy');
-            const botTypes = [
-                { type: 'hunter', name: 'Max', icon: '🐕‍🦺', color: 'hunter' },
-                { type: 'convencer', name: 'Lucía', icon: '💬', color: 'convencer' },
-                { type: 'buyer', name: 'Carlos', icon: '💰', color: 'buyer' },
-                { type: 'renter', name: 'Sofía', icon: '🔍', color: 'renter' },
-                { type: 'contract', name: 'Juez', icon: '⚖️', color: 'contract' }
-            ];
-
-            let html = '';
-            for (let i = 1; i <= 110; i++) {
-                const botType = botTypes[Math.floor((i-1) / 22)];
-                html += `
-                    <div class="bot-card" id="bot-${i}">
-                        <div class="bot-id">#${i}</div>
-                        <div class="bot-avatar ${botType.color}">${botType.icon}</div>
-                        <div class="bot-name">${botType.name} ${i}</div>
-                        <div class="bot-status status-active">Activo</div>
-                    </div>
-                `;
-            }
-            botsContainer.innerHTML = html;
-        }
-
-        // ==========================================
-        // LEADERBOARD
-        // ==========================================
-        function initLeaderboard() {
-            const leaderboard = document.getElementById('leaderboard');
-            const competitors = [
-                { name: 'MEROFISE (Max)', count: 12847, status: 'Cazando ahora', live: true },
-                { name: 'Keller Williams', count: 8234, status: 'Inactivo', live: false },
-                { name: 'RE/MAX', count: 7891, status: 'Inactivo', live: false },
-                { name: 'Coldwell Banker', count: 6543, status: 'Offline', live: false }
-            ];
-
-            leaderboard.innerHTML = competitors.map((comp, idx) => `
-                <div class="leader-item">
-                    <div class="leader-rank ${idx === 0 ? 'rank-1' : idx === 1 ? 'rank-2' : idx === 2 ? 'rank-3' : 'text-slate-500'}">#${idx + 1}</div>
-                    <div class="leader-info">
-                        <div class="leader-name">${comp.name}</div>
-                        <div class="leader-status">
-                            ${comp.live ? '<span class="live-indicator"></span>' : ''}
-                            ${comp.status}
-                        </div>
-                    </div>
-                    <div class="leader-count">${comp.count.toLocaleString()}</div>
-                </div>
-            `).join('');
-        }
-
-        // ==========================================
-        // AUTENTICACIÓN
-        // ==========================================
-        async function checkSession() {
-            if (!supabase) return;
-            try {
-                const { data: { session } } = await supabase.auth.getSession();
-                if (session) {
-                    currentUser = session.user;
-                    updateAuthUI();
-                }
-            } catch (error) {
-                console.error(error);
-            }
-        }
-
-        async function login() {
-            const email = document.getElementById('authEmail').value;
-            const password = document.getElementById('authPassword').value;
-            if (!email || !password) {
-                showAuthError('Completa todos los campos');
-                return;
-            }
-            try {
-                const { error } = await supabase.auth.signInWithPassword({ email, password });
-                if (error) throw error;
-            } catch (error) {
-                showAuthError(error.message);
-            }
-        }
-
-        async function register() {
-            const email = document.getElementById('authEmail').value;
-            const password = document.getElementById('authPassword').value;
-            if (!email || !password || password.length < 6) {
-                showAuthError('Email válido y contraseña de 6+ caracteres');
-                return;
-            }
-            try {
-                const { error } = await supabase.auth.signUp({ email, password });
-                if (error) throw error;
-                showAuthSuccess('¡Registro exitoso! Revisa tu email');
-            } catch (error) {
-                showAuthError(error.message);
-            }
-        }
-
-        async function logout() {
-            if (supabase) await supabase.auth.signOut();
-            currentUser = null;
-            updateAuthUI();
-            showToast('Sesión cerrada', 'success');
-        }
-
-        function updateAuthUI() {
-            const btnText = document.getElementById('authBtnText');
-            const mobileText = document.getElementById('mobileAuthText');
-            if (currentUser) {
-                btnText.textContent = currentUser.email.split('@')[0];
-                mobileText.textContent = 'Salir';
-                document.getElementById('authBtn').onclick = logout;
-            } else {
-                btnText.textContent = 'Entrar';
-                mobileText.textContent = 'Entrar';
-                document.getElementById('authBtn').onclick = toggleAuth;
-            }
-        }
-
-        function toggleAuth() {
-            if (currentUser) logout();
-            else openAuthModal();
-        }
-
-        // ==========================================
-        // NEGOCIACIÓN
-        // ==========================================
-        function openNegotiation(propertyId, title, price) {
-            if (!currentUser) {
-                showToast('Inicia sesión para negociar', 'error');
-                openAuthModal();
-                return;
-            }
-            currentProperty = { id: propertyId, title, price };
-            document.getElementById('negotiationPanel').classList.add('active');
-        }
-
-        function toggleNegotiation() {
-            document.getElementById('negotiationPanel').classList.toggle('active');
-        }
-
-        function sendOffer() {
-            const amount = document.getElementById('offerAmount').value;
-            if (!amount) return;
+            renderProperties('freeProperties', freeProps, false);
+            renderProperties('lockedProperties', lockedProps, true);
             
-            const chat = document.getElementById('chatMessages');
-            chat.innerHTML += `<div class="chat-message user"><strong>Tú:</strong> Ofrezco ${parseInt(amount).toLocaleString()}€</div>`;
-            
-            setTimeout(() => {
-                const offerPct = (amount / currentProperty.price) * 100;
-                let response = '';
-                
-                if (offerPct < 80) {
-                    response = `Tu oferta es un ${(100-offerPct).toFixed(0)}% bajo el precio. El propietario contraofrece: ${(currentProperty.price * 0.95).toLocaleString()}€. ¿Aceptas?`;
-                } else if (offerPct < 95) {
-                    response = `✅ <strong>¡Aceptado!</strong> El propietario acepta ${parseInt(amount).toLocaleString()}€. ¿Procedemos al pago de señal?`;
-                } else {
-                    response = `✅ <strong>¡OFERTA ACEPTADA!</strong><br>Para formalizar, paga la señal del 10% (${(amount * 0.1).toLocaleString()}€)`;
-                }
-                
-                chat.innerHTML += `<div class="chat-message ai"><strong>🤖 Max IA:</strong> ${response}</div>`;
-                chat.scrollTop = chat.scrollHeight;
-            }, 1500);
-            
-            document.getElementById('offerAmount').value = '';
-            chat.scrollTop = chat.scrollHeight;
+            document.getElementById('results').scrollIntoView({ behavior: 'smooth' });
         }
 
-        // ==========================================
-        // VISITAS
-        // ==========================================
-        function requestVisit(propertyId) {
-            if (!currentUser) {
-                showToast('Inicia sesión para solicitar visita', 'error');
-                openAuthModal();
-                return;
-            }
-            showToast('Solicitud de visita enviada. El propietario confirmará en 24h.', 'success');
-        }
-
-        // ==========================================
-        // PAGOS STRIPE
-        // ==========================================
-        function payStripe(productId) {
-            if (!currentUser) {
-                showToast('Inicia sesión para pagar', 'error');
-                openAuthModal();
-                return;
-            }
-            showToast('Conectando con Stripe...', 'info');
-            setTimeout(() => {
-                showToast('Redirigiendo a pago seguro...', 'success');
-                // En producción: window.location.href = url de Stripe Checkout
-            }, 1000);
-        }
-
-        // ==========================================
-        // PUBLICAR
-        // ==========================================
-        async function publishProperty(e) {
-            e.preventDefault();
-            if (!currentUser) {
-                showToast('Debes iniciar sesión para publicar', 'error');
-                openAuthModal();
-                return;
-            }
-            
-            const formData = new FormData(e.target);
-            const property = {
-                title: formData.get('title'),
-                description: formData.get('description'),
-                price: parseInt(formData.get('price')),
-                transaction_type: formData.get('transaction_type'),
-                category: formData.get('category'),
-                location: formData.get('location'),
-                rooms: parseInt(formData.get('rooms')) || 3,
-                owner_id: currentUser.id,
-                status: 'active',
-                created_at: new Date().toISOString()
+        function generateProperties(count, locked) {
+            const cities = ['Madrid', 'Barcelona', 'Valencia', 'Sevilla'];
+            const neighborhoods = {
+                'Madrid': ['Salamanca', 'Chamberí', 'Retiro', 'Centro'],
+                'Barcelona': ['Eixample', 'Gràcia', 'Sant Martí', 'Sarrià'],
+                'Valencia': ['Ciutat Vella', 'Eixample', 'Ruzafa', 'Benimaclet'],
+                'Sevilla': ['Triana', 'Nervión', 'Macarena', 'Alameda']
             };
             
-            try {
-                if (supabase) {
-                    const { error } = await supabase.from('properties').insert([property]);
-                    if (error) throw error;
-                }
-                showToast('¡Propiedad publicada! Max la está distribuyendo a 110 bots...', 'success');
-                closePublishModal();
-                e.target.reset();
-            } catch (error) {
-                showToast(error.message, 'error');
-            }
-        }
-
-        // ==========================================
-        // UI HELPERS
-        // ==========================================
-        function showSection(sectionId) {
-            document.querySelectorAll('main > section').forEach(s => {
-                s.classList.add('hidden-section');
-                s.classList.remove('visible-section');
-            });
-            const target = document.getElementById(sectionId);
-            if (target) {
-                target.classList.remove('hidden-section');
-                target.classList.add('visible-section');
-                target.classList.add('fade-in');
-            }
-            document.getElementById('mobileMenu')?.classList.add('hidden');
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
-
-        function toggleMobileMenu() {
-            document.getElementById('mobileMenu').classList.toggle('hidden');
-        }
-
-        function openAuthModal() { document.getElementById('authModal').classList.add('active'); }
-        function closeAuthModal() { document.getElementById('authModal').classList.remove('active'); }
-        function openPublishModal() { 
-            if (!currentUser) { openAuthModal(); return; }
-            document.getElementById('publishModal').classList.add('active'); 
-        }
-        function closePublishModal() { document.getElementById('publishModal').classList.remove('active'); }
-        function openSolvencyModal() { document.getElementById('solvencyModal').classList.add('active'); }
-        function closeSolvencyModal() { document.getElementById('solvencyModal').classList.remove('active'); }
-        function openContractModal() { showToast('Contrato en desarrollo', 'info'); }
-
-        function showAuthError(msg) {
-            const el = document.getElementById('authError');
-            el.textContent = msg;
-            el.classList.remove('hidden');
-        }
-
-        function showAuthSuccess(msg) {
-            const el = document.getElementById('authSuccess');
-            el.textContent = msg;
-            el.classList.remove('hidden');
-        }
-
-        function showToast(message, type = 'success') {
-            const container = document.getElementById('toastContainer');
-            const toast = document.createElement('div');
-            toast.className = `toast toast-${type}`;
-            toast.innerHTML = `<i class="fas ${type === 'success' ? 'fa-check' : type === 'error' ? 'fa-exclamation' : 'fa-info'} mr-2"></i> ${message}`;
-            container.appendChild(toast);
-            setTimeout(() => toast.classList.add('show'), 100);
-            setTimeout(() => {
-                toast.classList.remove('show');
-                setTimeout(() => toast.remove(), 300);
-            }, 4000);
-        }
-
-        function startCounters() {
-            setInterval(() => {
-                // Actualizar viewers aleatoriamente
-                document.querySelectorAll('.viewers-live').forEach(el => {
-                    const current = parseInt(el.textContent);
-                    const change = Math.floor(Math.random() * 5) - 2;
-                    el.innerHTML = `<span class="viewer-dot"></span> ${Math.max(1, current + change)} personas viendo`;
+            const city = searchData.city || 'Madrid';
+            const cityHoods = neighborhoods[city] || ['Centro', 'Norte', 'Sur'];
+            
+            const props = [];
+            for (let i = 0; i < count; i++) {
+                const price = Math.floor(searchData.budget * (0.8 + Math.random() * 0.4));
+                const rooms = searchData.rooms;
+                const surface = 50 + Math.floor(Math.random() * 60);
+                const score = locked ? 0.6 + Math.random() * 0.2 : 0.85 + Math.random() * 0.14;
+                
+                props.push({
+                    title: `${rooms} hab. en ${cityHoods[i % cityHoods.length]}`,
+                    price: price,
+                    address: `Calle ${String.fromCharCode(65 + i)} ${Math.floor(Math.random() * 100)}, ${cityHoods[i % cityHoods.length]}`,
+                    city: city,
+                    rooms: rooms,
+                    bathrooms: Math.max(1, Math.floor(rooms * 0.7)),
+                    surface: surface,
+                    score: score,
+                    explanation: locked 
+                        ? 'Más opciones disponibles' 
+                        : `Perfecto para tu presupuesto de ${searchData.budget}€. Zona con excelente conectividad y todos los servicios cercanos.`
                 });
-            }, 5000);
-        }
-
-        function joinChallenge() {
-            if (!currentUser) {
-                showToast('Inicia sesión para unirte', 'error');
-                openAuthModal();
-                return;
             }
-            showToast('¡Te has unido al Max Challenge!', 'success');
+            return props;
         }
 
-        function setLang(lang) {
-            const flags = { es: '🇪🇸', en: '🇬🇧', fr: '🇫🇷', de: '🇩🇪', it: '🇮🇹', pt: '🇵🇹', zh: '🇨🇳', ar: '🇸🇦' };
-            document.getElementById('currentLang').textContent = `${flags[lang]} ${lang.toUpperCase()}`;
-            document.getElementById('langDropdown').classList.remove('active');
-            showToast(`Idioma cambiado a ${lang.toUpperCase()}`, 'success');
+        function renderProperties(containerId, properties, locked) {
+            const container = document.getElementById(containerId);
+            container.innerHTML = '';
+            
+            properties.forEach((prop, index) => {
+                const card = document.createElement('div');
+                card.className = `property-card ${locked ? 'locked' : ''}`;
+                
+                const matchPercent = Math.round(prop.score * 100);
+                
+                card.innerHTML = `
+                    ${!locked ? `
+                    <div class="property-badge">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"/>
+                        </svg>
+                        Match ${matchPercent}%
+                    </div>
+                    ` : ''}
+                    
+                    <div class="property-image">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
+                        </svg>
+                    </div>
+                    
+                    <div class="property-content">
+                        <div class="property-header">
+                            <h3>${prop.title}</h3>
+                            <div class="property-price">${prop.price}€<span>/mes</span></div>
+                        </div>
+                        
+                        <div class="property-location">
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+                            </svg>
+                            ${locked ? prop.city : prop.address}
+                        </div>
+                        
+                        ${!locked ? `
+                        <div class="ai-explanation">
+                            <p>"${prop.explanation}"</p>
+                        </div>
+                        ` : ''}
+                        
+                        <div class="property-features">
+                            <span>
+                                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
+                                </svg>
+                                ${prop.rooms} hab.
+                            </span>
+                            <span>
+                                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/>
+                                </svg>
+                                ${prop.bathrooms} baño${prop.bathrooms > 1 ? 's' : ''}
+                            </span>
+                            <span>
+                                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"/>
+                                </svg>
+                                ${prop.surface}m²
+                            </span>
+                        </div>
+                        
+                        ${!locked ? `
+                        <button class="property-cta" onclick="alert('Próximamente: Contactar propietario')">
+                            Ver detalles y contactar
+                        </button>
+                        ` : ''}
+                    </div>
+                    
+                    ${locked ? `
+                    <div class="lock-overlay">
+                        <div class="lock-icon">
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+                            </svg>
+                        </div>
+                        <p>Desbloquear contacto</p>
+                        <div class="price">4.99€</div>
+                    </div>
+                    ` : ''}
+                `;
+                
+                container.appendChild(card);
+            });
         }
 
-        function toggleLang() {
-            document.getElementById('langDropdown').classList.toggle('active');
-        }
+        // Initialize
+        document.getElementById('cityInput').addEventListener('input', function(e) {
+            searchData.city = e.target.value;
+        });
 
-        // Console
-        console.log('%c MEROFISE v2.0 - Max Challenge ACTIVADO', 'color: #3b82f6; font-size: 20px; font-weight: bold;');
-        console.log('%c 110 Bots cazando | Propiedades HOT | Subastas en vivo', 'color: #8b5cf6;');
+        document.getElementById('budgetSlider').addEventListener('input', function(e) {
+            searchData.budget = parseInt(e.target.value);
+        });
     </script>
 </body>
 </html>
