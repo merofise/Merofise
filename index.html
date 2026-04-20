@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Merofise - Encuentra tu hogar con IA</title>
+    <title>Merofise - Alquiler y Venta con IA</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         * {
@@ -172,6 +172,37 @@
 
         .cta-btn:hover svg {
             transform: translateX(4px);
+        }
+
+        /* Operation Toggle */
+        .operation-toggle {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            margin-bottom: 40px;
+            padding: 0 24px;
+        }
+
+        .op-btn {
+            padding: 14px 32px;
+            border-radius: 50px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 2px solid rgba(255,255,255,0.3);
+            background: transparent;
+            color: white;
+        }
+
+        .op-btn.active {
+            background: white;
+            color: #2563eb;
+            border-color: white;
+        }
+
+        .op-btn:hover:not(.active) {
+            background: rgba(255,255,255,0.1);
         }
 
         /* Search Section */
@@ -494,6 +525,25 @@
             color: #86868b;
         }
 
+        .operation-tag {
+            display: inline-block;
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 16px;
+        }
+
+        .operation-tag.rent {
+            background: #eff6ff;
+            color: #2563eb;
+        }
+
+        .operation-tag.sale {
+            background: #f0fdf4;
+            color: #16a34a;
+        }
+
         .properties-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
@@ -531,6 +581,10 @@
             gap: 6px;
         }
 
+        .property-badge.sale-badge {
+            background: #16a34a;
+        }
+
         .property-badge svg {
             width: 12px;
             height: 12px;
@@ -543,6 +597,10 @@
             display: flex;
             align-items: center;
             justify-content: center;
+        }
+
+        .property-image.sale-image {
+            background: linear-gradient(135deg, #16a34a 0%, #059669 100%);
         }
 
         .property-image svg {
@@ -575,10 +633,16 @@
             font-weight: 800;
             color: #2563eb;
             letter-spacing: -0.02em;
+            text-align: right;
+        }
+
+        .property-price.sale-price {
+            color: #16a34a;
         }
 
         .property-price span {
-            font-size: 14px;
+            display: block;
+            font-size: 13px;
             color: #86868b;
             font-weight: 500;
         }
@@ -605,11 +669,20 @@
             margin-bottom: 16px;
         }
 
+        .ai-explanation.sale-explanation {
+            background: #f0fdf4;
+            border-left-color: #16a34a;
+        }
+
         .ai-explanation p {
             font-size: 14px;
             color: #1e40af;
             font-style: italic;
             line-height: 1.5;
+        }
+
+        .ai-explanation.sale-explanation p {
+            color: #166534;
         }
 
         .property-features {
@@ -646,6 +719,10 @@
 
         .property-cta:hover {
             background: #2563eb;
+        }
+
+        .property-cta.sale-cta:hover {
+            background: #16a34a;
         }
 
         /* Locked cards */
@@ -699,6 +776,52 @@
             font-weight: 800;
             color: #2563eb;
             margin-top: 4px;
+        }
+
+        /* Publish Section */
+        .publish-section {
+            background: white;
+            padding: 80px 24px;
+            text-align: center;
+        }
+
+        .publish-content {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .publish-section h2 {
+            font-size: 36px;
+            font-weight: 800;
+            margin-bottom: 16px;
+            letter-spacing: -0.02em;
+        }
+
+        .publish-section p {
+            color: #86868b;
+            font-size: 18px;
+            margin-bottom: 32px;
+        }
+
+        .publish-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            background: #16a34a;
+            color: white;
+            border: none;
+            padding: 18px 40px;
+            border-radius: 50px;
+            font-size: 17px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .publish-btn:hover {
+            background: #15803d;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(22, 163, 74, 0.3);
         }
 
         /* Footer */
@@ -802,6 +925,16 @@
                 font-size: 36px;
             }
 
+            .operation-toggle {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .op-btn {
+                width: 100%;
+                max-width: 280px;
+            }
+
             .search-card {
                 padding: 24px;
             }
@@ -842,7 +975,7 @@
     <nav class="navbar">
         <div class="nav-container">
             <a href="#" class="logo">Mero<span>fise</span></a>
-            <button class="nav-btn" onclick="alert('Próximamente: Publicar propiedad')">Publicar propiedad</button>
+            <button class="nav-btn" onclick="scrollToPublish()">Publicar propiedad</button>
         </div>
     </nav>
 
@@ -860,6 +993,16 @@
                 <span>ideal en minutos</span>
             </h1>
             <p>Merofise analiza miles de propiedades y te recomienda las 3 mejores opciones personalizadas para ti usando IA avanzada.</p>
+            
+            <div class="operation-toggle">
+                <button class="op-btn active" id="btnRent" onclick="setOperation('rent')">
+                    Alquiler
+                </button>
+                <button class="op-btn" id="btnSale" onclick="setOperation('sale')">
+                    Comprar
+                </button>
+            </div>
+
             <button class="cta-btn" onclick="scrollToSearch()">
                 Empezar búsqueda
                 <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -880,7 +1023,7 @@
 
             <!-- Step 1: City -->
             <div class="search-step active" id="step1">
-                <h2>¿Dónde quieres vivir?</h2>
+                <h2>¿Dónde quieres <span id="opText1">vivir</span>?</h2>
                 <div class="input-group">
                     <label>Ciudad o zona</label>
                     <input type="text" id="cityInput" placeholder="Ej: Madrid, Barcelona, Valencia..." onkeypress="if(event.key==='Enter') nextStep()">
@@ -902,12 +1045,12 @@
 
             <!-- Step 2: Budget -->
             <div class="search-step" id="step2">
-                <h2>¿Cuál es tu presupuesto?</h2>
+                <h2>¿Cuál es tu <span id="opText2">presupuesto mensual</span>?</h2>
                 <div class="range-display" id="budgetDisplay">1000€</div>
                 <input type="range" class="range-slider" id="budgetSlider" min="300" max="5000" step="50" value="1000" oninput="updateBudget(this.value)">
                 <div class="range-labels">
-                    <span>300€</span>
-                    <span>5000€+</span>
+                    <span id="minLabel">300€</span>
+                    <span id="maxLabel">5000€+</span>
                 </div>
                 <button class="search-btn" onclick="nextStep()">
                     Continuar
@@ -974,6 +1117,7 @@
     <!-- Results -->
     <section class="results-section" id="results">
         <div class="results-header">
+            <div class="operation-tag" id="resultsTag">ALQUILER</div>
             <h2>Tus 3 recomendaciones perfectas</h2>
             <p>Generadas con inteligencia artificial para tu perfil</p>
         </div>
@@ -989,6 +1133,20 @@
 
         <div class="properties-grid" id="lockedProperties">
             <!-- Locked properties will be inserted here -->
+        </div>
+    </section>
+
+    <!-- Publish Section -->
+    <section class="publish-section" id="publicar">
+        <div class="publish-content">
+            <h2>¿Tienes una propiedad?</h2>
+            <p>Publica tu piso o casa en Merofise y llega a miles de personas que buscan hogar. Nuestra IA te ayuda a encontrar el comprador o inquilino ideal.</p>
+            <button class="publish-btn" onclick="alert('Próximamente: Formulario de publicación')">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" width="20" height="20">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+                </svg>
+                Publicar ahora
+            </button>
         </div>
     </section>
 
@@ -1014,19 +1172,19 @@
                 </div>
             </div>
             <div class="footer-links">
-                <h4>Producto</h4>
+                <h4>Buscar</h4>
                 <ul>
-                    <li><a href="#buscador">Buscador</a></li>
-                    <li><a href="#" onclick="alert('Próximamente')">Para propietarios</a></li>
-                    <li><a href="#" onclick="alert('Próximamente')">Para inmobiliarias</a></li>
+                    <li><a href="#buscador" onclick="setOperation('rent')">Alquiler</a></li>
+                    <li><a href="#buscador" onclick="setOperation('sale')">Comprar</a></li>
+                    <li><a href="#" onclick="alert('Próximamente')">Nuevas construcciones</a></li>
                 </ul>
             </div>
             <div class="footer-links">
-                <h4>Empresa</h4>
+                <h4>Publicar</h4>
                 <ul>
-                    <li><a href="#" onclick="alert('Próximamente')">Sobre nosotros</a></li>
-                    <li><a href="#" onclick="alert('Próximamente')">Blog</a></li>
-                    <li><a href="#" onclick="alert('Próximamente')">Contacto</a></li>
+                    <li><a href="#publicar">Publicar propiedad</a></li>
+                    <li><a href="#" onclick="alert('Próximamente')">Para inmobiliarias</a></li>
+                    <li><a href="#" onclick="alert('Próximamente')">Precios</a></li>
                 </ul>
             </div>
             <div class="footer-links">
@@ -1046,6 +1204,7 @@
     <script>
         // Search state
         let searchData = {
+            operation: 'rent', // 'rent' or 'sale'
             city: '',
             budget: 1000,
             rooms: 2
@@ -1053,8 +1212,42 @@
 
         let currentStep = 1;
 
+        function setOperation(op) {
+            searchData.operation = op;
+            
+            // Update buttons
+            document.getElementById('btnRent').classList.toggle('active', op === 'rent');
+            document.getElementById('btnSale').classList.toggle('active', op === 'sale');
+            
+            // Update text
+            const opText = op === 'rent' ? 'vivir' : 'comprar';
+            const budgetText = op === 'rent' ? 'presupuesto mensual' : 'presupuesto máximo';
+            const minBudget = op === 'rent' ? 300 : 50000;
+            const maxBudget = op === 'rent' ? 5000 : 1000000;
+            const currency = op === 'rent' ? '€/mes' : '€';
+            
+            document.getElementById('opText1').textContent = opText;
+            document.getElementById('opText2').textContent = budgetText;
+            
+            // Update slider
+            const slider = document.getElementById('budgetSlider');
+            slider.min = minBudget;
+            slider.max = maxBudget;
+            slider.step = op === 'rent' ? 50 : 1000;
+            slider.value = op === 'rent' ? 1000 : 200000;
+            
+            updateBudget(slider.value);
+            
+            document.getElementById('minLabel').textContent = minBudget.toLocaleString() + '€';
+            document.getElementById('maxLabel').textContent = maxBudget >= 1000000 ? '1M€+' : maxBudget.toLocaleString() + '€+';
+        }
+
         function scrollToSearch() {
             document.getElementById('buscador').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function scrollToPublish() {
+            document.getElementById('publicar').scrollIntoView({ behavior: 'smooth' });
         }
 
         function selectCity(city) {
@@ -1064,7 +1257,10 @@
 
         function updateBudget(value) {
             searchData.budget = parseInt(value);
-            document.getElementById('budgetDisplay').textContent = value + '€';
+            const formatted = searchData.operation === 'sale' && value >= 1000000 
+                ? (value / 1000000).toFixed(1) + 'M€' 
+                : parseInt(value).toLocaleString() + '€';
+            document.getElementById('budgetDisplay').textContent = formatted;
         }
 
         function selectRooms(rooms) {
@@ -1097,7 +1293,6 @@
             document.getElementById('buscador').style.display = 'none';
             document.getElementById('loading').classList.add('active');
             
-            // Simulate AI processing
             setTimeout(() => {
                 document.getElementById('loading').classList.remove('active');
                 showResults();
@@ -1107,7 +1302,11 @@
         function showResults() {
             document.getElementById('results').classList.add('active');
             
-            // Generate mock properties based on search
+            // Update tag
+            const tag = document.getElementById('resultsTag');
+            tag.textContent = searchData.operation === 'rent' ? 'ALQUILER' : 'VENTA';
+            tag.className = 'operation-tag ' + (searchData.operation === 'rent' ? 'rent' : 'sale');
+            
             const freeProps = generateProperties(3, false);
             const lockedProps = generateProperties(3, true);
             
@@ -1131,10 +1330,27 @@
             
             const props = [];
             for (let i = 0; i < count; i++) {
-                const price = Math.floor(searchData.budget * (0.8 + Math.random() * 0.4));
+                let price;
+                if (searchData.operation === 'rent') {
+                    price = Math.floor(searchData.budget * (0.8 + Math.random() * 0.4));
+                } else {
+                    price = Math.floor(searchData.budget * (0.7 + Math.random() * 0.6));
+                }
+                
                 const rooms = searchData.rooms;
                 const surface = 50 + Math.floor(Math.random() * 60);
                 const score = locked ? 0.6 + Math.random() * 0.2 : 0.85 + Math.random() * 0.14;
+                
+                let explanation;
+                if (searchData.operation === 'rent') {
+                    explanation = locked 
+                        ? 'Más opciones disponibles' 
+                        : `Perfecto para tu presupuesto de ${searchData.budget.toLocaleString()}€/mes. Zona con excelente conectividad y todos los servicios cercanos.`;
+                } else {
+                    explanation = locked
+                        ? 'Más opciones disponibles'
+                        : `Excelente inversión en ${cityHoods[i % cityHoods.length]}. Precio competitivo para la zona con gran potencial de revalorización.`;
+                }
                 
                 props.push({
                     title: `${rooms} hab. en ${cityHoods[i % cityHoods.length]}`,
@@ -1145,9 +1361,8 @@
                     bathrooms: Math.max(1, Math.floor(rooms * 0.7)),
                     surface: surface,
                     score: score,
-                    explanation: locked 
-                        ? 'Más opciones disponibles' 
-                        : `Perfecto para tu presupuesto de ${searchData.budget}€. Zona con excelente conectividad y todos los servicios cercanos.`
+                    explanation: explanation,
+                    operation: searchData.operation
                 });
             }
             return props;
@@ -1162,10 +1377,11 @@
                 card.className = `property-card ${locked ? 'locked' : ''}`;
                 
                 const matchPercent = Math.round(prop.score * 100);
+                const isSale = prop.operation === 'sale';
                 
                 card.innerHTML = `
                     ${!locked ? `
-                    <div class="property-badge">
+                    <div class="property-badge ${isSale ? 'sale-badge' : ''}">
                         <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"/>
                         </svg>
@@ -1173,7 +1389,7 @@
                     </div>
                     ` : ''}
                     
-                    <div class="property-image">
+                    <div class="property-image ${isSale ? 'sale-image' : ''}">
                         <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
                         </svg>
@@ -1182,7 +1398,12 @@
                     <div class="property-content">
                         <div class="property-header">
                             <h3>${prop.title}</h3>
-                            <div class="property-price">${prop.price}€<span>/mes</span></div>
+                            <div class="property-price ${isSale ? 'sale-price' : ''}">
+                                ${isSale && prop.price >= 1000000 
+                                    ? (prop.price / 1000000).toFixed(2) + 'M€' 
+                                    : prop.price.toLocaleString() + '€'}
+                                <span>${isSale ? 'Precio total' : '/mes'}</span>
+                            </div>
                         </div>
                         
                         <div class="property-location">
@@ -1194,7 +1415,7 @@
                         </div>
                         
                         ${!locked ? `
-                        <div class="ai-explanation">
+                        <div class="ai-explanation ${isSale ? 'sale-explanation' : ''}">
                             <p>"${prop.explanation}"</p>
                         </div>
                         ` : ''}
@@ -1221,8 +1442,8 @@
                         </div>
                         
                         ${!locked ? `
-                        <button class="property-cta" onclick="alert('Próximamente: Contactar propietario')">
-                            Ver detalles y contactar
+                        <button class="property-cta ${isSale ? 'sale-cta' : ''}" onclick="alert('Próximamente: Contactar propietario')">
+                            ${isSale ? 'Ver detalles y visitar' : 'Ver detalles y contactar'}
                         </button>
                         ` : ''}
                     </div>
