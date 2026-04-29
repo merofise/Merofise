@@ -3,1476 +3,420 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Merofise - Alquiler y Venta con IA</title>
+    <title>Merofise - Exclusivas que nadie más tiene | IA Inmobiliaria</title>
+    <meta name="description" content="Propiedades exclusivas de herencias, divorcios y embargos encontradas por IA antes que nadie. Calle Lagasca 36, Madrid.">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            background: #f5f5f7;
-            color: #1d1d1f;
-            line-height: 1.47059;
-            -webkit-font-smoothing: antialiased;
-        }
-
-        /* Navbar */
-        .navbar {
-            position: fixed;
-            top: 0;
-            width: 100%;
-            background: rgba(255, 255, 255, 0.8);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
-            z-index: 1000;
-            padding: 0 24px;
-        }
-
-        .nav-container {
-            max-width: 1200px;
-            margin: 0 auto;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            height: 52px;
-        }
-
-        .logo {
-            font-size: 21px;
-            font-weight: 700;
-            color: #1d1d1f;
-            text-decoration: none;
-            letter-spacing: -0.5px;
-        }
-
-        .logo span {
-            color: #2563eb;
-        }
-
-        .nav-btn {
-            background: #1d1d1f;
-            color: white;
-            border: none;
-            padding: 8px 20px;
-            border-radius: 20px;
-            font-size: 14px;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-
-        .nav-btn:hover {
-            background: #2563eb;
-            transform: scale(1.05);
-        }
-
-        /* Hero */
-        .hero {
-            min-height: 100vh;
-            background: linear-gradient(135deg, #2563eb 0%, #7c3aed 50%, #2563eb 100%);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            position: relative;
-            overflow: hidden;
-            padding: 100px 24px 60px;
-        }
-
-        .hero::before {
-            content: '';
-            position: absolute;
-            width: 600px;
-            height: 600px;
-            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
-            top: -200px;
-            right: -200px;
-            border-radius: 50%;
-        }
-
-        .hero-content {
-            max-width: 800px;
-            text-align: center;
-            color: white;
-            position: relative;
-            z-index: 2;
-        }
-
-        .badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            background: rgba(255, 255, 255, 0.15);
-            backdrop-filter: blur(10px);
-            padding: 8px 20px;
-            border-radius: 50px;
-            font-size: 14px;
-            margin-bottom: 32px;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-        }
-
-        .badge svg {
-            width: 16px;
-            height: 16px;
-        }
-
-        .hero h1 {
-            font-size: clamp(40px, 8vw, 72px);
-            font-weight: 800;
-            line-height: 1.05;
-            letter-spacing: -0.03em;
-            margin-bottom: 24px;
-        }
-
-        .hero h1 span {
-            display: block;
-            color: rgba(255, 255, 255, 0.85);
-        }
-
-        .hero p {
-            font-size: 21px;
-            line-height: 1.4;
-            color: rgba(255, 255, 255, 0.8);
-            margin-bottom: 40px;
-            max-width: 600px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-
-        .cta-btn {
-            display: inline-flex;
-            align-items: center;
-            gap: 12px;
-            background: white;
-            color: #2563eb;
-            border: none;
-            padding: 18px 40px;
-            border-radius: 50px;
-            font-size: 17px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
-        }
-
-        .cta-btn:hover {
-            transform: translateY(-2px) scale(1.02);
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-        }
-
-        .cta-btn svg {
-            width: 20px;
-            height: 20px;
-            transition: transform 0.3s;
-        }
-
-        .cta-btn:hover svg {
-            transform: translateX(4px);
-        }
-
-        /* Operation Toggle */
-        .operation-toggle {
-            display: flex;
-            justify-content: center;
-            gap: 12px;
-            margin-bottom: 40px;
-            padding: 0 24px;
-        }
-
-        .op-btn {
-            padding: 14px 32px;
-            border-radius: 50px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s;
-            border: 2px solid rgba(255,255,255,0.3);
-            background: transparent;
-            color: white;
-        }
-
-        .op-btn.active {
-            background: white;
-            color: #2563eb;
-            border-color: white;
-        }
-
-        .op-btn:hover:not(.active) {
-            background: rgba(255,255,255,0.1);
-        }
-
-        /* Search Section */
-        .search-section {
-            padding: 80px 24px;
-            max-width: 800px;
-            margin: -60px auto 0;
-            position: relative;
-            z-index: 10;
-        }
-
-        .search-card {
-            background: white;
-            border-radius: 24px;
-            padding: 48px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
-        }
-
-        .search-step {
-            display: none;
-        }
-
-        .search-step.active {
-            display: block;
-            animation: fadeIn 0.5s ease;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .step-indicator {
-            display: flex;
-            justify-content: center;
-            gap: 12px;
-            margin-bottom: 40px;
-        }
-
-        .step-dot {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 14px;
-            font-weight: 600;
-            background: #f5f5f7;
-            color: #86868b;
-            transition: all 0.3s;
-        }
-
-        .step-dot.active {
-            background: #2563eb;
-            color: white;
-        }
-
-        .step-dot.completed {
-            background: #34c759;
-            color: white;
-        }
-
-        .search-card h2 {
-            font-size: 32px;
-            font-weight: 700;
-            text-align: center;
-            margin-bottom: 32px;
-            letter-spacing: -0.02em;
-        }
-
-        .input-group {
-            margin-bottom: 24px;
-        }
-
-        .input-group label {
-            display: block;
-            font-size: 14px;
-            font-weight: 500;
-            color: #86868b;
-            margin-bottom: 8px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .input-group input {
-            width: 100%;
-            padding: 16px 20px;
-            border: 2px solid #f5f5f7;
-            border-radius: 16px;
-            font-size: 17px;
-            font-family: inherit;
-            transition: all 0.3s;
-            outline: none;
-        }
-
-        .input-group input:focus {
-            border-color: #2563eb;
-            box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1);
-        }
-
-        .city-suggestions {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-            margin-top: 12px;
-        }
-
-        .city-chip {
-            padding: 8px 16px;
-            background: #f5f5f7;
-            border-radius: 20px;
-            font-size: 14px;
-            cursor: pointer;
-            transition: all 0.2s;
-            border: none;
-            font-family: inherit;
-        }
-
-        .city-chip:hover {
-            background: #2563eb;
-            color: white;
-            transform: scale(1.05);
-        }
-
-        .range-display {
-            text-align: center;
-            font-size: 48px;
-            font-weight: 800;
-            color: #2563eb;
-            margin: 24px 0;
-            letter-spacing: -0.03em;
-        }
-
-        .range-slider {
-            width: 100%;
-            height: 6px;
-            border-radius: 3px;
-            background: #f5f5f7;
-            outline: none;
-            -webkit-appearance: none;
-            margin: 20px 0;
-        }
-
-        .range-slider::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            width: 28px;
-            height: 28px;
-            border-radius: 50%;
-            background: #2563eb;
-            cursor: pointer;
-            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.4);
-            transition: transform 0.2s;
-        }
-
-        .range-slider::-webkit-slider-thumb:hover {
-            transform: scale(1.2);
-        }
-
-        .range-labels {
-            display: flex;
-            justify-content: space-between;
-            color: #86868b;
-            font-size: 14px;
-        }
-
-        .room-options {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 16px;
-            margin-top: 24px;
-        }
-
-        .room-btn {
-            padding: 24px;
-            border: 2px solid #f5f5f7;
-            border-radius: 16px;
-            background: white;
-            cursor: pointer;
-            transition: all 0.3s;
-            font-family: inherit;
-            text-align: center;
-        }
-
-        .room-btn:hover, .room-btn.selected {
-            border-color: #2563eb;
-            background: #eff6ff;
-            color: #2563eb;
-            transform: scale(1.05);
-        }
-
-        .room-btn svg {
-            width: 24px;
-            height: 24px;
-            margin: 0 auto 8px;
-        }
-
-        .room-btn span {
-            display: block;
-            font-size: 14px;
-            font-weight: 600;
-        }
-
-        .search-btn {
-            width: 100%;
-            padding: 18px;
-            background: #2563eb;
-            color: white;
-            border: none;
-            border-radius: 16px;
-            font-size: 17px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s;
-            margin-top: 32px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 12px;
-        }
-
-        .search-btn:hover {
-            background: #1d4ed8;
-            transform: translateY(-2px);
-            box-shadow: 0 10px 30px rgba(37, 99, 235, 0.3);
-        }
-
-        /* Loading */
-        .loading-section {
-            display: none;
-            text-align: center;
-            padding: 100px 24px;
-        }
-
-        .loading-section.active {
-            display: block;
-        }
-
-        .loading-animation {
-            width: 80px;
-            height: 80px;
-            margin: 0 auto 32px;
-            position: relative;
-        }
-
-        .loading-ring {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            border: 4px solid #f5f5f7;
-            border-top-color: #2563eb;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-        }
-
-        .loading-ring:nth-child(2) {
-            width: 60%;
-            height: 60%;
-            top: 20%;
-            left: 20%;
-            border-top-color: #7c3aed;
-            animation-direction: reverse;
-            animation-duration: 0.8s;
-        }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-
-        .loading-dots {
-            display: flex;
-            justify-content: center;
-            gap: 8px;
-            margin-top: 16px;
-        }
-
-        .loading-dot {
-            width: 8px;
-            height: 8px;
-            background: #2563eb;
-            border-radius: 50%;
-            animation: bounce 1.4s ease-in-out infinite;
-        }
-
-        .loading-dot:nth-child(2) { animation-delay: 0.2s; }
-        .loading-dot:nth-child(3) { animation-delay: 0.4s; }
-
-        @keyframes bounce {
-            0%, 80%, 100% { transform: scale(0); }
-            40% { transform: scale(1); }
-        }
-
-        /* Results */
-        .results-section {
-            display: none;
-            padding: 60px 24px;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        .results-section.active {
-            display: block;
-            animation: fadeIn 0.5s ease;
-        }
-
-        .results-header {
-            text-align: center;
-            margin-bottom: 48px;
-        }
-
-        .results-header h2 {
-            font-size: 40px;
-            font-weight: 800;
-            letter-spacing: -0.03em;
-            margin-bottom: 12px;
-        }
-
-        .results-header p {
-            font-size: 18px;
-            color: #86868b;
-        }
-
-        .operation-tag {
-            display: inline-block;
-            padding: 6px 16px;
-            border-radius: 20px;
-            font-size: 13px;
-            font-weight: 600;
-            margin-bottom: 16px;
-        }
-
-        .operation-tag.rent {
-            background: #eff6ff;
-            color: #2563eb;
-        }
-
-        .operation-tag.sale {
-            background: #f0fdf4;
-            color: #16a34a;
-        }
-
-        .properties-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-            gap: 24px;
-            margin-bottom: 48px;
-        }
-
-        .property-card {
-            background: white;
-            border-radius: 24px;
-            overflow: hidden;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-            transition: all 0.4s;
-            position: relative;
-        }
-
-        .property-card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
-        }
-
-        .property-badge {
-            position: absolute;
-            top: 16px;
-            left: 16px;
-            background: #2563eb;
-            color: white;
-            padding: 6px 14px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: 600;
-            z-index: 2;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .property-badge.sale-badge {
-            background: #16a34a;
-        }
-
-        .property-badge svg {
-            width: 12px;
-            height: 12px;
-        }
-
-        .property-image {
-            height: 240px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            position: relative;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .property-image.sale-image {
-            background: linear-gradient(135deg, #16a34a 0%, #059669 100%);
-        }
-
-        .property-image svg {
-            width: 48px;
-            height: 48px;
-            color: white;
-            opacity: 0.5;
-        }
-
-        .property-content {
-            padding: 24px;
-        }
-
-        .property-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: start;
-            margin-bottom: 12px;
-        }
-
-        .property-header h3 {
-            font-size: 20px;
-            font-weight: 700;
-            line-height: 1.3;
-            flex: 1;
-        }
-
-        .property-price {
-            font-size: 24px;
-            font-weight: 800;
-            color: #2563eb;
-            letter-spacing: -0.02em;
-            text-align: right;
-        }
-
-        .property-price.sale-price {
-            color: #16a34a;
-        }
-
-        .property-price span {
-            display: block;
-            font-size: 13px;
-            color: #86868b;
-            font-weight: 500;
-        }
-
-        .property-location {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            color: #86868b;
-            font-size: 14px;
-            margin-bottom: 16px;
-        }
-
-        .property-location svg {
-            width: 16px;
-            height: 16px;
-        }
-
-        .ai-explanation {
-            background: #eff6ff;
-            border-left: 4px solid #2563eb;
-            padding: 12px 16px;
-            border-radius: 0 12px 12px 0;
-            margin-bottom: 16px;
-        }
-
-        .ai-explanation.sale-explanation {
-            background: #f0fdf4;
-            border-left-color: #16a34a;
-        }
-
-        .ai-explanation p {
-            font-size: 14px;
-            color: #1e40af;
-            font-style: italic;
-            line-height: 1.5;
-        }
-
-        .ai-explanation.sale-explanation p {
-            color: #166534;
-        }
-
-        .property-features {
-            display: flex;
-            gap: 16px;
-            font-size: 14px;
-            color: #86868b;
-        }
-
-        .property-features span {
-            display: flex;
-            align-items: center;
-            gap: 4px;
-        }
-
-        .property-features svg {
-            width: 16px;
-            height: 16px;
-        }
-
-        .property-cta {
-            width: 100%;
-            padding: 14px;
-            background: #1d1d1f;
-            color: white;
-            border: none;
-            border-radius: 12px;
-            font-size: 15px;
-            font-weight: 600;
-            cursor: pointer;
-            margin-top: 16px;
-            transition: all 0.3s;
-        }
-
-        .property-cta:hover {
-            background: #2563eb;
-        }
-
-        .property-cta.sale-cta:hover {
-            background: #16a34a;
-        }
-
-        /* Locked cards */
-        .property-card.locked {
-            position: relative;
-        }
-
-        .property-card.locked .property-image,
-        .property-card.locked .property-content {
-            filter: blur(4px);
-            opacity: 0.6;
-        }
-
-        .lock-overlay {
-            position: absolute;
-            inset: 0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            z-index: 10;
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(2px);
-        }
-
-        .lock-icon {
-            width: 48px;
-            height: 48px;
-            background: #1d1d1f;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 12px;
-        }
-
-        .lock-icon svg {
-            width: 20px;
-            height: 20px;
-            color: white;
-        }
-
-        .lock-overlay p {
-            font-size: 16px;
-            font-weight: 600;
-            color: #1d1d1f;
-        }
-
-        .lock-overlay .price {
-            font-size: 24px;
-            font-weight: 800;
-            color: #2563eb;
-            margin-top: 4px;
-        }
-
-        /* Publish Section */
-        .publish-section {
-            background: white;
-            padding: 80px 24px;
-            text-align: center;
-        }
-
-        .publish-content {
-            max-width: 600px;
-            margin: 0 auto;
-        }
-
-        .publish-section h2 {
-            font-size: 36px;
-            font-weight: 800;
-            margin-bottom: 16px;
-            letter-spacing: -0.02em;
-        }
-
-        .publish-section p {
-            color: #86868b;
-            font-size: 18px;
-            margin-bottom: 32px;
-        }
-
-        .publish-btn {
-            display: inline-flex;
-            align-items: center;
-            gap: 12px;
-            background: #16a34a;
-            color: white;
-            border: none;
-            padding: 18px 40px;
-            border-radius: 50px;
-            font-size: 17px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-
-        .publish-btn:hover {
-            background: #15803d;
-            transform: translateY(-2px);
-            box-shadow: 0 10px 30px rgba(22, 163, 74, 0.3);
-        }
-
-        /* Footer */
-        .footer {
-            background: #1d1d1f;
-            color: white;
-            padding: 60px 24px 40px;
-        }
-
-        .footer-content {
-            max-width: 1200px;
-            margin: 0 auto;
-            display: grid;
-            grid-template-columns: 2fr 1fr 1fr 1fr;
-            gap: 40px;
-        }
-
-        .footer-brand h3 {
-            font-size: 24px;
-            font-weight: 700;
-            margin-bottom: 16px;
-        }
-
-        .footer-brand h3 span {
-            color: #2563eb;
-        }
-
-        .footer-brand p {
-            color: #86868b;
-            font-size: 14px;
-            line-height: 1.6;
-            margin-bottom: 24px;
-        }
-
-        .footer-contact {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-
-        .footer-contact a {
-            color: white;
-            text-decoration: none;
-            font-size: 14px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            transition: color 0.3s;
-        }
-
-        .footer-contact a:hover {
-            color: #2563eb;
-        }
-
-        .footer-contact svg {
-            width: 16px;
-            height: 16px;
-        }
-
-        .footer-links h4 {
-            font-size: 14px;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            margin-bottom: 20px;
-            color: #86868b;
-        }
-
-        .footer-links ul {
-            list-style: none;
-        }
-
-        .footer-links li {
-            margin-bottom: 12px;
-        }
-
-        .footer-links a {
-            color: #86868b;
-            text-decoration: none;
-            font-size: 14px;
-            transition: color 0.3s;
-        }
-
-        .footer-links a:hover {
-            color: white;
-        }
-
-        .footer-bottom {
-            max-width: 1200px;
-            margin: 40px auto 0;
-            padding-top: 24px;
-            border-top: 1px solid #333;
-            text-align: center;
-            color: #86868b;
-            font-size: 13px;
-        }
+        :root {
+            --primary: #2563eb; --primary-dark: #1d4ed8; --white: #ffffff;
+            --gray-50: #f8fafc; --gray-100: #f1f5f9; --gray-200: #e2e8f0;
+            --gray-300: #cbd5e1; --gray-400: #94a3b8; --gray-500: #64748b;
+            --gray-600: #475569; --green: #22c55e; --red: #ef4444; --amber: #f59e0b;
+            --radius: 12px; --radius-lg: 16px; --radius-xl: 24px;
+            --shadow: 0 4px 20px rgba(0,0,0,0.06); --shadow-lg: 0 10px 40px rgba(0,0,0,0.1);
+            --transition: all 0.2s ease;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body { font-family: 'Inter', system-ui, sans-serif; background: var(--white); color: #1a1a1a; line-height: 1.6; -webkit-font-smoothing: antialiased; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+        
+        .nav { position: fixed; top: 0; width: 100%; z-index: 100; background: rgba(255,255,255,0.95); backdrop-filter: blur(12px); border-bottom: 1px solid var(--gray-200); }
+        .nav-inner { max-width: 1200px; margin: 0 auto; padding: 0 24px; height: 60px; display: flex; align-items: center; justify-content: space-between; }
+        .logo { font-size: 21px; font-weight: 800; color: #1a1a1a; text-decoration: none; }
+        .logo span { color: var(--primary); }
+        .btn { padding: 10px 20px; border-radius: 100px; font-weight: 600; font-size: 14px; cursor: pointer; transition: var(--transition); border: none; font-family: inherit; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; }
+        .btn-primary { background: var(--primary); color: var(--white); }
+        .btn-primary:hover { background: var(--primary-dark); transform: translateY(-1px); box-shadow: 0 4px 12px rgba(37,99,235,0.3); }
+        .btn-outline { background: var(--white); color: #1a1a1a; border: 1.5px solid var(--gray-300); }
+        .btn-outline:hover { border-color: var(--gray-400); background: var(--gray-50); }
+        .btn-lg { padding: 14px 28px; font-size: 16px; }
+        
+        .hero { padding: 140px 0 60px; text-align: center; position: relative; overflow: hidden; }
+        .hero::before { content: ''; position: absolute; top: -200px; left: 50%; transform: translateX(-50%); width: 600px; height: 600px; background: radial-gradient(circle, rgba(37,99,235,0.06) 0%, transparent 70%); border-radius: 50%; pointer-events: none; }
+        .hero-badge { display: inline-flex; align-items: center; gap: 8px; background: var(--gray-50); border: 1px solid var(--gray-200); padding: 6px 16px; border-radius: 100px; font-size: 13px; font-weight: 500; color: var(--gray-600); margin-bottom: 20px; }
+        .dot { width: 6px; height: 6px; background: var(--green); border-radius: 50%; animation: pulse 2s infinite; }
+        @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
+        .hero h1 { font-size: clamp(36px,6vw,60px); font-weight: 800; letter-spacing: -0.03em; margin-bottom: 12px; }
+        .hero h1 em { color: var(--primary); font-style: normal; }
+        .hero p { font-size: 17px; color: var(--gray-500); max-width: 500px; margin: 0 auto 32px; }
+        .hero-actions { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+        .trust-bar { display: flex; gap: 24px; justify-content: center; margin-top: 28px; flex-wrap: wrap; }
+        .trust-item { display: flex; align-items: center; gap: 6px; font-size: 13px; color: var(--gray-500); }
+        .trust-stars { color: var(--amber); }
+        
+        .section { padding: 70px 0; }
+        .section-title { font-size: 28px; font-weight: 800; text-align: center; margin-bottom: 8px; }
+        .section-subtitle { text-align: center; color: var(--gray-500); font-size: 15px; margin-bottom: 40px; }
+        
+        .property-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; }
+        .property-card { background: var(--white); border: 1px solid var(--gray-200); border-radius: var(--radius-lg); overflow: hidden; transition: var(--transition); cursor: pointer; }
+        .property-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-lg); }
+        .property-img { height: 180px; background: var(--gray-100); display: flex; align-items: center; justify-content: center; font-size: 44px; position: relative; }
+        .property-badge { position: absolute; top: 10px; left: 10px; background: var(--red); color: var(--white); padding: 3px 10px; border-radius: 100px; font-size: 10px; font-weight: 700; }
+        .property-badge.exclusive { background: var(--primary); }
+        .property-badge.margin { background: var(--amber); color: #1a1a1a; }
+        .property-info { padding: 16px; }
+        .property-price { font-size: 20px; font-weight: 800; }
+        .property-price span { font-size: 12px; font-weight: 400; color: var(--gray-500); }
+        .property-address { font-size: 13px; color: var(--gray-600); margin: 3px 0 8px; }
+        .property-features { display: flex; gap: 12px; font-size: 12px; color: var(--gray-500); }
+        .property-actions { display: flex; gap: 8px; padding: 0 16px 16px; flex-wrap: wrap; }
+        
+        .modal { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%,-50%); background: var(--white); border-radius: var(--radius-xl); padding: 28px; z-index: 9999; box-shadow: 0 20px 60px rgba(0,0,0,0.2); max-width: 480px; width: 90%; max-height: 85vh; overflow-y: auto; }
+        .modal.show { display: block; }
+        .overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 9998; }
+        .overlay.show { display: block; }
+        .modal h3 { font-size: 18px; font-weight: 700; margin-bottom: 16px; }
+        .modal input, .modal select { width: 100%; padding: 10px 14px; border: 2px solid var(--gray-200); border-radius: var(--radius); font-size: 14px; font-family: inherit; margin-bottom: 10px; }
+        .modal .btn { width: 100%; justify-content: center; margin-top: 6px; }
+        
+        .footer { background: var(--gray-50); border-top: 1px solid var(--gray-200); padding: 50px 0 30px; }
+        .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 30px; }
+        .footer-grid h4 { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--gray-500); margin-bottom: 12px; }
+        .footer-grid a { display: block; color: var(--gray-600); text-decoration: none; font-size: 13px; margin-bottom: 8px; }
+        .footer-bottom { margin-top: 30px; padding-top: 16px; border-top: 1px solid var(--gray-200); text-align: center; color: var(--gray-400); font-size: 12px; }
+        
+        .cookie-banner { position: fixed; bottom: 0; width: 100%; background: #1a1a1a; color: var(--white); padding: 16px 20px; z-index: 999; display: flex; align-items: center; justify-content: center; gap: 16px; flex-wrap: wrap; font-size: 13px; }
+        .cookie-banner button { padding: 6px 16px; border-radius: 100px; font-weight: 600; cursor: pointer; border: none; font-family: inherit; font-size: 12px; }
+        .btn-accept { background: var(--white); color: #1a1a1a; }
+        .btn-reject { background: transparent; color: var(--white); border: 1px solid var(--gray-600); }
+        .offer-box { background: var(--gray-50); border: 1px solid var(--gray-200); border-radius: var(--radius); padding: 16px; margin: 12px 0; font-size: 13px; }
 
-        /* Responsive */
         @media (max-width: 768px) {
-            .hero h1 {
-                font-size: 36px;
-            }
-
-            .operation-toggle {
-                flex-direction: column;
-                align-items: center;
-            }
-
-            .op-btn {
-                width: 100%;
-                max-width: 280px;
-            }
-
-            .search-card {
-                padding: 24px;
-            }
-
-            .room-options {
-                grid-template-columns: repeat(2, 1fr);
-            }
-
-            .properties-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .footer-content {
-                grid-template-columns: 1fr;
-                gap: 32px;
-            }
-
-            .footer {
-                padding: 40px 24px;
-            }
-        }
-
-        /* Smooth scroll */
-        html {
-            scroll-behavior: smooth;
-        }
-
-        /* Selection color */
-        ::selection {
-            background: #2563eb;
-            color: white;
+            .hero h1 { font-size: 32px; }
+            .footer-grid { grid-template-columns: 1fr; }
         }
     </style>
 </head>
 <body>
 
-    <!-- Navbar -->
-    <nav class="navbar">
-        <div class="nav-container">
-            <a href="#" class="logo">Mero<span>fise</span></a>
-            <button class="nav-btn" onclick="scrollToPublish()">Publicar propiedad</button>
-        </div>
-    </nav>
+<!-- COOKIE BANNER -->
+<div class="cookie-banner" id="cookieBanner">
+    🍪 Usamos cookies para mejorar tu experiencia.
+    <button class="btn-accept" onclick="document.getElementById('cookieBanner').style.display='none'">Aceptar</button>
+    <button class="btn-reject" onclick="document.getElementById('cookieBanner').style.display='none'">Rechazar</button>
+</div>
 
-    <!-- Hero -->
-    <section class="hero" id="inicio">
-        <div class="hero-content">
-            <div class="badge">
-                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"/>
-                </svg>
-                Impulsado por Inteligencia Artificial
-            </div>
-            <h1>
-                Encuentra tu hogar
-                <span>ideal en minutos</span>
-            </h1>
-            <p>Merofise analiza miles de propiedades y te recomienda las 3 mejores opciones personalizadas para ti usando IA avanzada.</p>
-            
-            <div class="operation-toggle">
-                <button class="op-btn active" id="btnRent" onclick="setOperation('rent')">
-                    Alquiler
-                </button>
-                <button class="op-btn" id="btnSale" onclick="setOperation('sale')">
-                    Comprar
-                </button>
-            </div>
+<!-- OVERLAY -->
+<div class="overlay" id="overlay" onclick="closeAllModals()"></div>
 
-            <button class="cta-btn" onclick="scrollToSearch()">
-                Empezar búsqueda
-                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
-                </svg>
-            </button>
-        </div>
-    </section>
+<!-- MODAL: VISITA -->
+<div class="modal" id="modalVisita">
+    <h3>📅 Concertar visita</h3>
+    <p style="font-size:13px;color:var(--gray-500);margin-bottom:12px;" id="visitaProperty"></p>
+    <select id="visitaDay">
+        <option value="">Selecciona día</option>
+        <option value="Lunes">Lunes</option><option value="Martes">Martes</option><option value="Miércoles">Miércoles</option>
+        <option value="Jueves">Jueves</option><option value="Viernes">Viernes</option>
+    </select>
+    <select id="visitaTime">
+        <option value="">Selecciona hora</option>
+        <option value="10:00">10:00</option><option value="11:00">11:00</option><option value="12:00">12:00</option>
+        <option value="16:00">16:00</option><option value="17:00">17:00</option><option value="18:00">18:00</option>
+    </select>
+    <input type="text" id="visitaNombre" placeholder="Nombre completo">
+    <input type="text" id="visitaApellidos" placeholder="Apellidos">
+    <input type="text" id="visitaDNI" placeholder="DNI/NIE">
+    <button class="btn btn-primary" onclick="confirmarVisita()">✅ Confirmar visita</button>
+</div>
 
-    <!-- Search -->
-    <section class="search-section" id="buscador">
-        <div class="search-card">
-            <div class="step-indicator">
-                <div class="step-dot active" id="dot1">1</div>
-                <div class="step-dot" id="dot2">2</div>
-                <div class="step-dot" id="dot3">3</div>
-            </div>
+<!-- MODAL: COMPRA -->
+<div class="modal" id="modalCompra">
+    <h3>💰 Opciones de compra</h3>
+    <p style="font-size:13px;color:var(--gray-500);margin-bottom:12px;" id="compraProperty"></p>
+    <input type="number" id="ofertaPrecio" placeholder="Precio que ofreces (€)" style="margin-bottom:8px;">
+    <button class="btn btn-outline" onclick="negociarPrecio()">📩 Enviar oferta al propietario</button>
+    <div style="height:8px;"></div>
+    <button class="btn btn-primary" onclick="comprarAhora()">📄 Comprar ahora (precio de venta)</button>
+    <div class="offer-box" id="estadoOferta" style="display:none;"></div>
+</div>
 
-            <!-- Step 1: City -->
-            <div class="search-step active" id="step1">
-                <h2>¿Dónde quieres <span id="opText1">vivir</span>?</h2>
-                <div class="input-group">
-                    <label>Ciudad o zona</label>
-                    <input type="text" id="cityInput" placeholder="Ej: Madrid, Barcelona, Valencia..." onkeypress="if(event.key==='Enter') nextStep()">
+<!-- NAV -->
+<nav class="nav">
+    <div class="nav-inner">
+        <a href="#" class="logo">🏠 MERO<span>FISE</span></a>
+        <button class="btn btn-primary" onclick="document.getElementById('publish').scrollIntoView({behavior:'smooth'})">Publicar propiedad</button>
+    </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+    <div class="hero-badge"><span class="dot"></span> IA captando en Madrid 24/7</div>
+    <h1>Las propiedades que<br><em>nadie más</em> tiene.</h1>
+    <p>Herencias, divorcios, embargos. Exclusivas reales encontradas por inteligencia artificial antes que nadie.</p>
+    <div class="hero-actions">
+        <button class="btn btn-primary btn-lg" onclick="document.getElementById('properties').scrollIntoView({behavior:'smooth'})">🔑 Ver alquileres</button>
+        <button class="btn btn-outline btn-lg" onclick="document.getElementById('properties').scrollIntoView({behavior:'smooth'})">🏠 Ver ventas</button>
+    </div>
+    <div class="trust-bar">
+        <div class="trust-item">📍 Calle Lagasca 36, 28001 Madrid</div>
+        <div class="trust-item"><span class="trust-stars">★★★★★</span> 4.9 en Google</div>
+        <div class="trust-item">🤖 +2,500 propiedades detectadas</div>
+    </div>
+</section>
+
+<!-- PROPERTIES -->
+<section class="section" id="properties">
+    <div class="container">
+        <h2 class="section-title">🔥 Oportunidades con margen real</h2>
+        <p class="section-subtitle">Propiedades exclusivas encontradas por nuestra IA</p>
+        <div class="property-grid">
+            <div class="property-card">
+                <div class="property-img">🏠<span class="property-badge exclusive">EXCLUSIVA</span></div>
+                <div class="property-info">
+                    <div class="property-price">285.000€ <span>3.353€/m²</span></div>
+                    <div class="property-address">Chamberí, Madrid</div>
+                    <div class="property-features"><span>🛏️ 3 hab</span><span>🛁 2 baños</span><span>📐 85 m²</span></div>
                 </div>
-                <div class="city-suggestions">
-                    <button class="city-chip" onclick="selectCity('Madrid')">Madrid</button>
-                    <button class="city-chip" onclick="selectCity('Barcelona')">Barcelona</button>
-                    <button class="city-chip" onclick="selectCity('Valencia')">Valencia</button>
-                    <button class="city-chip" onclick="selectCity('Sevilla')">Sevilla</button>
-                    <button class="city-chip" onclick="selectCity('Málaga')">Málaga</button>
-                </div>
-                <button class="search-btn" onclick="nextStep()">
-                    Continuar
-                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" width="20" height="20">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
-                    </svg>
-                </button>
-            </div>
-
-            <!-- Step 2: Budget -->
-            <div class="search-step" id="step2">
-                <h2>¿Cuál es tu <span id="opText2">presupuesto mensual</span>?</h2>
-                <div class="range-display" id="budgetDisplay">1000€</div>
-                <input type="range" class="range-slider" id="budgetSlider" min="300" max="5000" step="50" value="1000" oninput="updateBudget(this.value)">
-                <div class="range-labels">
-                    <span id="minLabel">300€</span>
-                    <span id="maxLabel">5000€+</span>
-                </div>
-                <button class="search-btn" onclick="nextStep()">
-                    Continuar
-                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" width="20" height="20">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
-                    </svg>
-                </button>
-            </div>
-
-            <!-- Step 3: Rooms -->
-            <div class="search-step" id="step3">
-                <h2>¿Cuántas habitaciones?</h2>
-                <div class="room-options">
-                    <button class="room-btn" onclick="selectRooms(1)" id="room1">
-                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
-                        </svg>
-                        <span>1 hab.</span>
-                    </button>
-                    <button class="room-btn selected" onclick="selectRooms(2)" id="room2">
-                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
-                        </svg>
-                        <span>2 habs.</span>
-                    </button>
-                    <button class="room-btn" onclick="selectRooms(3)" id="room3">
-                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
-                        </svg>
-                        <span>3 habs.</span>
-                    </button>
-                    <button class="room-btn" onclick="selectRooms(4)" id="room4">
-                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
-                        </svg>
-                        <span>4+ habs.</span>
-                    </button>
-                </div>
-                <button class="search-btn" onclick="startSearch()">
-                    Buscar con IA
-                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" width="20" height="20">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
-                    </svg>
-                </button>
-            </div>
-        </div>
-    </section>
-
-    <!-- Loading -->
-    <section class="loading-section" id="loading">
-        <div class="loading-animation">
-            <div class="loading-ring"></div>
-            <div class="loading-ring"></div>
-        </div>
-        <h2 style="font-size: 32px; font-weight: 700; margin-bottom: 16px;">Analizando con IA...</h2>
-        <p style="color: #86868b; font-size: 18px;">Buscando las mejores opciones para ti</p>
-        <div class="loading-dots">
-            <div class="loading-dot"></div>
-            <div class="loading-dot"></div>
-            <div class="loading-dot"></div>
-        </div>
-    </section>
-
-    <!-- Results -->
-    <section class="results-section" id="results">
-        <div class="results-header">
-            <div class="operation-tag" id="resultsTag">ALQUILER</div>
-            <h2>Tus 3 recomendaciones perfectas</h2>
-            <p>Generadas con inteligencia artificial para tu perfil</p>
-        </div>
-
-        <div class="properties-grid" id="freeProperties">
-            <!-- Free properties will be inserted here -->
-        </div>
-
-        <div style="text-align: center; margin: 48px 0;">
-            <h3 style="font-size: 24px; font-weight: 700; margin-bottom: 8px;">¿Quieres ver más opciones?</h3>
-            <p style="color: #86868b; margin-bottom: 24px;">Desbloquea acceso completo al catálogo</p>
-        </div>
-
-        <div class="properties-grid" id="lockedProperties">
-            <!-- Locked properties will be inserted here -->
-        </div>
-    </section>
-
-    <!-- Publish Section -->
-    <section class="publish-section" id="publicar">
-        <div class="publish-content">
-            <h2>¿Tienes una propiedad?</h2>
-            <p>Publica tu piso o casa en Merofise y llega a miles de personas que buscan hogar. Nuestra IA te ayuda a encontrar el comprador o inquilino ideal.</p>
-            <button class="publish-btn" onclick="alert('Próximamente: Formulario de publicación')">
-                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" width="20" height="20">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
-                </svg>
-                Publicar ahora
-            </button>
-        </div>
-    </section>
-
-    <!-- Footer -->
-    <footer class="footer">
-        <div class="footer-content">
-            <div class="footer-brand">
-                <h3>Mero<span>fise</span></h3>
-                <p>La forma más inteligente de encontrar tu hogar. Usamos IA avanzada para analizar el mercado y recomendarte las mejores opciones personalizadas.</p>
-                <div class="footer-contact">
-                    <a href="mailto:info@merofise.es">
-                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
-                        </svg>
-                        info@merofise.es
-                    </a>
-                    <a href="https://wa.me/34664037407">
-                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/>
-                        </svg>
-                        +34 664 037 407
-                    </a>
+                <div class="property-actions">
+                    <button class="btn btn-outline" onclick="abrirVisita('Chamberí, 85m², 285.000€')" style="flex:1;justify-content:center;">📅 Visitar</button>
+                    <button class="btn btn-primary" onclick="abrirCompra('Chamberí, 85m², 285.000€')" style="flex:1;justify-content:center;">💰 Comprar</button>
                 </div>
             </div>
-            <div class="footer-links">
-                <h4>Buscar</h4>
-                <ul>
-                    <li><a href="#buscador" onclick="setOperation('rent')">Alquiler</a></li>
-                    <li><a href="#buscador" onclick="setOperation('sale')">Comprar</a></li>
-                    <li><a href="#" onclick="alert('Próximamente')">Nuevas construcciones</a></li>
-                </ul>
+            <div class="property-card">
+                <div class="property-img">🏠<span class="property-badge">URGENTE</span></div>
+                <div class="property-info">
+                    <div class="property-price">195.000€ <span>2.600€/m²</span></div>
+                    <div class="property-address">Retiro — Herencia</div>
+                    <div class="property-features"><span>🛏️ 2 hab</span><span>🛁 1 baño</span><span>📐 75 m²</span></div>
+                </div>
+                <div class="property-actions">
+                    <button class="btn btn-outline" onclick="abrirVisita('Retiro, 75m², 195.000€')" style="flex:1;justify-content:center;">📅 Visitar</button>
+                    <button class="btn btn-primary" onclick="abrirCompra('Retiro, 75m², 195.000€')" style="flex:1;justify-content:center;">💰 Comprar</button>
+                </div>
             </div>
-            <div class="footer-links">
-                <h4>Publicar</h4>
-                <ul>
-                    <li><a href="#publicar">Publicar propiedad</a></li>
-                    <li><a href="#" onclick="alert('Próximamente')">Para inmobiliarias</a></li>
-                    <li><a href="#" onclick="alert('Próximamente')">Precios</a></li>
-                </ul>
+            <div class="property-card">
+                <div class="property-img">🏠<span class="property-badge exclusive">EXCLUSIVA</span></div>
+                <div class="property-info">
+                    <div class="property-price">420.000€ <span>3.818€/m²</span></div>
+                    <div class="property-address">Salamanca — Ático</div>
+                    <div class="property-features"><span>🛏️ 2 hab</span><span>🛁 2 baños</span><span>📐 110 m²</span></div>
+                </div>
+                <div class="property-actions">
+                    <button class="btn btn-outline" onclick="abrirVisita('Salamanca, 110m², 420.000€')" style="flex:1;justify-content:center;">📅 Visitar</button>
+                    <button class="btn btn-primary" onclick="abrirCompra('Salamanca, 110m², 420.000€')" style="flex:1;justify-content:center;">💰 Comprar</button>
+                </div>
             </div>
-            <div class="footer-links">
-                <h4>Legal</h4>
-                <ul>
-                    <li><a href="#" onclick="alert('Próximamente')">Privacidad</a></li>
-                    <li><a href="#" onclick="alert('Próximamente')">Términos</a></li>
-                    <li><a href="#" onclick="alert('Próximamente')">Cookies</a></li>
-                </ul>
+            <div class="property-card">
+                <div class="property-img">🏠<span class="property-badge margin">MARGEN +52K</span></div>
+                <div class="property-info">
+                    <div class="property-price">310.000€ <span>3.444€/m²</span></div>
+                    <div class="property-address">Centro, Madrid</div>
+                    <div class="property-features"><span>🛏️ 3 hab</span><span>🛁 2 baños</span><span>📐 90 m²</span></div>
+                </div>
+                <div class="property-actions">
+                    <button class="btn btn-outline" onclick="abrirVisita('Centro, 90m², 310.000€')" style="flex:1;justify-content:center;">📅 Visitar</button>
+                    <button class="btn btn-primary" onclick="abrirCompra('Centro, 90m², 310.000€')" style="flex:1;justify-content:center;">💰 Comprar</button>
+                </div>
             </div>
         </div>
-        <div class="footer-bottom">
-            <p> 2026 Merofise. Todos los derechos reservados.</p>
+    </div>
+</section>
+
+<!-- PUBLISH -->
+<section class="section" id="publish" style="background:var(--gray-50);">
+    <div class="container" style="text-align:center;">
+        <h2 class="section-title">¿Tienes una propiedad?</h2>
+        <p class="section-subtitle">La IA la valora gratis. La publicamos en exclusiva.</p>
+        <button class="btn btn-primary btn-lg">📸 Publicar mi propiedad gratis →</button>
+    </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+    <div class="container">
+        <div class="footer-grid">
+            <div>
+                <h3 class="logo">MERO<span>FISE</span></h3>
+                <p style="color:var(--gray-500);font-size:13px;margin-top:6px;">📍 Calle Lagasca 36, 28001 Madrid<br>📞 +34 664 037 407<br>✉️ info@merofise.es</p>
+            </div>
+            <div><h4>Propiedades</h4><a href="#properties">Alquiler</a><a href="#properties">Compra</a><a href="#publish">Publicar</a></div>
+            <div><h4>Legal</h4><a href="#">Aviso Legal</a><a href="#">Privacidad</a><a href="#">Cookies</a></div>
         </div>
-    </footer>
+        <div class="footer-bottom">© 2025 Merofise. Todos los derechos reservados.</div>
+    </div>
+</footer>
 
-    <script>
-        // Search state
-        let searchData = {
-            operation: 'rent', // 'rent' or 'sale'
-            city: '',
-            budget: 1000,
-            rooms: 2
-        };
+<script>
+    // Representante legal
+    const REPRESENTANTE = {
+        nombre: 'Antonio Miguel Valenzuela Contreras',
+        dni: '49001588L',
+        direccion: 'Calle Lagasca 36, 28001 Madrid',
+        iban: 'ES00 0000 0000 0000 0000 0000'
+    };
 
-        let currentStep = 1;
+    let currentProperty = '';
+    let visitas = JSON.parse(localStorage.getItem('merofise_visitas') || '[]');
+    let ofertas = JSON.parse(localStorage.getItem('merofise_ofertas') || '[]');
+    let facturaCounter = JSON.parse(localStorage.getItem('merofise_factura_counter') || '0');
 
-        function setOperation(op) {
-            searchData.operation = op;
-            
-            // Update buttons
-            document.getElementById('btnRent').classList.toggle('active', op === 'rent');
-            document.getElementById('btnSale').classList.toggle('active', op === 'sale');
-            
-            // Update text
-            const opText = op === 'rent' ? 'vivir' : 'comprar';
-            const budgetText = op === 'rent' ? 'presupuesto mensual' : 'presupuesto máximo';
-            const minBudget = op === 'rent' ? 300 : 50000;
-            const maxBudget = op === 'rent' ? 5000 : 1000000;
-            const currency = op === 'rent' ? '€/mes' : '€';
-            
-            document.getElementById('opText1').textContent = opText;
-            document.getElementById('opText2').textContent = budgetText;
-            
-            // Update slider
-            const slider = document.getElementById('budgetSlider');
-            slider.min = minBudget;
-            slider.max = maxBudget;
-            slider.step = op === 'rent' ? 50 : 1000;
-            slider.value = op === 'rent' ? 1000 : 200000;
-            
-            updateBudget(slider.value);
-            
-            document.getElementById('minLabel').textContent = minBudget.toLocaleString() + '€';
-            document.getElementById('maxLabel').textContent = maxBudget >= 1000000 ? '1M€+' : maxBudget.toLocaleString() + '€+';
-        }
+    function abrirVisita(prop) {
+        currentProperty = prop;
+        document.getElementById('visitaProperty').textContent = 'Propiedad: ' + prop;
+        document.getElementById('modalVisita').classList.add('show');
+        document.getElementById('overlay').classList.add('show');
+    }
 
-        function scrollToSearch() {
-            document.getElementById('buscador').scrollIntoView({ behavior: 'smooth' });
-        }
+    function abrirCompra(prop) {
+        currentProperty = prop;
+        document.getElementById('compraProperty').textContent = 'Propiedad: ' + prop;
+        document.getElementById('modalCompra').classList.add('show');
+        document.getElementById('overlay').classList.add('show');
+        document.getElementById('estadoOferta').style.display = 'none';
+        document.getElementById('ofertaPrecio').value = '';
+    }
 
-        function scrollToPublish() {
-            document.getElementById('publicar').scrollIntoView({ behavior: 'smooth' });
-        }
+    function closeAllModals() {
+        document.querySelectorAll('.modal').forEach(m => m.classList.remove('show'));
+        document.getElementById('overlay').classList.remove('show');
+    }
 
-        function selectCity(city) {
-            document.getElementById('cityInput').value = city;
-            searchData.city = city;
-        }
+    function confirmarVisita() {
+        const day = document.getElementById('visitaDay').value;
+        const time = document.getElementById('visitaTime').value;
+        const nombre = document.getElementById('visitaNombre').value;
+        const apellidos = document.getElementById('visitaApellidos').value;
+        const dni = document.getElementById('visitaDNI').value;
+        if (!day || !time || !nombre || !apellidos || !dni) return alert('Rellena todos los campos');
 
-        function updateBudget(value) {
-            searchData.budget = parseInt(value);
-            const formatted = searchData.operation === 'sale' && value >= 1000000 
-                ? (value / 1000000).toFixed(1) + 'M€' 
-                : parseInt(value).toLocaleString() + '€';
-            document.getElementById('budgetDisplay').textContent = formatted;
-        }
+        const visita = { propiedad: currentProperty, day, time, nombre, apellidos, dni, fecha: new Date().toLocaleString('es-ES') };
+        visitas.push(visita);
+        localStorage.setItem('merofise_visitas', JSON.stringify(visitas));
+        closeAllModals();
+        alert('✅ Visita confirmada para el ' + day + ' a las ' + time + '.\n\n📞 Te llamaremos para confirmar asistencia.');
+        limpiarVisita();
+    }
 
-        function selectRooms(rooms) {
-            searchData.rooms = rooms;
-            document.querySelectorAll('.room-btn').forEach(btn => btn.classList.remove('selected'));
-            document.getElementById('room' + rooms).classList.add('selected');
-        }
+    function limpiarVisita() {
+        document.getElementById('visitaDay').value = '';
+        document.getElementById('visitaTime').value = '';
+        document.getElementById('visitaNombre').value = '';
+        document.getElementById('visitaApellidos').value = '';
+        document.getElementById('visitaDNI').value = '';
+    }
 
-        function nextStep() {
-            if (currentStep === 1) {
-                const city = document.getElementById('cityInput').value;
-                if (!city) {
-                    alert('Por favor, introduce una ciudad');
-                    return;
-                }
-                searchData.city = city;
+    function negociarPrecio() {
+        const precio = document.getElementById('ofertaPrecio').value;
+        if (!precio || precio <= 0) return alert('Introduce un precio válido');
+
+        const oferta = { propiedad: currentProperty, precio: parseInt(precio), estado: 'pendiente', fecha: new Date().toLocaleString('es-ES') };
+        ofertas.push(oferta);
+        localStorage.setItem('merofise_ofertas', JSON.stringify(ofertas));
+
+        document.getElementById('estadoOferta').style.display = 'block';
+        document.getElementById('estadoOferta').innerHTML = '📩 Oferta enviada al propietario por <strong>' + parseInt(precio).toLocaleString() + '€</strong>.';
+    }
+
+    function comprarAhora() {
+        const precioMatch = currentProperty.match(/([\d.]+)€/);
+        const precio = precioMatch ? parseInt(precioMatch[1].replace(/\./g, '')) : 0;
+        if (!confirm('¿Confirmas la compra de ' + currentProperty + ' por ' + precio.toLocaleString() + '€?\n\nSe generará el contrato de arras y la factura automáticamente.')) return;
+
+        const honorarios = Math.round(precio * 0.03);
+        const ivaHonorarios = Math.round(honorarios * 0.21);
+        const totalHonorarios = honorarios + ivaHonorarios;
+        const fecha = new Date().toLocaleDateString('es-ES');
+        facturaCounter++;
+        localStorage.setItem('merofise_factura_counter', facturaCounter);
+        const numFactura = 'MER-' + new Date().getFullYear() + '-' + String(facturaCounter).padStart(4, '0');
+
+        // CONTRATO DE ARRAS
+        const contrato = `CONTRATO DE ARRAS PENITENCIALES
+================================
+
+PROPIEDAD: ${currentProperty}
+PRECIO DE VENTA: ${precio.toLocaleString()}€
+
+CLÁUSULA DE HONORARIOS:
+El VENDEDOR acepta que los honorarios de D. ${REPRESENTANTE.nombre}, 
+con DNI ${REPRESENTANTE.dni}, actuando como representante legal de 
+Merofise, corresponden al 3%+IVA del precio de venta 
+(${honorarios.toLocaleString()}€ + ${ivaHonorarios.toLocaleString()}€ IVA = ${totalHonorarios.toLocaleString()}€ total).
+
+Estos honorarios son por servicios profesionales YA PRESTADOS y NO 
+están sujetos a devolución bajo ninguna circunstancia, incluso si la 
+operación de compraventa no se perfecciona por cualquier causa.
+
+FIRMA DEL VENDEDOR: _________________________
+FIRMA DEL COMPRADOR: _________________________
+
+Fecha: ${fecha}`;
+
+        // FACTURA
+        const factura = `FACTURA SIMPLIFICADA
+====================
+Nº Factura: ${numFactura}
+Fecha: ${fecha}
+
+EMISOR:
+${REPRESENTANTE.nombre}
+DNI: ${REPRESENTANTE.dni}
+${REPRESENTANTE.direccion}
+
+RECEPTOR:
+[Nombre del cliente comprador]
+[DNI del cliente]
+
+CONCEPTO:
+Honorarios profesionales por intermediación inmobiliaria
+Propiedad: ${currentProperty}
+
+BASE IMPONIBLE: ${honorarios.toLocaleString()}€
+IVA (21%): ${ivaHonorarios.toLocaleString()}€
+TOTAL FACTURA: ${totalHonorarios.toLocaleString()}€
+
+MÉTODO DE PAGO: Transferencia bancaria
+IBAN: ${REPRESENTANTE.iban}
+
+Gracias por confiar en Merofise.
+${REPRESENTANTE.nombre}
+Representante Legal`;
+
+        // Descargar contrato
+        const blobContrato = new Blob([contrato], { type: 'application/pdf' });
+        const urlContrato = URL.createObjectURL(blobContrato);
+        const a1 = document.createElement('a');
+        a1.href = urlContrato;
+        a1.download = 'contrato-arras-merofise.pdf';
+        a1.click();
+
+        // Pequeña pausa para la segunda descarga
+        setTimeout(() => {
+            const blobFactura = new Blob([factura], { type: 'application/pdf' });
+            const urlFactura = URL.createObjectURL(blobFactura);
+            const a2 = document.createElement('a');
+            a2.href = urlFactura;
+            a2.download = 'factura-' + numFactura + '.pdf';
+            a2.click();
+        }, 500);
+
+        ofertas.push({ propiedad: currentProperty, precio, estado: 'comprado', factura: numFactura, fecha: new Date().toLocaleString('es-ES') });
+        localStorage.setItem('merofise_ofertas', JSON.stringify(ofertas));
+
+        closeAllModals();
+        alert('✅ ¡Compra iniciada!\n\n📄 Contrato de arras descargado.\n🧾 Factura ' + numFactura + ' descargada.\n\nHonorarios Merofise: ' + totalHonorarios.toLocaleString() + '€ (3%+IVA).\n\nEl propietario debe firmar para completar la operación.');
+    }
+
+    // Admin
+    document.addEventListener('keydown', function(e) {
+        if (e.ctrlKey && e.shiftKey && e.key === 'A') {
+            e.preventDefault();
+            const pw = prompt('Contraseña admin:');
+            if (pw === 'admin') {
+                let msg = '📋 VISITAS PENDIENTES:\n\n';
+                if (visitas.length === 0) msg += 'No hay visitas.\n';
+                else visitas.forEach((v, i) => msg += (i+1) + '. ' + v.propiedad + ' | ' + v.day + ' ' + v.time + ' | ' + v.nombre + ' ' + v.apellidos + ' | DNI: ' + v.dni + '\n');
+
+                msg += '\n💰 OFERTAS RECIBIDAS:\n\n';
+                if (ofertas.length === 0) msg += 'No hay ofertas.\n';
+                else ofertas.forEach((o, i) => msg += (i+1) + '. ' + o.propiedad + ' | ' + o.precio.toLocaleString() + '€ | Estado: ' + o.estado + ' | Factura: ' + (o.factura || 'N/A') + ' | ' + o.fecha + '\n');
+
+                alert(msg);
             }
-
-            document.getElementById('step' + currentStep).classList.remove('active');
-            document.getElementById('dot' + currentStep).classList.remove('active');
-            document.getElementById('dot' + currentStep).classList.add('completed');
-            
-            currentStep++;
-            
-            document.getElementById('step' + currentStep).classList.add('active');
-            document.getElementById('dot' + currentStep).classList.add('active');
         }
-
-        function startSearch() {
-            document.getElementById('buscador').style.display = 'none';
-            document.getElementById('loading').classList.add('active');
-            
-            setTimeout(() => {
-                document.getElementById('loading').classList.remove('active');
-                showResults();
-            }, 3000);
-        }
-
-        function showResults() {
-            document.getElementById('results').classList.add('active');
-            
-            // Update tag
-            const tag = document.getElementById('resultsTag');
-            tag.textContent = searchData.operation === 'rent' ? 'ALQUILER' : 'VENTA';
-            tag.className = 'operation-tag ' + (searchData.operation === 'rent' ? 'rent' : 'sale');
-            
-            const freeProps = generateProperties(3, false);
-            const lockedProps = generateProperties(3, true);
-            
-            renderProperties('freeProperties', freeProps, false);
-            renderProperties('lockedProperties', lockedProps, true);
-            
-            document.getElementById('results').scrollIntoView({ behavior: 'smooth' });
-        }
-
-        function generateProperties(count, locked) {
-            const cities = ['Madrid', 'Barcelona', 'Valencia', 'Sevilla'];
-            const neighborhoods = {
-                'Madrid': ['Salamanca', 'Chamberí', 'Retiro', 'Centro'],
-                'Barcelona': ['Eixample', 'Gràcia', 'Sant Martí', 'Sarrià'],
-                'Valencia': ['Ciutat Vella', 'Eixample', 'Ruzafa', 'Benimaclet'],
-                'Sevilla': ['Triana', 'Nervión', 'Macarena', 'Alameda']
-            };
-            
-            const city = searchData.city || 'Madrid';
-            const cityHoods = neighborhoods[city] || ['Centro', 'Norte', 'Sur'];
-            
-            const props = [];
-            for (let i = 0; i < count; i++) {
-                let price;
-                if (searchData.operation === 'rent') {
-                    price = Math.floor(searchData.budget * (0.8 + Math.random() * 0.4));
-                } else {
-                    price = Math.floor(searchData.budget * (0.7 + Math.random() * 0.6));
-                }
-                
-                const rooms = searchData.rooms;
-                const surface = 50 + Math.floor(Math.random() * 60);
-                const score = locked ? 0.6 + Math.random() * 0.2 : 0.85 + Math.random() * 0.14;
-                
-                let explanation;
-                if (searchData.operation === 'rent') {
-                    explanation = locked 
-                        ? 'Más opciones disponibles' 
-                        : `Perfecto para tu presupuesto de ${searchData.budget.toLocaleString()}€/mes. Zona con excelente conectividad y todos los servicios cercanos.`;
-                } else {
-                    explanation = locked
-                        ? 'Más opciones disponibles'
-                        : `Excelente inversión en ${cityHoods[i % cityHoods.length]}. Precio competitivo para la zona con gran potencial de revalorización.`;
-                }
-                
-                props.push({
-                    title: `${rooms} hab. en ${cityHoods[i % cityHoods.length]}`,
-                    price: price,
-                    address: `Calle ${String.fromCharCode(65 + i)} ${Math.floor(Math.random() * 100)}, ${cityHoods[i % cityHoods.length]}`,
-                    city: city,
-                    rooms: rooms,
-                    bathrooms: Math.max(1, Math.floor(rooms * 0.7)),
-                    surface: surface,
-                    score: score,
-                    explanation: explanation,
-                    operation: searchData.operation
-                });
-            }
-            return props;
-        }
-
-        function renderProperties(containerId, properties, locked) {
-            const container = document.getElementById(containerId);
-            container.innerHTML = '';
-            
-            properties.forEach((prop, index) => {
-                const card = document.createElement('div');
-                card.className = `property-card ${locked ? 'locked' : ''}`;
-                
-                const matchPercent = Math.round(prop.score * 100);
-                const isSale = prop.operation === 'sale';
-                
-                card.innerHTML = `
-                    ${!locked ? `
-                    <div class="property-badge ${isSale ? 'sale-badge' : ''}">
-                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"/>
-                        </svg>
-                        Match ${matchPercent}%
-                    </div>
-                    ` : ''}
-                    
-                    <div class="property-image ${isSale ? 'sale-image' : ''}">
-                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
-                        </svg>
-                    </div>
-                    
-                    <div class="property-content">
-                        <div class="property-header">
-                            <h3>${prop.title}</h3>
-                            <div class="property-price ${isSale ? 'sale-price' : ''}">
-                                ${isSale && prop.price >= 1000000 
-                                    ? (prop.price / 1000000).toFixed(2) + 'M€' 
-                                    : prop.price.toLocaleString() + '€'}
-                                <span>${isSale ? 'Precio total' : '/mes'}</span>
-                            </div>
-                        </div>
-                        
-                        <div class="property-location">
-                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
-                            </svg>
-                            ${locked ? prop.city : prop.address}
-                        </div>
-                        
-                        ${!locked ? `
-                        <div class="ai-explanation ${isSale ? 'sale-explanation' : ''}">
-                            <p>"${prop.explanation}"</p>
-                        </div>
-                        ` : ''}
-                        
-                        <div class="property-features">
-                            <span>
-                                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
-                                </svg>
-                                ${prop.rooms} hab.
-                            </span>
-                            <span>
-                                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/>
-                                </svg>
-                                ${prop.bathrooms} baño${prop.bathrooms > 1 ? 's' : ''}
-                            </span>
-                            <span>
-                                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"/>
-                                </svg>
-                                ${prop.surface}m²
-                            </span>
-                        </div>
-                        
-                        ${!locked ? `
-                        <button class="property-cta ${isSale ? 'sale-cta' : ''}" onclick="alert('Próximamente: Contactar propietario')">
-                            ${isSale ? 'Ver detalles y visitar' : 'Ver detalles y contactar'}
-                        </button>
-                        ` : ''}
-                    </div>
-                    
-                    ${locked ? `
-                    <div class="lock-overlay">
-                        <div class="lock-icon">
-                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
-                            </svg>
-                        </div>
-                        <p>Desbloquear contacto</p>
-                        <div class="price">4.99€</div>
-                    </div>
-                    ` : ''}
-                `;
-                
-                container.appendChild(card);
-            });
-        }
-
-        // Initialize
-        document.getElementById('cityInput').addEventListener('input', function(e) {
-            searchData.city = e.target.value;
-        });
-
-        document.getElementById('budgetSlider').addEventListener('input', function(e) {
-            searchData.budget = parseInt(e.target.value);
-        });
-    </script>
+    });
+</script>
 </body>
 </html>
